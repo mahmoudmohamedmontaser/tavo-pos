@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Customer Display · Tavo</title>
+<title>شاشة العميل · Tavo</title>
 <style>
   :root{--bg:#0b0d12;--panel:#141821;--panel2:#1b2030;--line:#262c3a;--txt:#eef2f8;--mut:#8b94a7;--brand:#6366f1;--brand2:#a855f7;--green:#34d399;--amber:#fbbf24}
   *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
@@ -18,7 +18,7 @@
   .row{display:flex;align-items:baseline;gap:14px;padding:13px 0;border-bottom:1px solid var(--line);font-size:21px;animation:slide .25s ease}
   @keyframes slide{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
   .row .q{min-width:44px;color:var(--brand2);font-weight:800}.row .nm{flex:1}.row .pr{font-weight:700}
-  aside{width:38%;max-width:460px;border-left:1px solid var(--line);background:var(--panel);padding:28px;display:flex;flex-direction:column;justify-content:flex-end}
+  aside{width:38%;max-width:460px;border-right:1px solid var(--line);background:var(--panel);padding:28px;display:flex;flex-direction:column;justify-content:flex-end}
   .tline{display:flex;justify-content:space-between;font-size:17px;color:var(--mut);padding:5px 0}
   .total{display:flex;justify-content:space-between;align-items:baseline;border-top:2px solid var(--line);margin-top:12px;padding-top:16px}
   .total .lab{font-size:21px;font-weight:700}.total .amt{font-size:50px;font-weight:900;letter-spacing:-1px}
@@ -77,15 +77,15 @@ function chooseReceipt(kind){
 }
 
 function head(){ const logo=(business||'T').trim().charAt(0).toUpperCase();
-  return `<header><div class="logo">${logo}</div><div><div class="biz">${esc(business)}</div><div class="biz-sub">Customer display</div></div></header>`; }
-function foot(){ return `<div class="foot"><span><span class="dot"></span>Live</span><span>Powered by Tavo</span></div>`; }
+  return `<header><div class="logo">${logo}</div><div><div class="biz">${esc(business)}</div><div class="biz-sub">شاشة العميل</div></div></header>`; }
+function foot(){ return `<div class="foot"><span><span class="dot"></span>مباشر</span><span>مدعوم بواسطة Tavo</span></div>`; }
 
 function renderCart(s){
   const rows=s.lines.map(l=>`<div class="row"><div class="q">${l.qty}×</div><div class="nm">${esc(l.name)}</div><div class="pr">${money(l.price*l.qty)}</div></div>`).join('');
   return `<main><div class="items">${rows}</div>
-    <aside><div class="tline"><span>Subtotal</span><span>${money(s.subtotal)}</span></div>
-    <div class="tline"><span>Tax</span><span>${money(s.tax)}</span></div>
-    <div class="total"><span class="lab">Total</span><span class="amt">${money(s.total)}</span></div></aside></main>`;
+    <aside><div class="tline"><span>المجموع الفرعي</span><span>${money(s.subtotal)}</span></div>
+    <div class="tline"><span>الضريبة</span><span>${money(s.tax)}</span></div>
+    <div class="total"><span class="lab">الإجمالي</span><span class="amt">${money(s.total)}</span></div></aside></main>`;
 }
 
 function renderInteractive(){
@@ -93,46 +93,46 @@ function renderInteractive(){
   let body='';
   if(c.phase==='tip'){
     if(customMode){
-      body=`<div class="pay"><div class="duebox">Amount due</div><div class="due">${money(base)}</div>
-        <div class="step">Enter a tip</div>
+      body=`<div class="pay"><div class="duebox">المبلغ المستحق</div><div class="due">${money(base)}</div>
+        <div class="step">أدخل الإكرامية</div>
         <input id="ctip" class="field" type="number" inputmode="decimal" step="0.50" min="0" placeholder="0.00">
-        <button class="bigbtn" onclick="confirmCustom()">Add tip &amp; continue</button>
-        <button class="ghostbtn" onclick="customMode=false;renderInteractive()">Back</button></div>`;
+        <button class="bigbtn" onclick="confirmCustom()">أضف الإكرامية وتابع</button>
+        <button class="ghostbtn" onclick="customMode=false;renderInteractive()">رجوع</button></div>`;
     } else {
       const tiles=(c.tipPresets||[]).map(p=>{const amt=Math.round(sub*p*100)/100;
         return `<button class="tipbtn" onclick="chooseTip(${amt})"><span class="pct">${Math.round(p*100)}%</span><span class="amt">${money(amt)}</span></button>`;}).join('');
-      body=`<div class="pay"><div class="duebox">Amount due</div><div class="due">${money(base)}</div>
-        <div class="step">Add a tip?</div>
+      body=`<div class="pay"><div class="duebox">المبلغ المستحق</div><div class="due">${money(base)}</div>
+        <div class="step">إضافة إكرامية؟</div>
         <div class="tips">${tiles}</div>
-        <div class="row2"><button class="tipbtn alt" onclick="customTip()"><span class="pct" style="font-size:20px">Custom</span></button>
-          <button class="tipbtn alt" onclick="chooseTip(0)"><span class="pct" style="font-size:20px">No tip</span></button></div></div>`;
+        <div class="row2"><button class="tipbtn alt" onclick="customTip()"><span class="pct" style="font-size:20px">مخصص</span></button>
+          <button class="tipbtn alt" onclick="chooseTip(0)"><span class="pct" style="font-size:20px">بدون إكرامية</span></button></div></div>`;
     }
   } else if(c.phase==='await_card'){
     const total=base+(c.tip||0);
     body=`<div class="pay"><div class="spin"></div>
-      <div class="step">Present your card</div>
-      <div class="welcome-sub">Tap, insert, or swipe to pay ${money(total)}${c.tip?` &nbsp;·&nbsp; ${money(c.tip)} tip`:''}</div></div>`;
+      <div class="step">قدّم بطاقتك</div>
+      <div class="welcome-sub">قرّب، أدخل، أو مرّر للدفع ${money(total)}${c.tip?` &nbsp;·&nbsp; ${money(c.tip)} إكرامية`:''}</div></div>`;
   } else if(c.phase==='declined'){
-    body=`<div class="pay"><div class="check" style="color:#f87171">✕</div><div class="step">Payment declined</div>
-      <div class="welcome-sub">Please try another card or ask our team.</div></div>`;
+    body=`<div class="pay"><div class="check" style="color:#f87171">✕</div><div class="step">تم رفض الدفع</div>
+      <div class="welcome-sub">يرجى تجربة بطاقة أخرى أو اسأل فريقنا.</div></div>`;
   } else if(c.phase==='approved'){
     const total=base+(c.tip||0);
     if(sentReceipt===c.sessionId || c.receipt){
-      body=`<div class="pay"><div class="check">✓</div><div class="step">All set!</div>
-        <div class="welcome-sub">${c.receipt==='none'?'Thanks &#8212; have a great day':'Your receipt is on its way'}</div></div>`;
+      body=`<div class="pay"><div class="check">✓</div><div class="step">تم كل شيء!</div>
+        <div class="welcome-sub">${c.receipt==='none'?'شكراً &#8212; نتمنى لك يوماً رائعاً':'إيصالك في الطريق'}</div></div>`;
     } else {
-      body=`<div class="pay"><div class="check">✓</div><div class="step">Approved &#8212; ${money(total)}</div>
-        <div class="welcome-sub" style="margin-bottom:18px">How would you like your receipt?</div>
-        <input id="rcontact" class="field" placeholder="email or phone (for email/text)">
+      body=`<div class="pay"><div class="check">✓</div><div class="step">تمت الموافقة &#8212; ${money(total)}</div>
+        <div class="welcome-sub" style="margin-bottom:18px">كيف تريد إيصالك؟</div>
+        <input id="rcontact" class="field" placeholder="البريد الإلكتروني أو الهاتف (للبريد/الرسائل)">
         <div class="tips" style="grid-template-columns:repeat(2,1fr);width:min(560px,94%)">
-          <button class="tipbtn alt" onclick="chooseReceipt('email')"><span class="pct" style="font-size:20px">✉️ Email</span></button>
-          <button class="tipbtn alt" onclick="chooseReceipt('sms')"><span class="pct" style="font-size:20px">💬 Text</span></button>
-          <button class="tipbtn alt" onclick="chooseReceipt('print')"><span class="pct" style="font-size:20px">🖨 Print</span></button>
-          <button class="tipbtn alt" onclick="chooseReceipt('none')"><span class="pct" style="font-size:20px">No thanks</span></button></div></div>`;
+          <button class="tipbtn alt" onclick="chooseReceipt('email')"><span class="pct" style="font-size:20px">✉️ بريد إلكتروني</span></button>
+          <button class="tipbtn alt" onclick="chooseReceipt('sms')"><span class="pct" style="font-size:20px">💬 رسالة نصية</span></button>
+          <button class="tipbtn alt" onclick="chooseReceipt('print')"><span class="pct" style="font-size:20px">🖨 طباعة</span></button>
+          <button class="tipbtn alt" onclick="chooseReceipt('none')"><span class="pct" style="font-size:20px">لا شكراً</span></button></div></div>`;
     }
   } else { // done
-    body=`<div class="pay"><div class="check">✓</div><div class="thanks">Thank you!</div>
-      <div class="welcome-sub" style="margin-top:10px">Have a wonderful day</div></div>`;
+    body=`<div class="pay"><div class="check">✓</div><div class="thanks">شكراً لك!</div>
+      <div class="welcome-sub" style="margin-top:10px">نتمنى لك يوماً رائعاً</div></div>`;
   }
   document.getElementById('app').innerHTML=head()+`<main style="display:block">${body}</main>`+foot();
 }
@@ -143,8 +143,8 @@ function paint(){
   // passive states
   const has=(s.lines||[]).length>0, thanks=!has && s.message;
   let body;
-  if(thanks){ body=`<div class="center"><div class="thanks">✓ ${esc(s.message)}</div><div class="welcome-sub" style="margin-top:16px">Have a wonderful day</div></div>`; }
-  else if(!has){ body=`<div class="center"><div class="welcome">Welcome 👋</div><div class="welcome-sub">Your order will appear here</div></div>`; }
+  if(thanks){ body=`<div class="center"><div class="thanks">✓ ${esc(s.message)}</div><div class="welcome-sub" style="margin-top:16px">نتمنى لك يوماً رائعاً</div></div>`; }
+  else if(!has){ body=`<div class="center"><div class="welcome">مرحباً 👋</div><div class="welcome-sub">سيظهر طلبك هنا</div></div>`; }
   else { document.getElementById('app').innerHTML=head()+renderCart(s)+foot(); return; }
   document.getElementById('app').innerHTML=head()+`<main style="display:block">${body}</main>`+foot();
 }
