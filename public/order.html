@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
 <meta name="theme-color" content="#0b0f17" />
-<title>Order · Tavo</title>
+<title>الطلب · Tavo</title>
 <script src="https://js.stripe.com/v3/"></script>
 <style>
   :root{
@@ -26,7 +26,7 @@
     display:grid;place-items:center;font-weight:800;font-size:20px;color:#fff;box-shadow:var(--shadow)}
   .biz{font-weight:800;font-size:19px;line-height:1.1}
   .sub{color:var(--muted);font-size:13px;margin-top:2px}
-  .tablechip{margin-left:auto;background:var(--panel2);border:1px solid var(--line);
+  .tablechip{margin-right:auto;background:var(--panel2);border:1px solid var(--line);
     padding:6px 11px;border-radius:999px;font-size:13px;font-weight:600;white-space:nowrap}
   /* category tabs */
   .cats{display:flex;gap:8px;overflow-x:auto;padding:12px 0 4px;scrollbar-width:none}
@@ -43,7 +43,7 @@
   .emoji img{width:100%;height:100%;object-fit:cover}
   .iname{font-weight:700;font-size:16px}
   .idesc{color:var(--muted);font-size:13px;margin-top:2px}
-  .iprice{margin-left:auto;text-align:right;font-weight:700}
+  .iprice{margin-right:auto;text-align:left;font-weight:700}
   .add{margin-top:6px;background:var(--brand);color:#fff;border:none;border-radius:10px;
     padding:8px 12px;font-weight:700;font-size:14px;cursor:pointer}
   /* cart bar */
@@ -54,7 +54,7 @@
     padding:15px 18px;font-weight:800;font-size:16px;display:flex;align-items:center;gap:12px;
     box-shadow:var(--shadow);cursor:pointer}
   .cartbtn .pill{background:rgba(255,255,255,.22);border-radius:999px;padding:3px 10px;font-size:14px}
-  .cartbtn .amt{margin-left:auto}
+  .cartbtn .amt{margin-right:auto}
   /* sheet / modal */
   .scrim{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:40;display:none}
   .sheet{position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--panel);
@@ -72,7 +72,7 @@
   .opt .dot{width:20px;height:20px;border-radius:50%;border:2px solid var(--line);flex:0 0 auto}
   .opt.sel .dot{border-color:var(--brand);background:var(--brand);box-shadow:inset 0 0 0 3px var(--panel2)}
   .opt .square{border-radius:6px}
-  .opt .oprice{margin-left:auto;color:var(--muted);font-weight:600}
+  .opt .oprice{margin-right:auto;color:var(--muted);font-weight:600}
   .qtyrow{display:flex;align-items:center;gap:14px;margin:16px 2px}
   .qtybtn{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--panel2);
     color:var(--text);font-size:22px;font-weight:700;cursor:pointer}
@@ -86,7 +86,7 @@
   .crow{display:flex;gap:10px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line)}
   .crow .cq{font-weight:800;color:var(--brand)}
   .crow .cmods{color:var(--muted);font-size:13px;margin-top:3px}
-  .crow .cp{margin-left:auto;font-weight:700;white-space:nowrap}
+  .crow .cp{margin-right:auto;font-weight:700;white-space:nowrap}
   .crow .rm{background:none;border:none;color:var(--muted);font-size:13px;cursor:pointer;padding:4px 0;text-decoration:underline}
   .totrow{display:flex;justify-content:space-between;padding:5px 0;color:var(--muted)}
   .totrow.big{color:var(--text);font-weight:800;font-size:18px;padding-top:10px;margin-top:6px;border-top:1px solid var(--line)}
@@ -138,7 +138,7 @@
     <div class="inner">
       <button class="cartbtn" onclick="openCart()">
         <span class="pill" id="cartCount">0</span>
-        <span>View cart</span>
+        <span>عرض السلة</span>
         <span class="amt" id="cartTotal">$0.00</span>
       </button>
     </div>
@@ -154,9 +154,9 @@
   <!-- Kiosk attract / welcome screen -->
   <div id="attract" onclick="startKiosk()">
     <div class="biglogo" id="attractLogo">T</div>
-    <h1 id="attractTitle">Welcome</h1>
-    <p>Order &amp; pay right here — no waiting in line</p>
-    <button class="tap">Tap to start your order →</button>
+    <h1 id="attractTitle">مرحبًا</h1>
+    <p>اطلب وادفع هنا — بلا انتظار في الصف</p>
+    <button class="tap">اضغط لبدء طلبك ←</button>
   </div>
 
 <script>
@@ -179,16 +179,16 @@ async function boot(){
     ]);
     if(c.error || m.error){ return fail(c.error||m.error); }
     CFG = c; MENU = m;
-    CATS = [...new Set(MENU.map(i=>i.category||'Other'))];
+    CATS = [...new Set(MENU.map(i=>i.category||'أخرى'))];
     if(CFG.publishableKey && window.Stripe){ try{ stripe = Stripe(CFG.publishableKey); }catch(e){} }
     render();
     if(KIOSK) showAttract();
-  }catch(e){ fail('Could not load the menu. Please check the link or try again.'); }
+  }catch(e){ fail('تعذر تحميل القائمة. يرجى التحقق من الرابط أو المحاولة مرة أخرى.'); }
 }
 function showAttract(){
   const name=(CFG&&CFG.tenant&&CFG.tenant.name)||'Tavo';
   document.getElementById('attractLogo').textContent=name.trim().charAt(0).toUpperCase();
-  document.getElementById('attractTitle').textContent='Welcome to '+name;
+  document.getElementById('attractTitle').textContent='مرحبًا بك في '+name;
   document.body.classList.add('attract-on');
   window.scrollTo(0,0);
 }
@@ -196,8 +196,8 @@ function startKiosk(){ document.body.classList.remove('attract-on'); }
 function fail(msg){
   document.getElementById('app').innerHTML =
     '<div class="wrap center"><div class="logo" style="margin:40px auto 16px">T</div>'+
-    '<h2>'+(msg||'Something went wrong')+'</h2>'+
-    '<p class="note">If you scanned a code at your table, ask a server for help.</p></div>';
+    '<h2>'+(msg||'حدث خطأ ما')+'</h2>'+
+    '<p class="note">إذا مسحت رمزًا على طاولتك، اطلب المساعدة من النادل.</p></div>';
 }
 
 function render(){
@@ -207,8 +207,8 @@ function render(){
       <div class="brandrow">
         <div class="logo">${(CFG.tenant.name||'T').trim().charAt(0).toUpperCase()}</div>
         <div><div class="biz">${esc(CFG.tenant.name||'Tavo')}</div>
-          <div class="sub">Order &amp; pay from your phone</div></div>
-        ${TABLE?`<div class="tablechip">Table ${esc(TABLE)}</div>`:`<div class="tablechip">${KIOSK?'Self-order':'Takeout'}</div>`}
+          <div class="sub">اطلب وادفع من هاتفك</div></div>
+        ${TABLE?`<div class="tablechip">طاولة ${esc(TABLE)}</div>`:`<div class="tablechip">${KIOSK?'طلب ذاتي':'سفري'}</div>`}
       </div>
       <div class="cats" id="cats">${CATS.map((c,i)=>`<div class="cat${i===0?' on':''}" data-c="${esc(c)}" onclick="jump('${esc(c)}',this)">${esc(c)}</div>`).join('')}</div>
     </div></header>
@@ -216,7 +216,7 @@ function render(){
   syncCart();
 }
 function section(cat){
-  const items = MENU.filter(i=>(i.category||'Other')===cat);
+  const items = MENU.filter(i=>(i.category||'أخرى')===cat);
   return `<h3 class="sec" id="sec-${cssid(cat)}">${esc(cat)}</h3>` + items.map(card).join('');
 }
 function card(it){
@@ -226,8 +226,8 @@ function card(it){
     <div class="emoji">${thumb}</div>
     <div style="flex:1">
       <div class="iname">${esc(it.name)}</div>
-      <div class="idesc">${money(it.price)}${hasMods?' · options':''}</div>
-      <button class="add" onclick='pick("${it.id}")'>Add</button>
+      <div class="idesc">${money(it.price)}${hasMods?' · خيارات':''}</div>
+      <button class="add" onclick='pick("${it.id}")'>إضافة</button>
     </div></div>`;
 }
 function jump(cat,el){
@@ -252,8 +252,8 @@ function openModSheet(){
     <h2>${esc(it.name)}</h2><div class="sub" style="color:var(--muted);font-size:14px">${money(it.price)}</div>
     ${groups.map((g,gi)=>`<div class="grp">
       <div class="ghead"><span class="gname">${esc(g.name)}</span>
-        ${g.required?'<span class="req">Required</span>':''}
-        <span style="color:var(--muted);font-size:12px;margin-left:auto">${modHint(g)}</span></div>
+        ${g.required?'<span class="req">مطلوب</span>':''}
+        <span style="color:var(--muted);font-size:12px;margin-right:auto">${modHint(g)}</span></div>
       ${(g.options||[]).map((o,oi)=>`<div class="opt" data-g="${gi}" data-o="${oi}" onclick="toggleOpt(${gi},${oi})">
         <span class="dot ${maxOf(g)===1?'':'square'}"></span>
         <span>${esc(o.name)}</span>
@@ -266,7 +266,7 @@ function openModSheet(){
   const s = document.getElementById('modSheet'); s.innerHTML = html;
   showSheet(s); paintOpts();
 }
-function modHint(g){ const mn=g.min||0, mx=maxOf(g); if(mx===1) return 'Choose 1'; if(mn&&mn===mx) return 'Choose '+mn; if(mn) return 'Choose '+mn+'–'+mx; return 'Up to '+mx; }
+function modHint(g){ const mn=g.min||0, mx=maxOf(g); if(mx===1) return 'اختر 1'; if(mn&&mn===mx) return 'اختر '+mn; if(mn) return 'اختر '+mn+'–'+mx; return 'حتى '+mx; }
 function maxOf(g){ return g.max||g.options.length||1; }
 function toggleOpt(gi,oi){
   const g = current.it.modifierGroups[gi]; const sel = current.sel[gi];
@@ -286,7 +286,7 @@ function paintOpts(){
   const ok = (current.it.modifierGroups||[]).every((g,gi)=> !g.required || current.sel[gi].length >= (g.min||1));
   const btn = document.getElementById('addBtn');
   btn.disabled = !ok;
-  btn.textContent = ok ? ('Add · '+money(linePrice(current)*current.qty)) : 'Choose required options';
+  btn.textContent = ok ? ('إضافة · '+money(linePrice(current)*current.qty)) : 'اختر الخيارات المطلوبة';
 }
 function bump(d){ current.qty = Math.max(1, Math.min(20, current.qty+d)); paintOpts(); }
 function linePrice(c){
@@ -336,24 +336,24 @@ function openCart(){
   if(!CART.length) return;
   const t = cartTotals();
   const s = document.getElementById('cartSheet');
-  s.innerHTML = `<div class="grab"></div><h2>Your order</h2>
-    <div class="sub" style="color:var(--muted);font-size:14px">${TABLE?('Table '+esc(TABLE)):'Takeout'} · ${esc(CFG.tenant.name||'Tavo')}</div>
+  s.innerHTML = `<div class="grab"></div><h2>طلبك</h2>
+    <div class="sub" style="color:var(--muted);font-size:14px">${TABLE?('طاولة '+esc(TABLE)):'سفري'} · ${esc(CFG.tenant.name||'Tavo')}</div>
     <div style="margin-top:10px">${CART.map(crow).join('')}</div>
     <div style="margin-top:14px">
-      <div class="totrow"><span>Subtotal</span><span>${money(t.sub)}</span></div>
-      <div class="totrow"><span>Tax</span><span>${money(t.tax)}</span></div>
-      <div class="sub" style="margin-top:14px;font-weight:700;color:var(--text)">Add a tip</div>
+      <div class="totrow"><span>المجموع الفرعي</span><span>${money(t.sub)}</span></div>
+      <div class="totrow"><span>الضريبة</span><span>${money(t.tax)}</span></div>
+      <div class="sub" style="margin-top:14px;font-weight:700;color:var(--text)">إضافة بقشيش</div>
       <div class="tips" id="tips">
-        ${[0,0.15,0.18,0.20].map(p=>`<div class="tip${p===tipPct?' on':''}" onclick="setTip(${p})">${p?Math.round(p*100)+'%':'None'}</div>`).join('')}
+        ${[0,0.15,0.18,0.20].map(p=>`<div class="tip${p===tipPct?' on':''}" onclick="setTip(${p})">${p?Math.round(p*100)+'%':'بدون'}</div>`).join('')}
       </div>
-      <div class="totrow big"><span>Total</span><span id="grand">${money(t.total)}</span></div>
+      <div class="totrow big"><span>الإجمالي</span><span id="grand">${money(t.total)}</span></div>
     </div>
-    <input class="txt" id="guestName" placeholder="Your name (optional)" maxlength="40" />
+    <input class="txt" id="guestName" placeholder="اسمك (اختياري)" maxlength="40" />
     <div class="err" id="payErr"></div>
     <div id="payArea"></div>
-    <button class="primary" id="payBtn" onclick="startPay()">Pay ${money(t.total)} now</button>
-    <button class="ghost" onclick="placeUnpaid()">Place order — pay at table</button>
-    <div class="note">You're ordering directly from your table. Items go straight to the kitchen once paid.</div>`;
+    <button class="primary" id="payBtn" onclick="startPay()">ادفع ${money(t.total)} الآن</button>
+    <button class="ghost" onclick="placeUnpaid()">تقديم الطلب — الدفع على الطاولة</button>
+    <div class="note">أنت تطلب مباشرة من طاولتك. تُرسل العناصر إلى المطبخ فور الدفع.</div>`;
   showSheet(s);
 }
 function crow(l){
@@ -361,7 +361,7 @@ function crow(l){
   const each = l.price + l.mods.reduce((s,x)=>{const z=String(x).match(/\+\$([0-9.]+)/);return s+(z?parseFloat(z[1]):0);},0);
   return `<div class="crow"><span class="cq">${l.qty}×</span>
     <div style="flex:1"><div style="font-weight:700">${esc(l.name)}</div>${mods}
-      <button class="rm" onclick="rm('${l.key}')">Remove</button></div>
+      <button class="rm" onclick="rm('${l.key}')">إزالة</button></div>
     <span class="cp">${money(each*l.qty)}</span></div>`;
 }
 function rm(key){ CART = CART.filter(l=>l.key!==key); syncCart(); if(CART.length) openCart(); else closeSheets(); }
@@ -385,7 +385,7 @@ async function placeUnpaid(){
     const r = await fetch(API+'/api/guest/orders',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload())}).then(r=>r.json());
     if(r.error) { setBusy(false); return showErr(r.error); }
     done(r.order, false);
-  }catch(e){ setBusy(false); showErr('Could not place your order. Try again.'); }
+  }catch(e){ setBusy(false); showErr('تعذر تقديم طلبك. حاول مرة أخرى.'); }
 }
 
 async function startPay(){
@@ -400,7 +400,7 @@ async function startPay(){
       const r = await fetch(API+'/api/guest/pay/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload(), intentId:intent.id})}).then(r=>r.json());
       if(r.error){ setBusy(false); return showErr(r.error); }
       done(r.order, true);
-    }catch(e){ setBusy(false); showErr('Payment failed. Try again.'); }
+    }catch(e){ setBusy(false); showErr('فشل الدفع. حاول مرة أخرى.'); }
     return;
   }
   // Stripe path: mount card field, then confirm.
@@ -409,7 +409,7 @@ async function startPay(){
     const elements = stripe.elements();
     cardEl = elements.create('card',{style:{base:{color:'#eef2f8',fontSize:'16px','::placeholder':{color:'#93a0b5'}}}});
     cardEl.mount('#card-element');
-    document.getElementById('payBtn').textContent = 'Pay '+money(t.total);
+    document.getElementById('payBtn').textContent = 'ادفع '+money(t.total);
     return; // first tap reveals the card field; second tap pays
   }
   setBusy(true);
@@ -421,31 +421,31 @@ async function startPay(){
     const r = await fetch(API+'/api/guest/pay/complete',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({...payload(), intentId:intent.id})}).then(r=>r.json());
     if(r.error){ setBusy(false); return showErr(r.error); }
     done(r.order, true);
-  }catch(e){ setBusy(false); showErr('Payment failed. Try again.'); }
+  }catch(e){ setBusy(false); showErr('فشل الدفع. حاول مرة أخرى.'); }
 }
 function setBusy(b){
-  const btn=document.getElementById('payBtn'); if(btn){ btn.disabled=b; btn.style.opacity=b?.6:1; if(b) btn.textContent='Processing…'; }
+  const btn=document.getElementById('payBtn'); if(btn){ btn.disabled=b; btn.style.opacity=b?.6:1; if(b) btn.textContent='جارٍ المعالجة…'; }
 }
 function done(order, paid){
   CART=[]; syncCart();
-  const where = TABLE?('Table '+esc(TABLE)):(KIOSK?'Pickup at counter':'Takeout');
-  const pickup = KIOSK ? `<div style="font-size:40px;font-weight:800;color:var(--brand);margin:6px 0 2px">#${order.number}</div><p class="note" style="margin-top:0">Listen for your number at the counter</p>` : '';
+  const where = TABLE?('طاولة '+esc(TABLE)):(KIOSK?'استلام من الكاونتر':'سفري');
+  const pickup = KIOSK ? `<div style="font-size:40px;font-weight:800;color:var(--brand);margin:6px 0 2px">#${order.number}</div><p class="note" style="margin-top:0">استمع لرقمك عند الكاونتر</p>` : '';
   document.getElementById('app').innerHTML = `<div class="wrap center">
     <div class="check">✓</div>
-    <h2>${paid?'Payment received':'Order placed'}</h2>
+    <h2>${paid?'تم استلام الدفع':'تم تقديم الطلب'}</h2>
     ${pickup}
-    <p class="note">${KIOSK?'':('Order #'+order.number+' · ')}${money(order.total)}<br>
-    ${paid?(KIOSK?'Your order is being prepared.':'Your order is on its way to the kitchen.'):'Flag your server when ready to pay.'}<br>
+    <p class="note">${KIOSK?'':('طلب #'+order.number+' · ')}${money(order.total)}<br>
+    ${paid?(KIOSK?'طلبك قيد التحضير.':'طلبك في طريقه إلى المطبخ.'):'أبلغ النادل عندما تكون جاهزًا للدفع.'}<br>
     ${where} · ${esc(CFG.tenant.name||'Tavo')}</p>
-    <button class="primary" style="max-width:280px;margin:18px auto 0" onclick="${KIOSK?'kioskReset()':'location.reload()'}">${KIOSK?'Start a new order':'Order more'}</button>
+    <button class="primary" style="max-width:280px;margin:18px auto 0" onclick="${KIOSK?'kioskReset()':'location.reload()'}">${KIOSK?'بدء طلب جديد':'اطلب المزيد'}</button>
     ${KIOSK?'<p class="note" id="kioskCountdown" style="margin-top:14px"></p>':''}
   </div>`;
   closeSheets(); window.scrollTo(0,0);
   if(KIOSK){
     let s=12; const el=()=>document.getElementById('kioskCountdown');
-    if(el()) el().textContent='Returning to start in '+s+'s…';
+    if(el()) el().textContent='العودة للبدء خلال '+s+' ثانية…';
     clearInterval(window._kioskIv);
-    window._kioskIv=setInterval(()=>{ s--; if(el())el().textContent='Returning to start in '+s+'s…'; if(s<=0){clearInterval(window._kioskIv);kioskReset();} },1000);
+    window._kioskIv=setInterval(()=>{ s--; if(el())el().textContent='العودة للبدء خلال '+s+' ثانية…'; if(s<=0){clearInterval(window._kioskIv);kioskReset();} },1000);
   }
 }
 function kioskReset(){ clearInterval(window._kioskIv); location.reload(); }
