@@ -16,7 +16,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 app.set('trust proxy', 1);   // correct client IP / protocol behind a load balancer (Render, Fly, etc.)
 const PORT = process.env.PORT || 4242;
-const TAX_RATE = parseFloat(process.env.TAX_RATE || '0.0825');
+const TAX_RATE = parseFloat(process.env.TAX_RATE || '0.0');
 // Loyalty: earn N points per $1 of pre-tax spend; each point is worth $REDEEM at redemption.
 const LOYALTY_EARN = parseFloat(process.env.LOYALTY_EARN_RATE || '1');      // points per $1
 const LOYALTY_REDEEM = parseFloat(process.env.LOYALTY_REDEEM_RATE || '0.05'); // $ per point (100pts = $5)
