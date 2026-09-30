@@ -695,63 +695,140 @@ html[dir="ltr"] .dir-flip{ transform:none; display:inline-block; }
 }
 
 /* ============================================================
-   Analytics workspace (frontend-only BI)
+   Analytics workspace (BI v3, frontend-only)
    ============================================================ */
-.an-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-md);padding:10px 14px}
-.an-range{display:flex;gap:6px;flex-wrap:wrap}
-.an-meta{display:flex;gap:12px;align-items:center;font-size:12px;color:var(--mut);flex-wrap:wrap}
-.an-refresh{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r-sm);background:var(--surface-2);border:1px solid var(--border);color:var(--txt);font-size:12.5px;font-weight:600;cursor:pointer;transition:background var(--dur-fast) var(--ease),border-color var(--dur-fast) var(--ease)}
-.an-refresh:hover{background:var(--surface-3);border-color:var(--border-2)}
+.an-toolbar{
+  display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;
+  margin-bottom:16px; background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r-md); padding:10px 14px;
+}
+.an-range{display:flex; gap:6px; flex-wrap:wrap}
+.an-meta{display:flex; gap:12px; align-items:center; font-size:12px; color:var(--mut); flex-wrap:wrap}
+.an-refresh{
+  display:inline-flex; align-items:center; gap:6px; padding:8px 14px;
+  border-radius:var(--r-sm); background:var(--surface-2); border:1px solid var(--border);
+  color:var(--txt); font-size:12.5px; font-weight:600; cursor:pointer;
+  transition:background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.an-refresh:hover{background:var(--surface-3); border-color:var(--border-2)}
 
-.an-kpi-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r-md);overflow:hidden;margin-bottom:18px}
-.an-kpi{background:var(--surface);padding:13px 15px;display:flex;flex-direction:column;gap:4px;min-width:0}
-.an-kpi__label{font-size:11px;color:var(--mut);font-weight:600;letter-spacing:.02em;text-transform:uppercase}
-.an-kpi__value{font-size:21px;font-weight:800;font-variant-numeric:tabular-nums;letter-spacing:-.02em;line-height:1.15;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.an-kpi__sub{font-size:11.5px;color:var(--mut);line-height:1.35}
+.an-kpi-strip{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px;
+  background:var(--border); border:1px solid var(--border); border-radius:var(--r-md);
+  overflow:hidden; margin-bottom:18px;
+}
+.an-kpi{
+  background:var(--surface); padding:12px 14px;
+  display:flex; flex-direction:column; gap:4px; min-width:0;
+}
+.an-kpi__head{display:flex; align-items:center; justify-content:space-between; gap:6px}
+.an-kpi__label{
+  font-size:10.5px; color:var(--mut); font-weight:600;
+  letter-spacing:.04em; text-transform:uppercase;
+}
+.an-kpi__ic{font-size:14px; opacity:.7; line-height:1}
+.an-kpi__value{
+  font-size:20px; font-weight:800; font-variant-numeric:tabular-nums;
+  letter-spacing:-.02em; line-height:1.15;
+  white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.an-kpi__sub{font-size:11px; color:var(--mut); line-height:1.35}
 
 .an-section{margin-bottom:20px}
-.an-section__head{display:flex;justify-content:space-between;align-items:baseline;gap:8px;margin-bottom:10px;flex-wrap:wrap}
-.an-section__title{font-size:13px;font-weight:700;letter-spacing:.02em;display:flex;align-items:center;gap:8px}
-.an-section__sub{font-size:11.5px;color:var(--mut)}
+.an-section__head{
+  display:flex; justify-content:space-between; align-items:baseline;
+  gap:8px; margin-bottom:10px; flex-wrap:wrap;
+}
+.an-section__title{
+  font-size:13px; font-weight:700; letter-spacing:.02em;
+  display:flex; align-items:center; gap:8px;
+}
+.an-section__sub{font-size:11.5px; color:var(--mut)}
 
-.an-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-.an-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.an-grid-2{display:grid; grid-template-columns:1fr 1fr; gap:14px}
+.an-grid-3{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
 @media (max-width:1000px){.an-grid-2,.an-grid-3{grid-template-columns:1fr}}
 
-.an-waterfall{display:flex;flex-direction:column}
-.an-wf-row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px dashed var(--border);font-size:13px}
+.an-waterfall{display:flex; flex-direction:column}
+.an-wf-row{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:9px 0; border-bottom:1px dashed var(--border); font-size:13px;
+}
 .an-wf-row:last-child{border-bottom:none}
 .an-wf-row.an-wf-pos .an-wf-val{color:var(--green)}
 .an-wf-row.an-wf-neg .an-wf-val{color:var(--red)}
-.an-wf-row.an-wf-total{border-top:2px solid var(--border);border-bottom:none;margin-top:6px;padding-top:12px;font-size:16px;font-weight:800}
+.an-wf-row.an-wf-total{
+  border-top:2px solid var(--border); border-bottom:none;
+  margin-top:6px; padding-top:12px; font-size:15px; font-weight:800;
+}
 .an-wf-lbl{color:var(--txt-2)}
-.an-wf-val{font-variant-numeric:tabular-nums;font-weight:700}
+.an-wf-val{font-variant-numeric:tabular-nums; font-weight:700}
 
-.an-insights{display:flex;flex-direction:column;gap:8px}
-.an-insight{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;background:var(--surface-2);border:1px solid var(--border);border-radius:var(--r-sm);font-size:13px;line-height:1.55}
-.an-insight__ic{font-size:16px;line-height:1.3;flex-shrink:0}
+.an-insights{display:flex; flex-direction:column; gap:8px}
+.an-insight{
+  display:flex; gap:10px; align-items:flex-start;
+  padding:10px 12px; background:var(--surface-2);
+  border:1px solid var(--border); border-radius:var(--r-sm);
+  font-size:13px; line-height:1.55;
+}
+.an-insight__ic{font-size:16px; line-height:1.3; flex-shrink:0}
 
-.an-prod-row{display:grid;grid-template-columns:1fr auto 120px;gap:12px;align-items:center;padding:9px 0;border-bottom:1px dashed var(--border)}
+.an-prod-row{
+  display:grid; grid-template-columns:26px 1fr auto minmax(70px,110px);
+  gap:10px; align-items:center;
+  padding:9px 0; border-bottom:1px dashed var(--border);
+}
 .an-prod-row:last-child{border-bottom:none}
-.an-prod-row__name{font-size:13px;font-weight:600;color:var(--txt);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.an-prod-row__qty{font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums;white-space:nowrap}
+.an-prod-row__rank{
+  font-size:11px; color:var(--mut); font-variant-numeric:tabular-nums;
+  text-align:center; font-weight:700;
+}
+.an-prod-row__name{
+  font-size:13px; font-weight:600; color:var(--txt);
+  min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+}
+.an-prod-row__qty{
+  font-size:12px; color:var(--mut); font-variant-numeric:tabular-nums;
+  white-space:nowrap; text-align:left; font-weight:600;
+}
+.an-prod-row__bar{height:6px; background:var(--surface-3); border-radius:3px; overflow:hidden}
+.an-prod-row__bar>i{
+  display:block; height:100%; border-radius:3px;
+  background:linear-gradient(90deg,var(--brand),var(--brand-2));
+}
 
-.an-txn-table{width:100%;border-collapse:separate;border-spacing:0;font-size:12.5px}
-.an-txn-table th{text-align:start;font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em;padding:8px 10px;border-bottom:1px solid var(--border);background:transparent}
-.an-txn-table td{padding:9px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+.an-txn-table{width:100%; border-collapse:separate; border-spacing:0; font-size:12.5px}
+.an-txn-table th{
+  text-align:start; font-size:11px; color:var(--mut);
+  text-transform:uppercase; letter-spacing:.04em;
+  padding:8px 10px; border-bottom:1px solid var(--border); background:transparent;
+  font-weight:600;
+}
+.an-txn-table td{
+  padding:9px 10px; border-bottom:1px solid var(--border); vertical-align:middle;
+}
 .an-txn-table tbody tr:hover td{background:var(--surface-2)}
 .an-txn-table tbody tr:last-child td{border-bottom:none}
 
-.an-empty{padding:26px 16px;text-align:center;color:var(--mut);font-size:13px;border:1px dashed var(--border);border-radius:var(--r-md);background:var(--surface-2);line-height:1.6}
+.an-empty{
+  padding:26px 16px; text-align:center; color:var(--mut);
+  font-size:13px; border:1px dashed var(--border);
+  border-radius:var(--r-md); background:var(--surface-2); line-height:1.6;
+}
+
+.an-dual{display:grid; grid-template-columns:1fr 1fr; gap:14px; align-items:start}
 
 @media (max-width:600px){
   .an-kpi{padding:10px 12px}
-  .an-kpi__value{font-size:18px}
+  .an-kpi__value{font-size:17px}
   .an-toolbar{padding:10px}
-  .an-prod-row{grid-template-columns:1fr auto}
-  .an-prod-row > div:last-child{display:none}
-  .an-wf-row{font-size:12.5px;padding:8px 0}
-  .an-wf-row.an-wf-total{font-size:14.5px}
+  .an-range .chip{padding:6px 10px; font-size:12px}
+  .an-meta{font-size:11px}
+  .an-prod-row{grid-template-columns:22px 1fr auto; gap:8px}
+  .an-prod-row__bar{display:none}
+  .an-wf-row{font-size:12.5px; padding:8px 0}
+  .an-wf-row.an-wf-total{font-size:14px}
+  .an-dual{grid-template-columns:1fr}
 }
 </style>
 </head>
@@ -2206,78 +2283,93 @@ async function doRefund(id,max){
 }
 
 /* ============================================================
-   Analytics — BI workspace (frontend-only)
+   Analytics — BI workspace v3 (frontend-only)
    ============================================================ */
-let _anDays=30, _anCustom={from:null,to:null};
-let _anData=null, _anSummary=null, _anPayments=null, _anOpenOrders=null;
-let _anLastUpdated=null;
-let _rbGroup='employee', _rbMetric='sales', _rbRows=null;
+let _anPreset      = '30d';                 // 'today' | 'yesterday' | '7d' | '30d' | '90d' | 'month' | 'custom'
+let _anCustom      = { from:null, to:null };
+let _anDays        = 30;                    // kept for the report builder's default range
+let _anData        = null;                  // /reports/analytics response
+let _anSummary     = null;                  // /reports/summary response
+let _anPayments    = null;                  // /payments list
+let _anOpenOrders  = null;                  // /orders?status=open list
+let _anLastUpdated = null;
 
-const _anNum   = v => Number(v)||0;
-const _anTime  = p => p && (p.createdAt || p.paidAt || p.timestamp || null);
+let _rbGroup = 'employee', _rbMetric = 'sales', _rbRows = null;
+
+const _anNum  = v => Number(v)||0;
+const _anTime = p => p && (p.createdAt || p.paidAt || p.timestamp || null);
 
 function anRange(){
-  if(_anCustom.from && _anCustom.to) return _anCustom;
+  if(_anPreset === 'custom' && _anCustom.from && _anCustom.to) return _anCustom;
   const to = Date.now();
-  return { from: to - _anDays*86400000, to };
+  if(_anPreset === 'today'){
+    const d = new Date(); d.setHours(0,0,0,0);
+    return { from: d.getTime(), to };
+  }
+  if(_anPreset === 'yesterday'){
+    const e = new Date(); e.setHours(0,0,0,0); e.setDate(e.getDate() - 1);
+    const s = e.getTime();
+    return { from: s, to: s + 86400000 - 1 };
+  }
+  if(_anPreset === 'month'){
+    const m = new Date(); m.setDate(1); m.setHours(0,0,0,0);
+    return { from: m.getTime(), to };
+  }
+  const days = { '7d':7, '30d':30, '90d':90 }[_anPreset] || 30;
+  _anDays = days;
+  return { from: to - days*86400000, to };
 }
+
 function anFmtDayLabel(ts){
-  const d=new Date(ts);
-  return d.toLocaleDateString('ar-EG',{month:'short',day:'numeric'});
+  const d = new Date(ts);
+  return d.toLocaleDateString('ar-EG', { month:'short', day:'numeric' });
 }
 function anFmtHourLabel(h){
-  const n=parseInt(h,10);
-  if(isNaN(n)) return String(h==null?'':h);
-  const ampm = n>=12 ? 'م' : 'ص';
-  const h12  = n%12 || 12;
+  const n = parseInt(h, 10);
+  if(isNaN(n)) return String(h == null ? '' : h);
+  const ampm = n >= 12 ? 'م' : 'ص';
+  const h12  = n % 12 || 12;
   return `${h12} ${ampm}`;
 }
 
-function anSetPreset(days){ _anCustom={from:null,to:null}; _anDays=days; render(); }
-function anSetToday(){
-  const d=new Date(); d.setHours(0,0,0,0);
-  _anCustom={from:d.getTime(), to:Date.now()};
-  render();
-}
-function anSetYesterday(){
-  const d=new Date(); d.setHours(0,0,0,0);
-  const end=d.getTime()-1, start=end-86400000+1;
-  _anCustom={from:start, to:end};
-  render();
-}
+function anSetPreset(p){ _anPreset = p; _anCustom = {from:null,to:null}; render(); }
+
 function anSetCustom(){
-  const ip='width:100%;padding:9px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);color:var(--txt)';
-  const today=new Date().toISOString().slice(0,10);
+  const ip = 'width:100%;padding:9px;border-radius:8px;background:var(--surface-2);border:1px solid var(--border);color:var(--txt)';
+  const today = new Date().toISOString().slice(0,10);
+  const from  = _anCustom.from ? new Date(_anCustom.from).toISOString().slice(0,10) : today;
+  const to    = _anCustom.to   ? new Date(_anCustom.to).toISOString().slice(0,10)   : today;
   openModal(`<div class="mhd"><h3>نطاق مخصص</h3><button class="x" onclick="closeModal()">✕</button></div><div class="mbd">
-    <div class="fld"><label>من</label><input id="an-from" type="date" value="${today}" style="${ip}"></div>
-    <div class="fld"><label>إلى</label><input id="an-to" type="date" value="${today}" style="${ip}"></div>
+    <div class="fld"><label>من</label><input id="an-from" type="date" value="${from}" style="${ip}"></div>
+    <div class="fld"><label>إلى</label><input id="an-to" type="date" value="${to}" style="${ip}"></div>
     <button class="btn primary" onclick="anApplyCustom()">تطبيق</button></div>`);
 }
 function anApplyCustom(){
-  const f=$("#an-from").value, t=$("#an-to").value;
-  if(!f||!t){ toast('اختر التواريخ','warning'); return; }
-  const fD=new Date(f); fD.setHours(0,0,0,0);
-  const tD=new Date(t); tD.setHours(23,59,59,999);
-  if(tD<fD){ toast('النطاق غير صالح','warning'); return; }
-  _anCustom={from:fD.getTime(), to:tD.getTime()};
+  const f = $("#an-from").value, t = $("#an-to").value;
+  if(!f || !t){ toast('اختر التواريخ','warning'); return; }
+  const fD = new Date(f); fD.setHours(0,0,0,0);
+  const tD = new Date(t); tD.setHours(23,59,59,999);
+  if(tD < fD){ toast('النطاق غير صالح','warning'); return; }
+  _anCustom = { from: fD.getTime(), to: tD.getTime() };
+  _anPreset = 'custom';
   closeModal(); render();
 }
 
 async function analyticsView(){
   try{
-    const {from,to}=anRange();
-    const [an,sum,pays,openOrds] = await Promise.all([
-      api('/reports/analytics?from='+from+'&to='+to).catch(()=>null),
-      api('/reports/summary').catch(()=>null),
-      api('/payments').catch(()=>[]),
-      api('/orders?status=open').catch(()=>[]),
+    const { from, to } = anRange();
+    const [an, sum, pays, openOrds] = await Promise.all([
+      api('/reports/analytics?from=' + from + '&to=' + to).catch(() => null),
+      api('/reports/summary').catch(() => null),
+      api('/payments').catch(() => []),
+      api('/orders?status=open').catch(() => []),
     ]);
-    _anData      = an;
-    _anSummary   = sum;
-    _anPayments  = Array.isArray(pays) ? pays : [];
-    _anOpenOrders= Array.isArray(openOrds) ? openOrds : [];
+    _anData       = an;
+    _anSummary    = sum;
+    _anPayments   = Array.isArray(pays) ? pays : [];
+    _anOpenOrders = Array.isArray(openOrds) ? openOrds : [];
     _anLastUpdated = Date.now();
-    return renderAnalytics(from,to);
+    return renderAnalytics(from, to);
   }catch(e){
     console.error('[analyticsView]', e);
     return `<div class="card" style="border-color:var(--red);max-width:600px">
@@ -2288,81 +2380,91 @@ async function analyticsView(){
   }
 }
 
-function anFilterPayments(from,to){
+function anFilterPayments(from, to){
   if(!_anPayments.length) return [];
-  const hasTime = _anPayments.some(p=>_anTime(p));
+  const hasTime = _anPayments.some(p => _anTime(p));
   if(!hasTime) return _anPayments.slice();
-  return _anPayments.filter(p=>{
-    const ts=_anTime(p);
-    return ts && ts>=from && ts<=to;
+  return _anPayments.filter(p => {
+    const ts = _anTime(p);
+    return ts && ts >= from && ts <= to;
   });
 }
 
-function renderAnalytics(from,to){
-  const an=_anData, sum=_anSummary;
-  const filtered=anFilterPayments(from,to);
-  const num=_anNum;
+function renderAnalytics(from, to){
+  const an  = _anData;
+  const sum = _anSummary;
+  const num = _anNum;
+  const filtered    = anFilterPayments(from, to);
+  const lastUpd     = _anLastUpdated ? new Date(_anLastUpdated).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}) : '—';
 
-  const spanDays = Math.round((to-from)/86400000);
-  const isPreset = !_anCustom.from;
-  const lastUpd  = _anLastUpdated ? new Date(_anLastUpdated).toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}) : '—';
-  const preset   = (label,n)=>`<button class="chip ${isPreset&&_anDays===n?'sel':''}" onclick="anSetPreset(${n})">${label}</button>`;
-  const todaySel = _anCustom.from && spanDays<1;
-  const yestSel  = _anCustom.from && spanDays>=1 && spanDays<2;
-  const customSel= _anCustom.from && spanDays>=2;
+  /* ---------- toolbar ---------- */
+  const presets = [
+    ['today','اليوم'], ['yesterday','أمس'], ['7d','7 أيام'],
+    ['30d','30 يومًا'], ['90d','90 يومًا'], ['month','هذا الشهر'],
+  ];
   const toolbar = `<div class="an-toolbar">
     <div class="an-range">
-      <button class="chip ${todaySel?'sel':''}" onclick="anSetToday()">اليوم</button>
-      <button class="chip ${yestSel?'sel':''}"  onclick="anSetYesterday()">أمس</button>
-      ${preset('7 أيام',7)}${preset('30 يومًا',30)}${preset('90 يومًا',90)}
-      <button class="chip ${customSel?'sel':''}" onclick="anSetCustom()">مخصص</button>
+      ${presets.map(([k,l]) => `<button class="chip ${_anPreset===k?'sel':''}" onclick="anSetPreset('${k}')">${l}</button>`).join('')}
+      <button class="chip ${_anPreset==='custom'?'sel':''}" onclick="anSetCustom()">مخصص</button>
     </div>
     <div class="an-meta">
       <span>${anFmtDayLabel(from)} — ${anFmtDayLabel(to)}</span>
       <span>· آخر تحديث ${lastUpd}</span>
       <button class="an-refresh" onclick="render()">🔄 تحديث</button>
-    </div></div>`;
-
-  const t = (an&&an.totals)||{};
-  const cmp = (an&&an.compare)||{};
-  const refundedPays = filtered.filter(p=>p.status==='refunded'||p.status==='partially_refunded');
-  const refundAmt = refundedPays.reduce((a,p)=>a+(num(p.refundedAmount)||(p.status==='refunded'?num(p.total):0)),0);
-  const openCount = _anOpenOrders.length;
-  const trendBadge = pct => {
-    if(pct==null || isNaN(pct)) return `<div class="an-kpi__sub">لا توجد بيانات للمقارنة</div>`;
-    const p=Number(pct);
-    const cls = p>0?'trend--good':(p<0?'trend--bad':'trend--flat');
-    const a = p>0?'↑':(p<0?'↓':'→');
-    return `<div class="an-kpi__sub trend ${cls}">${a} ${Math.abs(p).toFixed(1)}% مقابل الفترة السابقة</div>`;
-  };
-  const kpi = (lbl,val,sub)=>`<div class="an-kpi"><div class="an-kpi__label">${lbl}</div><div class="an-kpi__value">${val}</div>${sub||''}</div>`;
-  const kpiRow = `<div class="an-kpi-strip">
-    ${kpi('صافي المبيعات', money(num(t.netSales)), trendBadge(cmp.salesChangePct))}
-    ${kpi('الطلبات', num(t.orders).toLocaleString('en-US'), trendBadge(cmp.ordersChangePct))}
-    ${kpi('متوسط الفاتورة', money(num(t.avgCheck)), `<div class="an-kpi__sub">لكل طلب مدفوع</div>`)}
-    ${kpi('المرتجعات', money(refundAmt), `<div class="an-kpi__sub">${refundedPays.length} عملية</div>`)}
-    ${kpi('البقشيش', money(num(t.tips)), `<div class="an-kpi__sub">للموظفين</div>`)}
-    ${kpi('الضريبة', money(num(t.tax)), `<div class="an-kpi__sub">${num(t.taxExemptOrders)} طلب معفى</div>`)}
-    ${kpi('الخصومات', money(num(an&&an.discounts&&an.discounts.total)), '')}
-    ${kpi('رسوم الخدمة', money(num(t.serviceCharges)), '')}
+    </div>
   </div>`;
 
-  const trend     = anSalesTrend(filtered, from, to);
-  const peakHtml  = anPeakHours(an);
-  const methodHtml= anPaymentMethods(an, filtered);
-  const orderTypes= anOrderTypes(filtered);
-  const prodHtml  = anTopProducts(sum);
-  const catHtml   = anCategories(an);
-  const finHtml   = anFinancial(sum);
-  const orderAn   = anOrderAnalytics(an, sum, openCount, refundedPays.length);
-  const insights  = anInsights(an, sum, filtered);
+  /* ---------- KPI strip ---------- */
+  const t   = (an && an.totals) || {};
+  const cmp = (an && an.compare) || {};
+
+  const refundedPays = filtered.filter(p => p.status === 'refunded' || p.status === 'partially_refunded');
+  const refundAmt    = refundedPays.reduce((a,p) => a + (num(p.refundedAmount) || (p.status === 'refunded' ? num(p.total) : 0)), 0);
+  const openCount    = _anOpenOrders.length;
+
+  const trendBadge = pct => {
+    if(pct == null || isNaN(pct)) return `<div class="an-kpi__sub">لا مقابلة متاحة</div>`;
+    const p = Number(pct);
+    const cls = p > 0 ? 'trend--good' : (p < 0 ? 'trend--bad' : 'trend--flat');
+    const a   = p > 0 ? '↑' : (p < 0 ? '↓' : '→');
+    return `<div class="an-kpi__sub trend ${cls}">${a} ${Math.abs(p).toFixed(1)}% مقابل الفترة السابقة</div>`;
+  };
+  const kpi = (ic, lbl, val, sub) => `<div class="an-kpi">
+    <div class="an-kpi__head"><div class="an-kpi__label">${lbl}</div><div class="an-kpi__ic">${ic}</div></div>
+    <div class="an-kpi__value">${val}</div>${sub||''}</div>`;
+
+  const kpiRow = `<div class="an-kpi-strip">
+    ${kpi('💰','صافي المبيعات', money(num(t.netSales)), trendBadge(cmp.salesChangePct))}
+    ${kpi('🧾','الطلبات', num(t.orders).toLocaleString('en-US'), trendBadge(cmp.ordersChangePct))}
+    ${kpi('📊','متوسط الفاتورة', money(num(t.avgCheck)), `<div class="an-kpi__sub">لكل طلب مدفوع</div>`)}
+    ${kpi('↩️','المرتجعات', money(refundAmt), `<div class="an-kpi__sub">${refundedPays.length} عملية</div>`)}
+    ${kpi('💵','البقشيش', money(num(t.tips)), `<div class="an-kpi__sub">للموظفين</div>`)}
+    ${kpi('🧮','الضريبة', money(num(t.tax)), `<div class="an-kpi__sub">${num(t.taxExemptOrders)} طلب معفى</div>`)}
+    ${kpi('🏷️','الخصومات', money(num(an && an.discounts && an.discounts.total)), `<div class="an-kpi__sub">مطبّقة على الفواتير</div>`)}
+    ${kpi('➕','رسوم الخدمة', money(num(t.serviceCharges)), '')}
+    ${kpi('📂','فواتير مفتوحة', String(openCount), `<div class="an-kpi__sub">في الخدمة الآن</div>`)}
+  </div>`;
+
+  /* ---------- sections ---------- */
+  const trend      = anSalesTrend(filtered, from, to);
+  const peakHtml   = anPeakHours(an);
+  const dowHtml    = anDayOfWeek(an);
+  const methodHtml = anPaymentMethods(an, filtered);
+  const orderTypes = anOrderTypes(filtered);
+  const prodQty    = anTopProductsByQty(sum);
+  const prodRev    = anTopProductsByRevenue(sum, an);
+  const catHtml    = anCategories(an);
+  const finHtml    = anFinancial(sum, refundAmt);
+  const orderAn    = anOrderAnalytics(an, sum, openCount, refundedPays);
+  const insights   = anInsights(an, sum, filtered);
   const insightsBlock = insights.length
-    ? `<div class="an-insights">${insights.map(i=>`<div class="an-insight"><span class="an-insight__ic">${i.ic}</span><span>${esc(i.text)}</span></div>`).join('')}</div>`
+    ? `<div class="an-insights">${insights.map(i => `<div class="an-insight"><span class="an-insight__ic">${i.ic}</span><span>${esc(i.text)}</span></div>`).join('')}</div>`
     : `<div class="an-empty">لا توجد رؤى كافية لهذه الفترة.</div>`;
 
-  const sortedTx = filtered.slice().sort((a,b)=>(_anTime(b)||0)-(_anTime(a)||0)).slice(0,20);
+  const sortedTx = filtered.slice().sort((a,b) => (_anTime(b)||0) - (_anTime(a)||0)).slice(0,20);
   const txnHtml  = anRecentTransactions(sortedTx);
 
+  /* ---------- report builder ---------- */
   const rbOut = _rbRows ? reportTable() : `<div class="an-empty">اختر بُعدًا وقياسًا، ثم شغّل التقرير.</div>`;
   const rbBlock = `<section class="an-section">
     <div class="an-section__head">
@@ -2373,12 +2475,12 @@ function renderAnalytics(from,to){
         <div class="fld" style="margin:0"><label>تجميع حسب</label>
           <select id="rb-group">
             ${[['employee','الموظف'],['category','التصنيف'],['daypart','فترة اليوم'],['hour','الساعة'],['dow','يوم الأسبوع'],['method','طريقة الدفع']]
-              .map(([v,l])=>`<option value="${v}" ${_rbGroup===v?'selected':''}>${l}</option>`).join('')}
+              .map(([v,l]) => `<option value="${v}" ${_rbGroup===v?'selected':''}>${l}</option>`).join('')}
           </select></div>
         <div class="fld" style="margin:0"><label>القياس</label>
           <select id="rb-metric">
             ${[['sales','المبيعات'],['orders','الطلبات'],['avg','متوسط الفاتورة'],['tips','البقشيش']]
-              .map(([v,l])=>`<option value="${v}" ${_rbMetric===v?'selected':''}>${l}</option>`).join('')}
+              .map(([v,l]) => `<option value="${v}" ${_rbMetric===v?'selected':''}>${l}</option>`).join('')}
           </select></div>
         <button class="btn primary" onclick="runReport()">تشغيل</button>
         <button class="btn ghost" onclick="exportReport()">⬇ CSV</button>
@@ -2394,7 +2496,7 @@ function renderAnalytics(from,to){
     <section class="an-section">
       <div class="an-section__head">
         <div class="an-section__title">📈 اتجاه المبيعات</div>
-        <div class="an-section__sub">${trend.byDay?'مجمّعة يوميًا':'مجمّعة ساعيًا'}</div>
+        <div class="an-section__sub">${trend.byDay ? 'مجمّعة يوميًا' : 'مجمّعة ساعيًا'}</div>
       </div>
       <div class="card">${trend.html}</div>
     </section>
@@ -2408,28 +2510,47 @@ function renderAnalytics(from,to){
         <div class="card">${peakHtml}</div>
       </section>
       <section class="an-section">
-        <div class="an-section__head"><div class="an-section__title">💳 طرق الدفع</div></div>
-        <div class="card">${methodHtml}</div>
+        <div class="an-section__head">
+          <div class="an-section__title">📅 حسب يوم الأسبوع</div>
+          <div class="an-section__sub">المبيعات التراكمية لكل يوم</div>
+        </div>
+        <div class="card">${dowHtml}</div>
       </section>
     </div>
 
     <div class="an-grid-2">
       <section class="an-section">
+        <div class="an-section__head"><div class="an-section__title">💳 طرق الدفع</div></div>
+        <div class="card">${methodHtml}</div>
+      </section>
+      <section class="an-section">
         <div class="an-section__head"><div class="an-section__title">🍽️ أنواع الطلبات</div></div>
         <div class="card">${orderTypes}</div>
       </section>
+    </div>
+
+    <div class="an-grid-2">
       <section class="an-section">
-        <div class="an-section__head"><div class="an-section__title">📂 المبيعات حسب التصنيف</div></div>
-        <div class="card">${catHtml}</div>
+        <div class="an-section__head">
+          <div class="an-section__title">🏆 الأكثر مبيعًا بالكمية</div>
+          <div class="an-section__sub">عدد الوحدات المُباعة</div>
+        </div>
+        <div class="card">${prodQty}</div>
+      </section>
+      <section class="an-section">
+        <div class="an-section__head">
+          <div class="an-section__title">💎 الأعلى إيرادًا</div>
+          <div class="an-section__sub">حسب أسعار القائمة الحالية</div>
+        </div>
+        <div class="card">${prodRev}</div>
       </section>
     </div>
 
     <section class="an-section">
       <div class="an-section__head">
-        <div class="an-section__title">🏆 الأكثر مبيعًا</div>
-        <div class="an-section__sub">حسب الكمية</div>
+        <div class="an-section__title">📂 المبيعات حسب التصنيف</div>
       </div>
-      <div class="card">${prodHtml}</div>
+      <div class="card">${catHtml}</div>
     </section>
 
     <div class="an-grid-2">
@@ -2468,83 +2589,109 @@ function renderAnalytics(from,to){
   `;
 }
 
+/* ---------- Sales trend ---------- */
 function anSalesTrend(pays, from, to){
-  const span = (to-from)/86400000;
+  const span = (to - from) / 86400000;
   const byDay = span > 2;
-  const withTime = pays.filter(p=>_anTime(p));
+  const withTime = pays.filter(p => _anTime(p));
+
   if(!withTime.length){
     const hours = Array.isArray(_anData && _anData.byHour) ? _anData.byHour : [];
     if(hours.length){
-      const data = hours.filter(h=>h && h.hour!=null)
-        .map(h=>({h:parseInt(h.hour,10)||0, label:anFmtHourLabel(h.hour), value:_anNum(h.sales)}))
-        .sort((a,b)=>a.h-b.h);
-      return { byDay:false, html: svgColumns(data.map(x=>({label:x.label,value:x.value})), {height:200}) };
+      const data = hours.filter(h => h && h.hour != null)
+        .map(h => ({ h: parseInt(h.hour,10)||0, label: anFmtHourLabel(h.hour), value: _anNum(h.sales) }))
+        .sort((a,b) => a.h - b.h);
+      return { byDay:false, html: svgColumns(data.map(x => ({ label:x.label, value:x.value })), { height:200 }) };
     }
     return { byDay, html: chartEmpty('لا توجد بيانات مبيعات لهذه الفترة') };
   }
+
   const buckets = {};
   for(const p of withTime){
     const d = new Date(_anTime(p));
     let key, label;
     if(byDay){
       key = d.toISOString().slice(0,10);
-      label = d.toLocaleDateString('ar-EG',{month:'short',day:'numeric'});
+      label = d.toLocaleDateString('ar-EG',{ month:'short', day:'numeric' });
     } else {
       key = String(d.getHours()).padStart(2,'0');
       label = anFmtHourLabel(key);
     }
-    if(!buckets[key]) buckets[key]={key,label,value:0,count:0};
+    if(!buckets[key]) buckets[key] = { key, label, value:0, count:0 };
     buckets[key].value += _anNum(p.total);
     buckets[key].count++;
   }
-  let arr = Object.values(buckets).sort((a,b)=>a.key.localeCompare(b.key));
+  let arr = Object.values(buckets).sort((a,b) => a.key.localeCompare(b.key));
   if(!arr.length) return { byDay, html: chartEmpty('لا توجد بيانات مبيعات لهذه الفترة') };
-  if(arr.length>60) arr = arr.slice(-60);
-  const chart = svgLine(arr.map(x=>({label:x.label, value:x.value})), {height:200});
-  const total = arr.reduce((a,b)=>a+b.value,0);
-  const avg   = total/Math.max(1,arr.length);
-  const best  = arr.slice().sort((a,b)=>b.value-a.value)[0];
+  if(arr.length > 60) arr = arr.slice(-60);
+
+  const chart = svgLine(arr.map(x => ({ label:x.label, value:x.value })), { height:200 });
+  const total = arr.reduce((a,b) => a + b.value, 0);
+  const avg   = total / Math.max(1, arr.length);
+  const best  = arr.slice().sort((a,b) => b.value - a.value)[0];
   const summary = `<div style="display:flex;gap:16px;margin-top:12px;font-size:12px;color:var(--mut);flex-wrap:wrap">
     <span>الإجمالي: <b style="color:var(--txt)">${money(total)}</b></span>
     <span>المتوسط: <b style="color:var(--txt)">${money(avg)}</b></span>
-    ${best?`<span>الأعلى: <b style="color:var(--txt)">${esc(best.label)}</b> · ${money(best.value)}</span>`:''}
+    ${best ? `<span>الأعلى: <b style="color:var(--txt)">${esc(best.label)}</b> · ${money(best.value)}</span>` : ''}
   </div>`;
   return { byDay, html: chart + summary };
 }
 
+/* ---------- Peak hours ---------- */
 function anPeakHours(an){
   const hours = Array.isArray(an && an.byHour) ? an.byHour : [];
   if(!hours.length) return chartEmpty('لا توجد بيانات ساعية لهذه الفترة');
-  const data = hours.filter(h=>h && h.hour!=null)
-    .map(h=>({h:parseInt(h.hour,10)||0, label:anFmtHourLabel(h.hour), value:_anNum(h.sales)}))
-    .sort((a,b)=>a.h-b.h);
+  const data = hours.filter(h => h && h.hour != null)
+    .map(h => ({ h: parseInt(h.hour,10)||0, label: anFmtHourLabel(h.hour), value: _anNum(h.sales) }))
+    .sort((a,b) => a.h - b.h);
   if(!data.length) return chartEmpty('لا توجد بيانات ساعية لهذه الفترة');
-  return svgColumns(data.map(x=>({label:x.label,value:x.value})), {height:170});
+  const peak = data.slice().sort((a,b) => b.value - a.value)[0];
+  const chart = svgColumns(data.map(x => ({ label:x.label, value:x.value })), { height:170 });
+  return chart + (peak && peak.value > 0
+    ? `<div style="font-size:12px;color:var(--mut);margin-top:10px;text-align:center">الذروة عند <b style="color:var(--txt)">${esc(peak.label)}</b> · ${money(peak.value)}</div>`
+    : '');
 }
 
+/* ---------- Day-of-week ---------- */
+function anDayOfWeek(an){
+  const dows = Array.isArray(an && an.byDow) ? an.byDow : [];
+  if(!dows.length) return chartEmpty('لا توجد بيانات يومية لهذه الفترة');
+  const labels = {
+    0:'الأحد',1:'الاثنين',2:'الثلاثاء',3:'الأربعاء',4:'الخميس',5:'الجمعة',6:'السبت',
+    sunday:'الأحد',monday:'الاثنين',tuesday:'الثلاثاء',wednesday:'الأربعاء',
+    thursday:'الخميس',friday:'الجمعة',saturday:'السبت'
+  };
+  const data = dows.map(d => {
+    const lbl = labels[d.key] || labels[String(d.key).toLowerCase()] || String(d.key);
+    return { label: lbl, value: _anNum(d.sales) };
+  });
+  return svgColumns(data, { height:170 });
+}
+
+/* ---------- Payment methods ---------- */
 function anPaymentMethods(an, filtered){
   const methods = Array.isArray(an && an.byMethod) ? an.byMethod : [];
   let items;
   if(methods.length){
-    items = methods.map((m,i)=>({
-      label: String(m.key==null?'':m.key),
+    items = methods.map((m,i) => ({
+      label: String(m.key == null ? '' : m.key),
       value: _anNum(m.sales),
-      color: PALETTE[i%PALETTE.length]
+      color: PALETTE[i % PALETTE.length]
     }));
   } else {
-    const acc={};
-    filtered.forEach(p=>{
-      const k=String(p.method||'other');
-      if(!acc[k]) acc[k]={label:k,value:0};
+    const acc = {};
+    filtered.forEach(p => {
+      const k = String(p.method || 'other');
+      if(!acc[k]) acc[k] = { label:k, value:0 };
       acc[k].value += _anNum(p.total);
     });
-    items = Object.values(acc).map((x,i)=>({...x, color:PALETTE[i%PALETTE.length]}));
+    items = Object.values(acc).map((x,i) => ({ ...x, color: PALETTE[i % PALETTE.length] }));
   }
   if(!items.length) return chartEmpty('لا توجد بيانات دفع لهذه الفترة');
-  const total = items.reduce((a,b)=>a+b.value,0) || 1;
+  const total = items.reduce((a,b) => a + b.value, 0) || 1;
   const counts = {};
-  filtered.forEach(p=>{ const k=String(p.method||'other'); counts[k]=(counts[k]||0)+1; });
-  const rows = items.map(m=>`
+  filtered.forEach(p => { const k = String(p.method || 'other'); counts[k] = (counts[k]||0) + 1; });
+  const rows = items.map(m => `
     <tr>
       <td><span class="legend-dot" style="background:${m.color}"></span> ${esc(m.label)}</td>
       <td class="num" style="text-align:left;color:var(--mut)">${counts[m.label]||0}×</td>
@@ -2552,25 +2699,26 @@ function anPaymentMethods(an, filtered){
       <td class="num" style="text-align:left;color:var(--mut)">${(m.value/total*100).toFixed(1)}%</td>
     </tr>`).join('');
   return `<div class="report-split">
-    <div>${svgDonut(items,{size:170})}</div>
+    <div>${svgDonut(items,{ size:170 })}</div>
     <div><table class="mini-table"><tbody>${rows}</tbody></table></div>
   </div>`;
 }
 
+/* ---------- Order types ---------- */
 function anOrderTypes(pays){
   if(!pays.length) return chartEmpty('لا توجد بيانات طلبات لهذه الفترة');
-  let dinein=0, takeaway=0, dineCount=0, takeCount=0;
-  pays.forEach(p=>{
+  let dinein = 0, takeaway = 0, dineCount = 0, takeCount = 0;
+  pays.forEach(p => {
     if(p.table){ dinein += _anNum(p.total); dineCount++; }
     else       { takeaway += _anNum(p.total); takeCount++; }
   });
   const total = dinein + takeaway;
-  if(total<=0) return chartEmpty('لا توجد بيانات طلبات لهذه الفترة');
+  if(total <= 0) return chartEmpty('لا توجد بيانات طلبات لهذه الفترة');
   const items = [
-    {label:'داخل الصالة', value:dinein,  color:PALETTE[1], count:dineCount},
-    {label:'سفري',        value:takeaway, color:PALETTE[3], count:takeCount}
+    { label:'داخل الصالة', value: dinein,   color: PALETTE[1], count: dineCount },
+    { label:'سفري',        value: takeaway, color: PALETTE[3], count: takeCount },
   ];
-  const rows = items.map(m=>`
+  const rows = items.map(m => `
     <tr>
       <td><span class="legend-dot" style="background:${m.color}"></span> ${esc(m.label)}</td>
       <td class="num" style="text-align:left;color:var(--mut)">${m.count}×</td>
@@ -2578,38 +2726,76 @@ function anOrderTypes(pays){
       <td class="num" style="text-align:left;color:var(--mut)">${(m.value/total*100).toFixed(1)}%</td>
     </tr>`).join('');
   return `<div class="report-split">
-    <div>${svgDonut(items,{size:170})}</div>
+    <div>${svgDonut(items,{ size:170 })}</div>
     <div><table class="mini-table"><tbody>${rows}</tbody></table></div>
   </div>`;
 }
 
-function anTopProducts(sum){
-  const tops = (sum && Array.isArray(sum.topSellers)) ? sum.topSellers : [];
-  if(!tops.length) return `<div class="an-empty">لا توجد بيانات منتجات لهذه الفترة.</div>`;
-  const max = Math.max(1, ...tops.map(t=>_anNum(t[1])));
-  const totalQty = tops.reduce((a,t)=>a+_anNum(t[1]),0) || 1;
-  return tops.slice(0,10).map(([name,qty],i)=>{
-    const q=_anNum(qty);
-    const pct=(q/totalQty*100).toFixed(1);
-    const color=PALETTE[i%PALETTE.length];
+/* ---------- Products ---------- */
+function anProductList(items, mode){
+  if(!items.length) return `<div class="an-empty">لا توجد بيانات منتجات لهذه الفترة.</div>`;
+  const maxKey = (mode === 'revenue') ? 'revenue' : 'qty';
+  const max = Math.max(1, ...items.map(i => i[maxKey] || 0));
+  return items.slice(0,10).map((p,i) => {
+    const display = mode === 'revenue'
+      ? money(p.revenue)
+      : `${p.qty}×`;
     return `<div class="an-prod-row">
-      <div class="an-prod-row__name">${esc(name)}</div>
-      <div class="an-prod-row__qty">${q}× · ${pct}%</div>
-      <div><div class="hbar-track"><i style="width:${Math.round(q/max*100)}%;background:${color}"></i></div></div>
+      <div class="an-prod-row__rank">${i+1}</div>
+      <div class="an-prod-row__name">${esc(p.name)}</div>
+      <div class="an-prod-row__qty">${display}</div>
+      <div class="an-prod-row__bar"><i style="width:${Math.round((p[maxKey]||0)/max*100)}%"></i></div>
     </div>`;
   }).join('');
 }
+function anTopProductsByQty(sum){
+  const tops = (sum && Array.isArray(sum.topSellers)) ? sum.topSellers : [];
+  if(!tops.length) return `<div class="an-empty">لا توجد بيانات منتجات لهذه الفترة.</div>`;
+  const items = tops
+    .map(([name,qty]) => ({ name, qty: _anNum(qty) }))
+    .filter(p => p.qty > 0)
+    .sort((a,b) => b.qty - a.qty)
+    .slice(0,10);
+  if(!items.length) return `<div class="an-empty">لا توجد بيانات منتجات لهذه الفترة.</div>`;
+  return anProductList(items, 'qty');
+}
+function anTopProductsByRevenue(sum, an){
+  // Prefer real per-product sales if the backend already returns it
+  if(an && Array.isArray(an.byProduct) && an.byProduct.length){
+    const items = an.byProduct
+      .map(p => ({ name: String(p.key==null?'':p.key), revenue: _anNum(p.sales) }))
+      .filter(p => p.revenue > 0)
+      .sort((a,b) => b.revenue - a.revenue)
+      .slice(0,10);
+    if(items.length) return anProductList(items, 'revenue');
+  }
+  // Frontend-only estimate: current MENU price × sold quantity
+  const tops = (sum && Array.isArray(sum.topSellers)) ? sum.topSellers : [];
+  if(!tops.length) return `<div class="an-empty">لا توجد بيانات منتجات لهذه الفترة.</div>`;
+  const items = tops.map(([name,qty]) => {
+    const q = _anNum(qty);
+    const menuItem = (MENU || []).find(m => m.name === name);
+    const price = menuItem ? _anNum(menuItem.price) : 0;
+    return { name, qty:q, revenue: q * price };
+  }).filter(p => p.revenue > 0 && p.qty > 0)
+    .sort((a,b) => b.revenue - a.revenue)
+    .slice(0,10);
+  if(!items.length) return `<div class="an-empty" style="font-size:12.5px">تعذّر تقدير الإيراد — أسعار المنتجات الحالية غير متوفرة محليًا.</div>`;
+  return anProductList(items, 'revenue')
+    + `<div style="font-size:11px;color:var(--mut);margin-top:10px;text-align:center">تقدير بناءً على أسعار القائمة الحالية × الكمية المُباعة</div>`;
+}
 
+/* ---------- Categories ---------- */
 function anCategories(an){
   const cats = Array.isArray(an && an.byCategory) ? an.byCategory : [];
   if(!cats.length) return chartEmpty('لا توجد بيانات تصنيفات لهذه الفترة');
-  const total = cats.reduce((a,c)=>a+_anNum(c.sales),0) || 1;
-  const max   = Math.max(1, ...cats.map(c=>_anNum(c.sales)));
-  return `<div class="hbars">${cats.slice().sort((a,b)=>_anNum(b.sales)-_anNum(a.sales)).slice(0,8)
-    .map((c,i)=>{
-      const v=_anNum(c.sales);
-      const pct=(v/total*100).toFixed(1);
-      const color=PALETTE[i%PALETTE.length];
+  const total = cats.reduce((a,c) => a + _anNum(c.sales), 0) || 1;
+  const max   = Math.max(1, ...cats.map(c => _anNum(c.sales)));
+  return `<div class="hbars">${cats.slice().sort((a,b) => _anNum(b.sales) - _anNum(a.sales)).slice(0,8)
+    .map((c,i) => {
+      const v = _anNum(c.sales);
+      const pct = (v/total*100).toFixed(1);
+      const color = PALETTE[i % PALETTE.length];
       return `<div class="hbar">
         <div class="hbar-label">${esc(String(c.key==null?'':c.key))}</div>
         <div class="hbar-track"><i style="width:${Math.round(v/max*100)}%;background:${color}"></i></div>
@@ -2618,95 +2804,116 @@ function anCategories(an){
     }).join('')}</div>`;
 }
 
-function anFinancial(sum){
+/* ---------- Financial breakdown ---------- */
+function anFinancial(sum, refundAmt){
   if(!sum) return chartEmpty('لا توجد بيانات مالية');
-  const num=_anNum;
+  const num = _anNum;
   const gross     = num(sum.gross);
   const discounts = num(sum.discounts);
   const service   = num(sum.serviceCharges);
   const tax       = num(sum.tax);
   const tips      = num(sum.tips);
-  const refunds   = num(sum.refunds);
+  const refunds   = refundAmt || num(sum.refunds);
   const net       = num(sum.net);
-  const row=(lbl,val,cls)=>`<div class="an-wf-row ${cls||''}"><div class="an-wf-lbl">${lbl}</div><div class="an-wf-val">${val}</div></div>`;
+  const row = (lbl,val,cls) => `<div class="an-wf-row ${cls||''}"><div class="an-wf-lbl">${lbl}</div><div class="an-wf-val">${val}</div></div>`;
   return `<div class="an-waterfall">
     ${row('إجمالي المبيعات', money(gross))}
-    ${discounts>0?row('− الخصومات', '−'+money(discounts), 'an-wf-neg'):''}
-    ${refunds>0?row('− المرتجعات', '−'+money(refunds), 'an-wf-neg'):''}
-    ${service>0?row('+ رسوم الخدمة', '+'+money(service), 'an-wf-pos'):''}
-    ${tax>0?row('+ الضريبة', money(tax)):''}
-    ${tips>0?row('+ البقشيش', money(tips)):''}
+    ${discounts > 0 ? row('− الخصومات', '−'+money(discounts), 'an-wf-neg') : ''}
+    ${refunds   > 0 ? row('− المرتجعات', '−'+money(refunds),   'an-wf-neg') : ''}
+    ${service   > 0 ? row('+ رسوم الخدمة', '+'+money(service), 'an-wf-pos') : ''}
+    ${tax       > 0 ? row('+ الضريبة', money(tax)) : ''}
+    ${tips      > 0 ? row('+ البقشيش', money(tips)) : ''}
     ${row('صافي المبيعات', money(net), 'an-wf-total')}
   </div>`;
 }
 
-function anOrderAnalytics(an, sum, openCount, refundedCount){
-  const num=_anNum;
-  const orders = num(an&&an.totals&&an.totals.orders) || num(sum&&sum.orders);
-  const avg    = num(an&&an.totals&&an.totals.avgCheck) || num(sum&&sum.avgCheck);
-  const row=(lbl,val)=>`<div class="an-wf-row"><div class="an-wf-lbl">${lbl}</div><div class="an-wf-val">${val}</div></div>`;
+/* ---------- Order analytics ---------- */
+function anOrderAnalytics(an, sum, openCount, refundedPays){
+  const num = _anNum;
+  const totalOrders = num(an && an.totals && an.totals.orders) || num(sum && sum.orders);
+  const avg         = num(an && an.totals && an.totals.avgCheck) || num(sum && sum.avgCheck);
+  const refundedCount = (refundedPays || []).length;
+  const paidCount = Math.max(0, totalOrders - refundedCount);
+  const row = (lbl,val,cls) => `<div class="an-wf-row ${cls||''}"><div class="an-wf-lbl">${lbl}</div><div class="an-wf-val">${val}</div></div>`;
   return `<div class="an-waterfall">
-    ${row('إجمالي الطلبات', orders.toLocaleString('en-US'))}
-    ${row('الطلبات المفتوحة', String(openCount))}
-    ${row('المرتجعة', String(refundedCount||0))}
-    ${row('متوسط الفاتورة', money(avg))}
+    ${row('إجمالي الطلبات', totalOrders.toLocaleString('en-US'))}
+    ${row('مدفوعة', paidCount.toLocaleString('en-US'), 'an-wf-pos')}
+    ${row('مفتوحة', String(openCount))}
+    ${refundedCount ? row('مرتجعة', String(refundedCount), 'an-wf-neg') : ''}
+    ${row('متوسط الفاتورة', money(avg), 'an-wf-total')}
   </div>`;
 }
 
+/* ---------- Insights ---------- */
 function anInsights(an, sum, pays){
   const out = [];
+  const num = _anNum;
+
   const hours = Array.isArray(an && an.byHour) ? an.byHour : [];
   if(hours.length){
-    const peak = hours.slice().sort((a,b)=>_anNum(b.sales)-_anNum(a.sales))[0];
-    if(peak) out.push({ic:'⏰', text:`أعلى ساعة هي ${anFmtHourLabel(peak.hour)} بإجمالي ${money(_anNum(peak.sales))}.`});
+    const peak = hours.slice().sort((a,b) => num(b.sales) - num(a.sales))[0];
+    if(peak && num(peak.sales) > 0)
+      out.push({ ic:'⏰', text:`أعلى ساعة هي ${anFmtHourLabel(peak.hour)} بإجمالي ${money(num(peak.sales))}.` });
   }
+
   const cats = Array.isArray(an && an.byCategory) ? an.byCategory : [];
   if(cats.length){
-    const top = cats.slice().sort((a,b)=>_anNum(b.sales)-_anNum(a.sales))[0];
-    out.push({ic:'📂', text:`${top.key} تتصدر التصنيفات بإجمالي ${money(_anNum(top.sales))}.`});
+    const total = cats.reduce((a,c) => a + num(c.sales), 0) || 1;
+    const top = cats.slice().sort((a,b) => num(b.sales) - num(a.sales))[0];
+    const pct = (num(top.sales)/total*100).toFixed(1);
+    out.push({ ic:'📂', text:`${top.key} تتصدر التصنيفات بإجمالي ${money(num(top.sales))} (${pct}%).` });
   }
+
   const methods = Array.isArray(an && an.byMethod) ? an.byMethod : [];
   if(methods.length){
-    const total = methods.reduce((a,b)=>a+_anNum(b.sales),0) || 1;
-    const top = methods.slice().sort((a,b)=>_anNum(b.sales)-_anNum(a.sales))[0];
-    out.push({ic:'💳', text:`${top.key} هي الطريقة السائدة للدفع (${(_anNum(top.sales)/total*100).toFixed(1)}% من المبيعات).`});
+    const total = methods.reduce((a,b) => a + num(b.sales), 0) || 1;
+    const top = methods.slice().sort((a,b) => num(b.sales) - num(a.sales))[0];
+    out.push({ ic:'💳', text:`${top.key} هي الطريقة السائدة للدفع (${(num(top.sales)/total*100).toFixed(1)}% من المبيعات).` });
   }
+
   const dows = Array.isArray(an && an.byDow) ? an.byDow : [];
   if(dows.length){
-    const top = dows.slice().sort((a,b)=>_anNum(b.sales)-_anNum(a.sales))[0];
-    out.push({ic:'📅', text:`${top.key} هو اليوم الأعلى مبيعًا (${money(_anNum(top.sales))}).`});
+    const labels = {
+      0:'الأحد',1:'الاثنين',2:'الثلاثاء',3:'الأربعاء',4:'الخميس',5:'الجمعة',6:'السبت',
+      sunday:'الأحد',monday:'الاثنين',tuesday:'الثلاثاء',wednesday:'الأربعاء',
+      thursday:'الخميس',friday:'الجمعة',saturday:'السبت'
+    };
+    const top = dows.slice().sort((a,b) => num(b.sales) - num(a.sales))[0];
+    const lbl = labels[top.key] || labels[String(top.key).toLowerCase()] || String(top.key);
+    out.push({ ic:'📅', text:`${lbl} هو اليوم الأعلى مبيعًا (${money(num(top.sales))}).` });
   }
+
   const tops = (sum && Array.isArray(sum.topSellers)) ? sum.topSellers : [];
-  if(tops.length){
-    const top = tops[0];
-    out.push({ic:'🏆', text:`${top[0]} هو الأكثر مبيعًا (${_anNum(top[1])} وحدة).`});
-  }
+  if(tops.length && num(tops[0][1]) > 0)
+    out.push({ ic:'🏆', text:`${tops[0][0]} هو الأكثر مبيعًا (${num(tops[0][1])} وحدة).` });
+
   if(pays.length){
-    const ref = pays.filter(p=>p.status==='refunded'||p.status==='partially_refunded');
-    if(ref.length){
-      out.push({ic:'↩️', text:`${ref.length} من ${pays.length} عملية دفع مُرتجعة (${(ref.length/pays.length*100).toFixed(1)}%).`});
-    }
+    const ref = pays.filter(p => p.status === 'refunded' || p.status === 'partially_refunded');
+    if(ref.length)
+      out.push({ ic:'↩️', text:`${ref.length} من ${pays.length} عملية دفع مُرتجعة (${(ref.length/pays.length*100).toFixed(1)}%).` });
   }
+
   return out;
 }
 
+/* ---------- Recent transactions ---------- */
 function anRecentTransactions(txns){
   if(!txns.length) return `<div class="an-empty">لا توجد حركات في هذه الفترة.</div>`;
-  const rows = txns.map(p=>{
-    const ts=_anTime(p);
-    const t=ts?new Date(ts):null;
-    const time = t ? t.toLocaleTimeString('ar-EG',{hour:'2-digit',minute:'2-digit'}) : '—';
-    const status = p.status==='refunded' ? '<span class="tag red">مُرتجع</span>'
-                  : p.status==='partially_refunded' ? `<span class="tag amber">مُرتجع ${money(_anNum(p.refundedAmount))}</span>`
+  const rows = txns.map(p => {
+    const ts = _anTime(p);
+    const t  = ts ? new Date(ts) : null;
+    const time = t ? t.toLocaleTimeString('ar-EG',{ hour:'2-digit', minute:'2-digit' }) : '—';
+    const status = p.status === 'refunded'            ? '<span class="tag red">مُرتجع</span>'
+                  : p.status === 'partially_refunded' ? `<span class="tag amber">مُرتجع ${money(_anNum(p.refundedAmount))}</span>`
                   : '<span class="tag green">مدفوع</span>';
-    const method = p.method==='card' ? '<span class="tag blue">بطاقة</span>'
-                  : p.method==='cash' ? '<span class="tag green">نقدًا</span>'
-                  : p.method==='giftcard' ? '<span class="tag" style="background:rgba(168,85,247,.15);color:#c084fc">هدية</span>'
+    const method = p.method === 'card'     ? '<span class="tag blue">بطاقة</span>'
+                  : p.method === 'cash'    ? '<span class="tag green">نقدًا</span>'
+                  : p.method === 'giftcard'? '<span class="tag" style="background:rgba(168,85,247,.15);color:#c084fc">هدية</span>'
                   : `<span class="tag">${esc(p.method||'—')}</span>`;
     return `<tr>
       <td style="color:var(--mut);white-space:nowrap">${time}</td>
       <td style="color:var(--mut);direction:ltr;font-variant-numeric:tabular-nums">#${String(p.id).slice(-6)}</td>
-      <td>${p.table?('طاولة '+esc(p.table)):'سفري'}</td>
+      <td>${p.table ? ('طاولة '+esc(p.table)) : 'سفري'}</td>
       <td>${method}</td>
       <td>${status}</td>
       <td style="text-align:left;font-weight:700;font-variant-numeric:tabular-nums">${money(p.total)}</td>
@@ -2717,26 +2924,37 @@ function anRecentTransactions(txns){
     <tbody>${rows}</tbody></table></div>`;
 }
 
+/* ---------- Report builder ---------- */
 function reportTable(){
-  if(!_rbRows||!_rbRows.length) return '<div style="color:var(--mut);font-size:13px">لا صفوف.</div>';
-  const money$=_rbMetric==='orders'?(v=>v):(v=>money(v));
-  const max=Math.max(1,..._rbRows.map(r=>r.value));
-  return `<table>${_rbRows.map(r=>`<tr><td style="padding:5px 0">${esc(r.key)}</td>
+  if(!_rbRows || !_rbRows.length) return '<div style="color:var(--mut);font-size:13px">لا صفوف.</div>';
+  const money$ = _rbMetric === 'orders' ? (v => v) : (v => money(v));
+  const max = Math.max(1, ..._rbRows.map(r => r.value));
+  return `<table>${_rbRows.map(r => `<tr>
+    <td style="padding:5px 0">${esc(r.key)}</td>
     <td style="width:55%"><div style="height:8px;background:var(--surface-3);border-radius:4px;overflow:hidden"><div style="width:${Math.round(r.value/max*100)}%;height:100%;background:linear-gradient(90deg,#6366f1,#a855f7)"></div></div></td>
     <td style="text-align:left;font-weight:600;white-space:nowrap">${money$(r.value)}</td></tr>`).join('')}</table>`;
 }
 async function runReport(){
-  _rbGroup=$("#rb-group").value; _rbMetric=$("#rb-metric").value;
-  const {from,to}=anRange();
-  try{ const r=await api(`/reports/build?groupBy=${_rbGroup}&metric=${_rbMetric}&from=${from}&to=${to}`); _rbRows=r.rows; document.getElementById('rb-out').innerHTML=reportTable(); }
-  catch(e){ toast('⚠️ '+e.message,'warning'); }
+  _rbGroup  = $("#rb-group").value;
+  _rbMetric = $("#rb-metric").value;
+  const { from, to } = anRange();
+  try{
+    const r = await api(`/reports/build?groupBy=${_rbGroup}&metric=${_rbMetric}&from=${from}&to=${to}`);
+    _rbRows = r.rows;
+    document.getElementById('rb-out').innerHTML = reportTable();
+  }catch(e){ toast('⚠️ '+e.message,'warning'); }
 }
 function exportReport(){
-  if(!_rbRows||!_rbRows.length){ toast('شغّل تقريرًا أولًا','warning'); return; }
-  const head=_rbGroup+','+_rbMetric+'\n';
-  const body=_rbRows.map(r=>`"${String(r.key).replace(/"/g,'""')}",${r.value}`).join('\n');
-  const blob=new Blob([head+body],{type:'text/csv'}); const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='tavo-report-'+_rbGroup+'.csv'; a.click(); URL.revokeObjectURL(url);
+  if(!_rbRows || !_rbRows.length){ toast('شغّل تقريرًا أولًا','warning'); return; }
+  const head = _rbGroup + ',' + _rbMetric + '\n';
+  const body = _rbRows.map(r => `"${String(r.key).replace(/"/g,'""')}",${r.value}`).join('\n');
+  const blob = new Blob([head + body], { type:'text/csv' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = 'tavo-report-' + _rbGroup + '.csv';
+  a.click();
+  URL.revokeObjectURL(url);
   toast('⬇ تم تنزيل CSV','success');
 }
 
