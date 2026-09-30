@@ -1147,7 +1147,7 @@ function payCalc(){
 function paymentModal(){
   const c=payCalc(); const isMgr=ME&&ME.role==='manager';
   const tips=[15,18,20,25].map(p=>`<button class="tipbtn ${pay.tipPct===p?'sel':''}" onclick="setTip(${p})"><div class="p">${p}%</div><div class="a">${money(pay.sub*p/100)}</div></button>`).join("");
-  const methods=[["card","💳","بطاقة"],["cash","💵","نقدًا"],["wallet","📱","محفظة"]].map(m=>`<button class="pm ${pay.method===m[1]?'sel':''}" onclick="setMethod('${m[0]}')"><span class="ic">${m[1]}</span>${m[2]}</button>`).join("");
+  const methods=[["card","💳","بطاقة"],["cash","💵","نقدًا"],["wallet","📱","محفظة"]].map(m=>`<button class="pm ${pay.method===m[0]?'sel':''}" onclick="setMethod('${m[0]}')"><span class="ic">${m[1]}</span>${m[2]}</button>`).join("");
   let loyaltyBlock='';
   if(pay.customer){
     const m=pay.customer;
