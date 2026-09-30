@@ -1783,9 +1783,22 @@ async function start() {
       console.log('  Backfilled the default tenant row.');
     }
   } catch (e) { console.error('default-tenant backfill skipped:', e.message); }
-  app.listen(PORT, () => {
-    console.log(`\n  Tavo POS running → http://localhost:${PORT}`);
-    console.log(`  Database: ${storeKind().toUpperCase()}   Payment mode: ${usingStripe ? 'STRIPE (test)' : 'MOCK (no key set)'}\n`);
-  });
+  if (!process.env.VERCEL) {
+    app.listen(PORT, () => {
+      console.log(`\n  Tavo POS running → http://localhost:${PORT}`);
+      console.log(`  Database: ${storeKind().toUpperCase()}   Payment mode: ${usingStripe ? 'STRIPE (test)' : 'MOCK (no key set)'}\n`);
+    });
+  }
 }
+
+// التعديل: تصدير تطبيق Express لـ Vercel
+export default app;
+
+// تشغيل دالة التهيئة (ستقوم بتهيئة قاعدة البيانات وتتجاهل تشغيل المنفذ على Vercel)
 start().catch(e => { console.error('Failed to start:', e); process.exit(1); });
+//   app.listen(PORT, () => {
+//     console.log(`\n  Tavo POS running → http://localhost:${PORT}`);
+//     console.log(`  Database: ${storeKind().toUpperCase()}   Payment mode: ${usingStripe ? 'STRIPE (test)' : 'MOCK (no key set)'}\n`);
+//   });
+// }
+// start().catch(e => { console.error('Failed to start:', e); process.exit(1); });
