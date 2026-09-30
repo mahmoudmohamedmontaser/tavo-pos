@@ -1100,43 +1100,53 @@ function svgBars(items, opts={}){
   }).join('')}</div>`;
 }
 
-/* Line — fixed viewBox, no preserveAspectRatio stretching */
+/* Line — responsive, preserves aspect ratio (no distortion) */
 function svgLine(items, opts={}){
   const data = (items||[]).filter(d=>d!=null);
   if(!data.length) return chartEmpty(opts.emptyMsg);
   const max = Math.max(1, ...data.map(d=>+d.value||0));
   const W = 1000;
-  const h = opts.height || 180;
-  const padB = 22, padT = 10, padL = 6, padR = 6;
+  const h = opts.height || 220;
+  const padB = 30, padT = 16, padL = 16, padR = 16;
   const innerH = h - padB - padT;
   const n = data.length;
   const xAt = i => n<=1 ? W/2 : padL + (i/(n-1))*(W-padL-padR);
   const yAt = v => padT + innerH - (v/max)*innerH;
   const pts = data.map((d,i)=>({x:xAt(i), y:yAt(+d.value||0), ...d}));
   const line = pts.map((p,i)=>`${i?'L':'M'}${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(' ');
-  const area = `${line} L${pts[pts.length-1].x.toFixed(2)},${padT+innerH} L${pts[0].x.toFixed(2)},${padT+innerH} Z`;
-  const dots = pts.map(p=>`<circle cx="${p.x.toFixed(2)}" cy="${p.y.toFixed(2)}" r="3"
-      fill="var(--c1)" stroke="var(--surface)" stroke-width="1.5">
+  const area = `${line} L${pts[pts.length-1].x.toFixed(2)},${(padT+innerH).toFixed(2)} L${pts[0].x.toFixed(2)},${(padT+innerH).toFixed(2)} Z`;
+
+  const dots = pts.map(p=>`<circle cx="${p.x.toFixed(2)}" cy="${p.y.toFixed(2)}" r="4"
+      fill="var(--c1)" stroke="var(--surface)" stroke-width="2">
       <title>${esc(p.label)}: ${money(p.value)}</title>
     </circle>`).join('');
-  const step = Math.max(1, Math.ceil(n/10));
-  const xLabels = pts.map((p,i)=>
-    (i%step===0)
-      ? `<text x="${p.x.toFixed(2)}" y="${h-6}" text-anchor="middle" class="axis">${esc(p.label)}</text>`
-      : ''
-  ).join('');
-  return `<svg class="chart" viewBox="0 0 ${W} ${h}" width="100%" height="${h}"
-      preserveAspectRatio="none"
-      style="height:${h}px;max-height:${h}px"
+
+  const grid = [0, 0.25, 0.5, 0.75, 1].map(f => {
+    const y = (padT + innerH - f*innerH).toFixed(2);
+    return `<line x1="${padL}" y1="${y}" x2="${W-padR}" y2="${y}"
+      stroke="var(--border)" stroke-width="1" stroke-dasharray="3 4" opacity="0.45"/>`;
+  }).join('');
+
+  const step = Math.max(1, Math.ceil(n/8));
+  const xLabels = pts.map((p,i)=>{
+    if(i % step !== 0 && i !== n-1) return '';
+    return `<text x="${p.x.toFixed(2)}" y="${h-8}" text-anchor="middle"
+      font-size="12" fill="var(--mut)" font-family="inherit">${esc(p.label)}</text>`;
+  }).join('');
+
+  return `<svg class="chart" viewBox="0 0 ${W} ${h}" preserveAspectRatio="xMidYMid meet"
+      style="display:block;width:100%;height:auto;max-width:100%;overflow:visible"
       role="img" aria-label="Line chart">
     <defs>
       <linearGradient id="lg-area" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="var(--c1)" stop-opacity=".35"/>
+        <stop offset="0%" stop-color="var(--c1)" stop-opacity=".32"/>
         <stop offset="100%" stop-color="var(--c1)" stop-opacity="0"/>
       </linearGradient>
     </defs>
+    ${grid}
     <path d="${area}" fill="url(#lg-area)"/>
-    <path d="${line}" fill="none" stroke="var(--c1)" stroke-width="2" stroke-linejoin="round"/>
+    <path d="${line}" fill="none" stroke="var(--c1)" stroke-width="2.5"
+      stroke-linejoin="round" stroke-linecap="round"/>
     ${dots}
     ${xLabels}
   </svg>`;
@@ -1225,6 +1235,7 @@ async function flushOutbox(){
 let CFG = {paymentMode:'mock', taxRate:0.0825, publishableKey:null};
 let MENU = [], CATS = [], activeCat = '', check = [], tableNo = null, route='pos';
 let checkCustomer = null;
+let _lastOrderNumber = null;
 let LOYALTY = { earnRate: 1, redeemRate: 0.05 };
 let TENANT_MODE = 'restaurant';
 let TENANT_SETTINGS = {};
@@ -1672,11 +1683,13 @@ async function sendToKitchen(){
   const courses=[...new Set(check.map(l=>l.course).filter(Boolean))].sort();
   if(ONLINE){
     try{const order=await api('/orders',{method:'POST',body:JSON.stringify(payload)});
+      _lastOrderNumber = pickOrderNumber(order) || null;
       if(courses.length){ await api('/orders/'+order.id+'/fire-course',{method:'POST',body:JSON.stringify({course:courses[0]})}); }
       else { await api('/orders/'+order.id+'/fire',{method:'POST'}); }
       if(autoTicket()) doPrint(ticketInner(order));
+      const numLabel = _lastOrderNumber != null ? _lastOrderNumber : order.id;
       check=[];tableNo=null;checkCustomer=null;activeSeat=null;render();
-      toast(courses.length?('✅ الطلب #'+order.number+' أُرسل · دورة '+courses[0]+' انطلقت'):('✅ الطلب #'+order.number+' أُرسل إلى المطبخ'),'success');return;
+      toast(courses.length?('✅ الطلب #'+numLabel+' أُرسل · دورة '+courses[0]+' انطلقت'):('✅ الطلب #'+numLabel+' أُرسل إلى المطبخ'),'success');return;
     }catch(e){ if(!e.offline){ toast('⚠️ '+e.message,'warning'); return; } }
   }
   queueOrder(payload);
@@ -1698,7 +1711,7 @@ async function startPayment(){
    pay={
      lines:JSON.parse(JSON.stringify(check)),
      table:tableNo,
-     orderNumber: null,
+     orderNumber: _lastOrderNumber || null,
      orderId: null,
      sub:t.sub,
      effRate:t.effRate,
@@ -1881,7 +1894,7 @@ async function submitSplit(){
       tenders:_split.tenders.map(t=>({method:t.method,amount:t.amount})),
       customerId:pay.customer?pay.customer.id:null, pointsRedeemed:pay.pointsRedeemed||0})});
     if(r){
-      pay.orderNumber = r.number || r.orderNumber || r.order_no || null;
+      pay.orderNumber = pickOrderNumber(r) || pay.orderNumber;
       pay.orderId     = r.id || null;
     }
     try{ await loadMenu(); }catch(e){}
@@ -1957,9 +1970,10 @@ async function completePayment(intentId,grand){
       tip:pay.tip, table:pay.table, discount:trueDisc, discountReason:pay.discountReason||null, comp:!!pay.comp, serviceCharge:pay.serviceCharge||0, taxExempt:!!pay.taxExempt,
       customerId: pay.customer?pay.customer.id:null, pointsRedeemed: pay.pointsRedeemed||0})});
     if(r){
-      pay.orderNumber = r.number || r.orderNumber || r.order_no || null;
+      pay.orderNumber = pickOrderNumber(r) || pay.orderNumber;
       pay.orderId     = r.id || null;
     }
+    _lastOrderNumber = null;
     if(pay.customer && r && r.pointsBalance!=null) toast('💳 '+(r.pointsEarned||0)+' نقطة مكتسبة · الرصيد '+r.pointsBalance,'success');
     _lastPayId=(r&&r.id)||null;
     _lastPayCustomer=pay.customer?{email:pay.customer.email||'',phone:pay.customer.phone||''}:null;
@@ -2044,8 +2058,9 @@ function emailReceipt(){
 }
 function ticketInner(o){
   const when=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+  const num = pickOrderNumber(o) || o.number || '—';
   return `<div class="c" style="font-size:16px;font-weight:bold">المطبخ</div>
-    <div class="c">طلب #${o.number}</div>
+    <div class="c">طلب #${esc(String(num))}</div>
     <div class="r"><span>${o.table?('طاولة '+o.table):'سفري'}</span><span>${when}</span></div><hr>
     ${o.lines.map(it=>{const mi=(MENU||[]).find(m=>m.name===it.name);const combo=(mi&&mi.isCombo&&(mi.comboItems||[]).length)?`<div style="margin-left:12px">🍱 ${mi.comboItems.join(', ')}</div>`:'';return `<div style="font-size:14px;font-weight:bold">${it.qty}× ${it.name}</div>${combo}${(it.mods&&it.mods.length)?`<div style="margin-left:12px">↳ ${it.mods.join(', ')}</div>`:''}`}).join('')}
     <hr><div class="c">— أطلق —</div>`;
@@ -2487,6 +2502,24 @@ function orderLineTotal(l){
   return (price + mods) * qty;
 }
 
+function pickOrderNumber(raw){
+  if(!raw || typeof raw !== 'object') return null;
+  const candidates = ['number','orderNumber','order_no','order_number','orderNo','ticketNumber','receiptNumber'];
+  for(const k of candidates){
+    const v = raw[k];
+    if(v == null || v === '' || typeof v === 'object') continue;
+    const s = String(v).trim();
+    if(!s) continue;
+    if(s.length > 24) continue;
+    if(/^(tmp_|pay_|ord_|txn_|test_)/i.test(s)) continue;
+    return s;
+  }
+  if(raw.order && typeof raw.order === 'object'){
+    return pickOrderNumber(raw.order);
+  }
+  return null;
+}
+
 function normalizeOrderRecord(raw, kind){
   if(kind === 'payment'){
     const lines = Array.isArray(raw.lines) ? raw.lines : [];
@@ -2497,7 +2530,7 @@ function normalizeOrderRecord(raw, kind){
       'paid';
     return {
       id: raw.id,
-      number: raw.number || raw.orderNumber || raw.order_no || null,
+      number: pickOrderNumber(raw),
       table: raw.table || null,
       status,
       lines,
@@ -2519,7 +2552,7 @@ function normalizeOrderRecord(raw, kind){
   const lineSum = lines.reduce((s,l) => s + orderLineTotal(l), 0);
   return {
     id: raw.id,
-    number: raw.number || null,
+    number: pickOrderNumber(raw),
     table: raw.table || null,
     status: raw.status || 'open',
     lines,
@@ -2632,9 +2665,12 @@ function ordKpis(){
     ${kpi('مبيعات اليوم',     money(todaySales))}`;
 }
 
+function ordRefLabel(o){
+  return (o && o.number != null) ? '#'+esc(String(o.number)) : '—';
+}
+
 function ordRowHTML(o){
-  const num   = o.number != null ? '#'+esc(String(o.number))
-                                  : (o.source==='payment' ? '#'+esc(String(o.id).slice(-6)) : '—');
+  const num   = ordRefLabel(o);
   const items = orderItemsCount(o);
   const time  = fmtOrderTime(o.createdAt);
   const method = o.method
@@ -2654,8 +2690,7 @@ function ordRowHTML(o){
 }
 
 function ordCardHTML(o){
-  const num   = o.number != null ? '#'+esc(String(o.number))
-                                  : (o.source==='payment' ? '#'+esc(String(o.id).slice(-6)) : '—');
+  const num   = ordRefLabel(o);
   const items = orderItemsCount(o);
   const time  = fmtOrderTime(o.createdAt);
   const key   = o.source + '_' + String(o.id);
@@ -2795,7 +2830,7 @@ function resetOrderFilters(){
 function openOrderDetails(key){
   const o = (_ordState.data || []).find(x => (x.source + '_' + String(x.id)) === key);
   if(!o){ toast('لم يتم العثور على الأوردر','warning'); return; }
-  const num  = o.number != null ? '#'+esc(String(o.number)) : '#'+esc(String(o.id).slice(-6));
+  const num  = ordRefLabel(o);
   const items = (o.lines||[]).map(l => {
     const qty   = Number(l.qty)   || 0;
     const price = Number(l.price) || 0;
@@ -2866,12 +2901,13 @@ function printOrderReceipt(id){
   const o = (_ordState.data||[]).find(x => x.source==='payment' && String(x.id)===String(id));
   if(!o){ toast('لم يتم العثور على الإيصال','warning'); return; }
   const when  = fmtOrderTime(o.createdAt);
-  const num   = o.number != null ? ('#'+o.number) : ('#'+String(o.id).slice(-6));
+  const num   = o.number != null ? ('#'+o.number) : null;
+  const orderLine = num ? `<div class="c receipt-ordernum">ORDER ${esc(num)}</div>` : '';
   const lines = (o.lines||[]).map(l =>
     `<div class="r"><span>${l.qty}× ${esc(l.name)}</span><span>${money(orderLineTotal(l))}</span></div>`
   ).join('');
   const html = `<div class="c"><b>TAVO</b><br>123 Main St · (555) 010-2233</div>
-    <div class="c receipt-ordernum">ORDER ${esc(num)}</div>
+    ${orderLine}
     <hr>
     <div class="r"><span>${esc(when)}</span></div>
     ${o.table?`<div class="r"><span>طاولة</span><span>${esc(String(o.table))}</span></div>`
@@ -3391,7 +3427,7 @@ function anSalesTrend(pays, from, to){
   if(!arr.length) return { byDay, html: chartEmpty('لا توجد بيانات مبيعات لهذه الفترة') };
   if(arr.length > 60) arr = arr.slice(-60);
 
-  const chart = svgLine(arr.map(x => ({ label:x.label, value:x.value })), { height:200 });
+  const chart = svgLine(arr.map(x => ({ label:x.label, value:x.value })), { height:220 });
   const total = arr.reduce((a,b) => a + b.value, 0);
   const avg   = total / Math.max(1, arr.length);
   const best  = arr.slice().sort((a,b) => b.value - a.value)[0];
