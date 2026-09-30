@@ -1224,7 +1224,7 @@ function setMethod(m){pay.method=m;paymentModal()}
 let _split=null;
 function evenTenders(total,n){
   const each=Math.floor(total/n*100)/100; const t=[];
-  for(let i=0;i<n;i++) t.push({method:'card',amount:i===n-1?Math.round((total-each*(n-1))*100)/100:each});
+  for(let i=0;i<n;i++) t.push({method:'cash',amount:i===n-1?Math.round((total-each*(n-1))*100)/100:each});
   return t;
 }
 function openSplit(){
