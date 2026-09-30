@@ -1236,6 +1236,7 @@ let CFG = {paymentMode:'mock', taxRate:0.0825, publishableKey:null};
 let MENU = [], CATS = [], activeCat = '', check = [], tableNo = null, route='pos';
 let checkCustomer = null;
 let _lastOrderNumber = null;
+let _lastOrderId = null;
 let LOYALTY = { earnRate: 1, redeemRate: 0.05 };
 let TENANT_MODE = 'restaurant';
 let TENANT_SETTINGS = {};
@@ -1683,6 +1684,7 @@ async function sendToKitchen(){
   const courses=[...new Set(check.map(l=>l.course).filter(Boolean))].sort();
   if(ONLINE){
     try{const order=await api('/orders',{method:'POST',body:JSON.stringify(payload)});
+      _lastOrderId = order.id || null;
       _lastOrderNumber = pickOrderNumber(order) || null;
       if(courses.length){ await api('/orders/'+order.id+'/fire-course',{method:'POST',body:JSON.stringify({course:courses[0]})}); }
       else { await api('/orders/'+order.id+'/fire',{method:'POST'}); }
@@ -1712,7 +1714,7 @@ async function startPayment(){
      lines:JSON.parse(JSON.stringify(check)),
      table:tableNo,
      orderNumber: _lastOrderNumber || null,
-     orderId: null,
+     orderId: _lastOrderId || null,
      sub:t.sub,
      effRate:t.effRate,
      tip:0,
@@ -1895,7 +1897,14 @@ async function submitSplit(){
       customerId:pay.customer?pay.customer.id:null, pointsRedeemed:pay.pointsRedeemed||0})});
     if(r){
       pay.orderNumber = pickOrderNumber(r) || pay.orderNumber;
-      pay.orderId     = r.id || null;
+      pay.orderId     = r.id || pay.orderId || null;
+    }
+    if(!pay.orderNumber && pay.orderId){
+      try{
+        const ord = await api('/orders/'+encodeURIComponent(pay.orderId)).catch(()=>null);
+        const n = ord ? pickOrderNumber(ord) : null;
+        if(n) pay.orderNumber = n;
+      }catch(e){}
     }
     try{ await loadMenu(); }catch(e){}
     check=[];tableNo=null;checkCustomer=null;activeSeat=null;_split=null;
@@ -1971,9 +1980,25 @@ async function completePayment(intentId,grand){
       customerId: pay.customer?pay.customer.id:null, pointsRedeemed: pay.pointsRedeemed||0})});
     if(r){
       pay.orderNumber = pickOrderNumber(r) || pay.orderNumber;
-      pay.orderId     = r.id || null;
+      pay.orderId     = r.id || pay.orderId || null;
+    }
+    // Fallback 1: اسأل الـ backend عن الأوردر بالـ id
+    if(!pay.orderNumber && pay.orderId){
+      try{
+        const ord = await api('/orders/'+encodeURIComponent(pay.orderId)).catch(()=>null);
+        const n = ord ? pickOrderNumber(ord) : null;
+        if(n) pay.orderNumber = n;
+      }catch(e){}
+    }
+    // Fallback 2: ابحث في قائمة الأوردرات المحمّلة (لو المستخدم فتح الصفحة)
+    if(!pay.orderNumber && Array.isArray(_ordState.data) && _ordState.data.length){
+      const recent = _ordState.data
+        .filter(o => o.source === 'order' && o.number != null)
+        .sort((a,b) => (b.createdAt||0) - (a.createdAt||0))[0];
+      if(recent) pay.orderNumber = recent.number;
     }
     _lastOrderNumber = null;
+    _lastOrderId = null;
     if(pay.customer && r && r.pointsBalance!=null) toast('💳 '+(r.pointsEarned||0)+' نقطة مكتسبة · الرصيد '+r.pointsBalance,'success');
     _lastPayId=(r&&r.id)||null;
     _lastPayCustomer=pay.customer?{email:pay.customer.email||'',phone:pay.customer.phone||''}:null;
@@ -2504,7 +2529,14 @@ function orderLineTotal(l){
 
 function pickOrderNumber(raw){
   if(!raw || typeof raw !== 'object') return null;
-  const candidates = ['number','orderNumber','order_no','order_number','orderNo','ticketNumber','receiptNumber'];
+  const candidates = [
+    'number','orderNumber','order_no','order_number','orderNo',
+    'ticketNumber','ticket_number','ticket_no',
+    'receiptNumber','receipt_number','receipt_no',
+    'ref','reference','orderRef','order_ref',
+    'displayNumber','display_number','posNumber','pos_number',
+    'seq','sequence'
+  ];
   for(const k of candidates){
     const v = raw[k];
     if(v == null || v === '' || typeof v === 'object') continue;
@@ -2514,8 +2546,17 @@ function pickOrderNumber(raw){
     if(/^(tmp_|pay_|ord_|txn_|test_)/i.test(s)) continue;
     return s;
   }
-  if(raw.order && typeof raw.order === 'object'){
-    return pickOrderNumber(raw.order);
+  // بحث متداخل: أحيانًا الرد بيغلّف الطلب جوه حقل
+  for(const k of ['order','payment','ticket','meta','data','result']){
+    if(raw[k] && typeof raw[k] === 'object'){
+      const n = pickOrderNumber(raw[k]);
+      if(n) return n;
+    }
+  }
+  // fallback أخير: لو id رقمي قصير (زي 1007) اعتبره رقم أوردر
+  if(raw.id != null){
+    const idStr = String(raw.id).trim();
+    if(/^\d{1,10}$/.test(idStr)) return idStr;
   }
   return null;
 }
