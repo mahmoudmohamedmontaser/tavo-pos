@@ -67,8 +67,8 @@
   .ticket .tbody .mods{color:var(--amber);font-size:11px;margin-right:14px}.ticket .tfoot{padding:10px 14px;border-top:1px solid var(--line)}
   .overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);display:none;align-items:center;justify-content:center;z-index:50;padding:20px}.overlay.show{display:flex}
   .modal{background:var(--panel);border:1px solid var(--line);border-radius:18px;width:100%;max-width:460px;box-shadow:var(--shadow);max-height:90vh;overflow:auto}
-  .mhd{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center}.mhd h3{margin:0;font-size:17px}
-  .mbd{padding:20px}.x{background:transparent;font-size:22px;color:var(--mut)}
+  .mhd{padding:16px 20px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}.mhd h3{margin:0;font-size:17px;flex:1;min-width:0}
+  .mbd{padding:20px}.x{background:transparent;font-size:22px;color:var(--mut);flex-shrink:0}
   .modrow{display:flex;flex-wrap:wrap;gap:8px;margin:10px 0 18px}
   .chip{padding:9px 14px;border-radius:30px;background:var(--panel2);border:1px solid var(--line);font-size:13px;font-weight:600}.chip.sel{background:var(--brand);border-color:var(--brand);color:#fff}
   .fld{margin-bottom:14px}.fld label{display:block;font-size:12px;color:var(--mut);margin-bottom:6px;font-weight:600}
@@ -80,7 +80,7 @@
   .receipt{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;background:#fff;color:#111;border-radius:10px;padding:20px;direction:ltr;text-align:left}
   .receipt hr{border:none;border-top:1px dashed #999;margin:8px 0}.receipt .r{display:flex;justify-content:space-between}.receipt .c{text-align:center}
   .bar{height:8px;background:var(--panel2);border-radius:6px;overflow:hidden;margin-top:6px}.bar>i{display:block;height:100%;background:var(--brand)}
-  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--green);color:#062a1c;padding:13px 22px;border-radius:30px;font-weight:700;box-shadow:var(--shadow);transition:.3s;z-index:99}.toast.show{transform:translateX(-50%) translateY(0)}
+  .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(120px);background:var(--green);color:#062a1c;padding:13px 22px;border-radius:30px;font-weight:700;box-shadow:var(--shadow);transition:.3s;z-index:99;max-width:90vw;text-align:center}.toast.show{transform:translateX(-50%) translateY(0)}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   #stripe-element{background:#fff;padding:12px;border-radius:10px;margin:10px 0;direction:ltr}
   .modebadge{font-size:11px;padding:3px 8px;border-radius:20px;background:var(--panel2);border:1px solid var(--line);color:var(--mut)}
@@ -124,6 +124,198 @@
   @media(prefers-reduced-motion:reduce){
     *,*::before,*::after{animation:none!important}
     .item:hover,.tbl:hover,.btn:active{transform:none!important}
+  }
+
+  /* ============================================================ */
+  /*  RESPONSIVE — تابلت وجوال                                     */
+  /* ============================================================ */
+
+  /* تابلت أفقي وشاشات متوسطة */
+  @media (max-width: 1024px){
+    .pos{grid-template-columns:1fr 340px}
+    .items{grid-template-columns:repeat(auto-fill,minmax(120px,1fr))}
+    .sidebar{padding:6px 10px}
+    .navbtn{min-width:68px;height:54px;font-size:12px}
+    .navbtn .ic{font-size:19px}
+  }
+
+  /* تابلت عمودي */
+  @media (max-width: 900px){
+    .view{padding:14px}
+    .pos{grid-template-columns:1fr;grid-template-rows:auto auto;height:auto}
+    .menuwrap{min-height:0}
+    .items{max-height:45vh;overflow:auto}
+    .check{max-height:70vh}
+    .sidebar{padding:6px 8px;gap:4px}
+    .sidebar .logo{width:38px;height:38px;font-size:16px}
+    .navbtn{min-width:62px;height:50px;font-size:11px;padding:0 6px}
+    .navbtn .ic{font-size:17px}
+    .topbar{height:auto;min-height:58px;padding:8px 14px;flex-wrap:wrap;gap:10px}
+    .topbar h1{font-size:15px}
+  }
+
+  /* جوال */
+  @media (max-width: 600px){
+    body{overflow:auto;overflow-x:hidden}
+    #app{height:auto;min-height:100vh}
+    .main{min-height:0}
+    .view{padding:10px;overflow-x:hidden}
+
+    /* الشريط الجانبي: تمرير أفقي بسطر واحد */
+    .sidebar{
+      flex-wrap:nowrap;
+      overflow-x:auto;
+      overflow-y:hidden;
+      -webkit-overflow-scrolling:touch;
+      scrollbar-width:none;
+      padding:6px 8px;
+      gap:4px;
+    }
+    .sidebar::-webkit-scrollbar{display:none}
+    .sidebar .logo{width:34px;height:34px;font-size:14px;flex-shrink:0;margin:0 0 0 4px}
+    .nav{flex-wrap:nowrap;overflow:visible;flex:0 0 auto;gap:3px}
+    .navbtn{
+      min-width:52px;
+      height:46px;
+      flex-shrink:0;
+      font-size:10px;
+      padding:0 5px;
+      border-radius:10px;
+      gap:2px;
+    }
+    .navbtn .ic{font-size:16px}
+    /* زر الخروج لا يدفع الشريط */
+    .navbtn[style*="margin-right:auto"]{margin-right:0 !important;margin-right:0 !important}
+
+    /* الشريط العلوي */
+    .topbar{
+      height:auto;
+      min-height:0;
+      padding:8px 10px;
+      flex-wrap:wrap;
+      gap:6px;
+    }
+    .topbar h1{font-size:14px}
+    .topbar .sub{font-size:11px}
+    .topbar .spacer{display:none}
+    .pill{padding:4px 10px;font-size:11px}
+    .modebadge{font-size:10px;padding:2px 6px;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+    /* POS: عمودي كامل */
+    .pos{grid-template-columns:1fr;gap:10px;height:auto}
+    .cats{padding-bottom:8px;gap:6px}
+    .cat{padding:7px 12px;font-size:12px}
+    .items{
+      grid-template-columns:repeat(auto-fill,minmax(105px,1fr));
+      gap:8px;
+      max-height:40vh;
+      overflow:auto;
+    }
+    .item{padding:10px;min-height:86px;border-radius:12px}
+    .item .emoji{font-size:20px}
+    .item .nm{font-size:12px;margin-top:4px}
+    .item .pr{font-size:12px}
+    .check{max-height:none}
+    .check .hd{padding:10px 12px}
+    .check .hd h3{font-size:14px}
+    .line{padding:7px 6px;gap:8px}
+    .line .qty{min-width:24px;height:24px;font-size:12px}
+    .line .info .ln-nm{font-size:12px}
+    .line .info .ln-mod{font-size:10px}
+    .line .ln-pr{font-size:12px}
+    .line .rm{font-size:15px;padding:0 2px}
+    .totals{padding:10px 12px;font-size:12px}
+    .totrow.big{font-size:16px;padding-top:6px}
+    .actions{padding:10px;gap:6px;flex-wrap:wrap}
+    .btn{padding:11px;font-size:13px;border-radius:10px}
+
+    /* الشبكات: صف واحد */
+    .row2{grid-template-columns:1fr;gap:10px}
+    .kpis{grid-template-columns:repeat(2,1fr);gap:10px}
+    .grid{gap:10px}
+    .card{padding:12px;border-radius:12px}
+    .card h4{font-size:11px}
+    .card .val{font-size:20px}
+    .sec-title{font-size:12px;margin:4px 0 8px}
+
+    /* الجداول */
+    table{font-size:11.5px}
+    th,td{padding:8px 6px}
+    th{font-size:10px}
+    .tag{padding:2px 7px;font-size:10px}
+
+    /* النوافذ المنبثقة */
+    .overlay{padding:10px;align-items:flex-start;padding-top:18px;overflow-y:auto}
+    .modal{max-width:100%;border-radius:14px;max-height:calc(100vh - 36px)}
+    .mhd{padding:12px 14px}
+    .mhd h3{font-size:15px}
+    .mbd{padding:14px}
+    .x{font-size:20px}
+    .fld{margin-bottom:12px}
+    .fld label{font-size:11px;margin-bottom:5px}
+    .fld input,.fld select{padding:10px;font-size:14px;border-radius:8px}
+
+    /* البقشيش */
+    .tips{grid-template-columns:repeat(4,1fr);gap:6px;margin:6px 0 12px}
+    .tipbtn{padding:10px 4px;border-radius:10px;border-width:1.5px}
+    .tipbtn .p{font-size:14px}
+    .tipbtn .a{font-size:10px}
+
+    /* طرق الدفع: عمودي */
+    .paymethods{grid-template-columns:1fr;gap:6px;margin:8px 0}
+    .pm{
+      padding:12px 14px;
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      justify-content:flex-start;
+      text-align:right;
+      font-size:13px;
+      border-width:1.5px;
+    }
+    .pm .ic{font-size:20px;margin:0}
+
+    /* الشرائح */
+    .chip{padding:7px 11px;font-size:12px}
+    .modrow{gap:6px;margin:8px 0 14px}
+
+    /* الصالة والمطبخ */
+    .floor{grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+    .tbl .tnum{font-size:18px}
+    .kds{grid-template-columns:1fr;gap:10px}
+    .ticket{border-radius:12px}
+    .ticket .thd{padding:8px 12px}
+    .ticket .tbody{padding:10px 12px;font-size:12px}
+    .ticket .tfoot{padding:8px 12px}
+
+    /* إيصال */
+    .receipt{padding:14px;font-size:11.5px;border-radius:8px}
+
+    /* شاشة QR */
+    .qrgrid{grid-template-columns:repeat(auto-fill,minmax(140px,1fr)) !important;gap:10px}
+
+    /* منع التمدد الأفقي */
+    img,canvas{max-width:100%;height:auto}
+    pre,code{word-break:break-word}
+  }
+
+  /* جوال صغير جداً */
+  @media (max-width: 400px){
+    .items{grid-template-columns:repeat(auto-fill,minmax(95px,1fr));gap:6px}
+    .item{padding:8px;min-height:78px}
+    .item .nm{font-size:11px}
+    .item .pr{font-size:11px}
+    .kpis{grid-template-columns:1fr}
+    .navbtn{min-width:48px;height:42px;font-size:9px;padding:0 4px}
+    .navbtn .ic{font-size:14px}
+    .sidebar .logo{width:30px;height:30px;font-size:13px}
+    .tips{grid-template-columns:repeat(2,1fr);gap:6px}
+    .tipbtn{padding:12px 6px}
+    .tipbtn .p{font-size:16px}
+    .mhd h3{font-size:14px}
+    .mhd{padding:10px 12px}
+    .mbd{padding:12px}
   }
 </style>
 </head>
@@ -620,7 +812,7 @@ function paymentModal(){
     const can=Math.min(maxByPoints,pay.sub);
     const redeeming=pay.redeemDiscount>0;
     loyaltyBlock=`<div class="card" style="background:rgba(168,85,247,.1);margin:8px 0">
-      <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
         <span style="font-size:13px">💳 <b>${esc(m.name||'عضو')}</b> · ${m.points} نقطة</span>
         ${can>0?`<button class="chip" onclick="toggleRedeem(${can})">${redeeming?'إزالة':'استبدال '+money(can)}</button>`:'<span style="font-size:11px;color:var(--mut)">نقاط غير كافية للاستبدال</span>'}
       </div>
@@ -628,8 +820,8 @@ function paymentModal(){
   }
   const discBlock=`<div class="fld" style="margin-top:8px"><label>الخصم / الإعفاء</label>
     ${pay.manualDiscount>0
-      ? `<div style="display:flex;gap:6px;align-items:center"><span class="tag amber">${pay.comp?'إعفاء':'خصم'} −${money(pay.manualDiscount)}${pay.discountReason?(' · '+esc(pay.discountReason)):''}</span>${pay.autoDisc?'<span class="tag" style="background:#3a2a5e;color:#c4b5fd">🕐 ساعة سعيدة</span>':''}<button class="chip" style="margin-right:auto" onclick="clearDiscount()">إزالة</button></div>`
-      : `<div style="display:flex;gap:6px"><button class="chip" onclick="openDiscount()">＋ إضافة خصم</button>${isMgr?'<button class="chip" style="color:var(--amber)" onclick="compCheck()">إعفاء كامل (100%)</button>':''}</div>`}</div>`;
+      ? `<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><span class="tag amber">${pay.comp?'إعفاء':'خصم'} −${money(pay.manualDiscount)}${pay.discountReason?(' · '+esc(pay.discountReason)):''}</span>${pay.autoDisc?'<span class="tag" style="background:#3a2a5e;color:#c4b5fd">🕐 ساعة سعيدة</span>':''}<button class="chip" style="margin-right:auto" onclick="clearDiscount()">إزالة</button></div>`
+      : `<div style="display:flex;gap:6px;flex-wrap:wrap"><button class="chip" onclick="openDiscount()">＋ إضافة خصم</button>${isMgr?'<button class="chip" style="color:var(--amber)" onclick="compCheck()">إعفاء كامل (100%)</button>':''}</div>`}</div>`;
   const svcOn=pay.serviceCharge>0;
   const svcBlock=`<div class="fld"><label>رسم الخدمة${pay.svcPct?(' ('+pay.svcPct+'%)'):''}</label>
     <div style="display:flex;gap:6px;flex-wrap:wrap">
@@ -724,10 +916,10 @@ function splitModal(){
       <span style="width:22px;color:var(--mut)">${i+1}</span>
       <select onchange="setTenderMethod(${i},this.value)" style="padding:8px;border-radius:8px;background:var(--panel);border:1px solid var(--line);color:var(--txt)">
         ${[['card','بطاقة'],['cash','نقدًا'],['wallet','محفظة']].map(m=>`<option value="${m[0]}" ${t.method===m[0]?'selected':''}>${m[1]}</option>`).join('')}</select>
-      <input type="number" step="0.01" value="${t.amount}" oninput="setTenderAmt(${i},this.value)" style="flex:1;padding:8px;border-radius:8px;background:var(--panel);border:1px solid var(--line);color:var(--txt)">
-      ${_split.tenders.length>1?`<button class="chip" style="color:var(--red)" onclick="rmTender(${i})">✕</button>`:''}</div>`).join('');
+      <input type="number" step="0.01" value="${t.amount}" oninput="setTenderAmt(${i},this.value)" style="flex:1;min-width:0;padding:8px;border-radius:8px;background:var(--panel);border:1px solid var(--line);color:var(--txt)">
+      ${_split.tenders.length>1?`<button class="chip" style="color:var(--red);flex-shrink:0" onclick="rmTender(${i})">✕</button>`:''}</div>`).join('');
   openModal(`<div class="mhd"><h3>تقسيم ${money(_split.total)}</h3><button class="x" onclick="paymentModal()">✕</button></div><div class="mbd">
-    <div class="sec-title">تقسيم بالتساوي</div><div style="display:flex;gap:6px;margin-bottom:10px">${ways}<button class="chip" onclick="addTender()">＋ وسيلة</button></div>
+    <div class="sec-title">تقسيم بالتساوي</div><div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">${ways}<button class="chip" onclick="addTender()">＋ وسيلة</button></div>
     <div class="sec-title">وسائل الدفع</div>${rows}
     <div class="totals" style="border-top:none;padding:0;margin-top:8px">
       <div class="totrow"><span>المخصص</span><span>${money(paid)}</span></div>
@@ -849,7 +1041,7 @@ function showReceipt(grand){
   _lastReceipt={pay:JSON.parse(JSON.stringify(pay)),calc,grand,when};
   openModal(`<div class="mhd"><h3>✅ تمت الموافقة على الدفع</h3><button class="x" onclick="closeModal();render()">✕</button></div>
     <div class="mbd"><div class="receipt">${receiptInner(pay,calc,grand,when)}</div>
-    <div style="display:flex;gap:8px;margin-top:14px">
+    <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
       <button class="btn ghost" onclick="printReceipt()">🖨 طباعة</button>
       <button class="btn ghost" onclick="digitalReceiptForm()">📲 إيصال رقمي</button>
       <button class="btn primary" onclick="closeModal();render()">تم</button></div></div>`);
@@ -1006,7 +1198,7 @@ async function onlineView(){
   return `${sim}<div class="sec-title">الطلبات الإلكترونية النشطة (${orders.length})</div>${cards}
     <div class="card" style="margin-top:16px"><div class="sec-title">ربط المنصات الحقيقية</div>
       <p style="font-size:13px;color:var(--mut);line-height:1.7">تحتاج DoorDash و Uber Eats و Grubhub إلى شراكة أو مجمّع (Otter، Deliverect، Cuboh، Chowly). وجّههم إلى الـ webhook الخاص بك:<br>
-      <code style="color:var(--txt);direction:ltr;display:inline-block">POST ${location.origin}/api/integrations/orders</code><br>مع ترويسة <code style="color:var(--txt)">x-integration-key: &lt;مفتاحك&gt;</code>. راجع <b>INTEGRATIONS.md</b> لصيغة الطلب والإعداد.</p></div>`;
+      <code style="color:var(--txt);direction:ltr;display:inline-block;word-break:break-all">POST ${location.origin}/api/integrations/orders</code><br>مع ترويسة <code style="color:var(--txt)">x-integration-key: &lt;مفتاحك&gt;</code>. راجع <b>INTEGRATIONS.md</b> لصيغة الطلب والإعداد.</p></div>`;
 }
 async function simulateOrder(platform){
   try{ const r=await api('/integrations/simulate',{method:'POST',body:JSON.stringify({platform})});
@@ -1106,7 +1298,7 @@ async function qrView(){
   const tableCards=tables.map(t=>`<div class="card" style="text-align:center;padding:14px">
       <div style="font-weight:800;margin-bottom:8px">طاولة ${t.number}</div>
       <div class="qrbox" data-url="${guestUrl(t.number)}" style="background:#fff;border-radius:12px;padding:10px;display:inline-block"></div>
-      <div style="margin-top:10px;display:flex;gap:6px;justify-content:center">
+      <div style="margin-top:10px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap">
         <button class="btn ghost" style="padding:8px 10px;flex:0" onclick="printOneQR(${t.number})">🖨 طباعة</button>
         <button class="btn ghost" style="padding:8px 10px;flex:0" onclick="copyLink('${guestUrl(t.number)}')">🔗 رابط</button>
       </div></div>`).join('');
@@ -1186,7 +1378,7 @@ async function openZReport(date){
    <div class="mbd">
      <div class="fld"><label>تاريخ العمل</label><input type="date" value="${z.date}" onchange="openZReport(this.value)"></div>
      <div class="receipt">${zInner(z)}</div>
-     <div style="display:flex;gap:8px;margin-top:14px">
+     <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
        <button class="btn ghost" onclick="printZ()">🖨 طباعة</button>
        <button class="btn primary" onclick="closeModal()">إغلاق</button></div></div>`);
 }
@@ -1233,7 +1425,7 @@ async function dashView(){
     <td style="text-align:left;font-weight:700">${money(p.total)}</td>
     <td style="text-align:left">${(p.status!=='refunded')?`<button class="chip" style="color:var(--red)" onclick="openRefund(decodeURIComponent('${refundData}'))">استرجاع</button>`:''}</td></tr>`;
   }).join("")||`<tr><td colspan="6" style="text-align:center;color:var(--mut);padding:30px">لا مبيعات بعد</td></tr>`;
-  return `${offlineBanner}<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+  return `${offlineBanner}<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
       <div class="sec-title" style="margin:0">أداء اليوم</div>
       <button class="btn primary" style="flex:0;padding:10px 18px" onclick="openZReport()">🧾 إغلاق اليومية / تقرير Z</button></div>
     <div class="grid kpis">${kpi("إجمالي المبيعات",money(r.gross),"اليوم")}${kpi("صافي المبيعات",money(r.net),"بعد المرتجعات")}
@@ -1253,7 +1445,7 @@ async function dashView(){
       <div class="card"><div class="sec-title">الأكثر مبيعًا</div>${r.topSellers.length?r.topSellers.map(([n,c])=>`<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:13px"><span>${n}</span><b>${c}</b></div><div class="bar"><i style="width:${c/maxc*100}%"></i></div></div>`).join(""):`<div class="empty">لا بيانات</div>`}</div>
       <div class="card"><div class="sec-title">طرق الدفع</div>${Object.entries(r.byMethod).map(([m,v])=>`<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:13px"><span style="text-transform:capitalize">${m}</span><b>${money(v)}</b></div><div class="bar"><i style="width:${r.gross?v/r.gross*100:0}%"></i></div></div>`).join("")||'<div class="empty">لا بيانات</div>'}</div></div>
     <div class="card" style="margin-top:16px"><div class="sec-title">أحدث الحركات</div>
-      <table><thead><tr><th>الطلب</th><th>الموقع</th><th>الطريقة</th><th>الحالة</th><th style="text-align:left">الإجمالي</th><th></th></tr></thead><tbody>${recent}</tbody></table></div>`;
+      <div style="overflow-x:auto"><table><thead><tr><th>الطلب</th><th>الموقع</th><th>الطريقة</th><th>الحالة</th><th style="text-align:left">الإجمالي</th><th></th></tr></thead><tbody>${recent}</tbody></table></div></div>`;
 }
 function openRefund(json){
   const p=JSON.parse(json);
@@ -1262,7 +1454,7 @@ function openRefund(json){
    <div class="mbd">
      <p style="color:var(--mut);font-size:13px;margin-top:0">الأصلي ${money(p.total)}${p.refundedAmount?` · مُرتجع سابقًا ${money(p.refundedAmount)}`:''}. الحد الأقصى للاسترجاع <b>${money(+refundable)}</b>.</p>
      <div class="fld"><label>مبلغ الاسترجاع ($)</label><input id="refamt" type="number" step="0.01" value="${refundable}"></div>
-     <div style="display:flex;gap:8px">
+     <div style="display:flex;gap:8px;flex-wrap:wrap">
        <button class="btn ghost" onclick="document.getElementById('refamt').value='${refundable}'">كامل</button>
        <button class="btn green" onclick="doRefund('${p.id}',${refundable})">إصدار استرجاع</button>
      </div></div>`);
@@ -1299,12 +1491,12 @@ async function menuView(){
         <button class="chip" style="color:var(--red)" onclick="delItem('${it.id}')">✕</button>
       </td></tr>`).join("");
     return `<div class="card" style="margin-bottom:14px"><div class="sec-title">${c} <span style="color:var(--mut);font-weight:400">· ${list.length}</span></div>
-      <table><thead><tr><th></th><th>الاسم</th><th>السعر</th><th>الحالة</th><th style="text-align:left">ترتيب / إجراءات</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+      <div style="overflow-x:auto"><table><thead><tr><th></th><th>الاسم</th><th>السعر</th><th>الحالة</th><th style="text-align:left">ترتيب / إجراءات</th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
   }).join("");
   const labelable=_menuItems.filter(i=>i.barcode||i.sku).length;
-  return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+  return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
       <div class="sec-title" style="margin:0">${isRetail()?'المنتجات':'القائمة'} — ${_menuItems.length} عنصر · ${cats.length} تصنيفات</div>
-      <div style="display:flex;gap:6px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap">
         ${labelable?`<button class="btn ghost" style="flex:0;padding:10px 16px" onclick="printLabels()">🏷 طباعة الملصقات</button>`:''}
         <button class="btn primary" style="flex:0;padding:10px 18px" onclick="editItem()">+ إضافة عنصر</button></div></div>
     ${sections||'<div class="empty">لا توجد عناصر بعد.</div>'}`;
@@ -1335,7 +1527,7 @@ function itemForm(it){
   openModal(`<div class="mhd"><h3>${it.id?'تعديل':'إضافة'} عنصر قائمة</h3><button class="x" onclick="closeModal()">✕</button></div><div class="mbd">
     <div style="display:flex;gap:14px;align-items:center;margin-bottom:14px">
       <div id="imgPreview" style="width:64px;height:64px;border-radius:12px;flex-shrink:0;background:var(--panel2);display:flex;align-items:center;justify-content:center;font-size:30px;${it.image?`background-image:url('${it.image}');background-size:cover;background-position:center`:''}">${it.image?'':it.emoji}</div>
-      <div style="flex:1">
+      <div style="flex:1;min-width:0">
         <div class="fld" style="margin:0"><label>صورة</label>
           <input id="mi-image" placeholder="الصق رابط صورة…" value="${(it.image||'').startsWith('data:')?'':(it.image||'')}" oninput="previewImg(this.value)">
           <input id="mi-file" type="file" accept="image/*" style="margin-top:6px;font-size:12px" onchange="fileToImg(this)"></div>
@@ -1357,7 +1549,7 @@ function itemForm(it){
         <div class="fld" style="margin:0"><label>SKU</label><input id="mi-sku" value="${(it.sku||'').replace(/"/g,'&quot;')}" placeholder="مثال: TSHIRT-BLK-M"></div>
         <div class="fld" style="margin:0"><label>الباركود (UPC)</label><input id="mi-barcode" value="${(it.barcode||'').replace(/"/g,'&quot;')}" placeholder="امسح أو اكتب"></div></div>
       <div class="fld" style="margin:8px 0 0"><label>المخزون المتاح</label><input id="mi-stock" type="number" step="1" value="${it.stock!=null?it.stock:''}" placeholder="الكمية"></div>
-      <div style="display:flex;align-items:center;gap:8px;margin-top:10px">
+      <div style="display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap">
         <label style="font-size:12px;display:flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" id="mi-weighted" ${it.weighted?'checked':''}> ⚖️ يُباع بالوزن</label>
         <span style="font-size:12px;color:var(--mut)">السعر لكل</span>
         <select id="mi-weight-unit" style="padding:5px;border-radius:6px;background:var(--panel);border:1px solid var(--line);color:var(--txt)">
@@ -1370,7 +1562,7 @@ function itemForm(it){
         <div class="fld" style="margin:0"><label>ساعات الإتاحة</label><div style="display:flex;gap:6px"><input id="mi-start" type="time" value="${(it.schedule&&it.schedule.start)||''}" style="flex:1"><input id="mi-end" type="time" value="${(it.schedule&&it.schedule.end)||''}" style="flex:1"></div></div>
       </div>
       <div style="margin-top:8px"><label style="font-size:12px;color:var(--mut)">أيام الإتاحة (بلا تحديد = كل يوم)</label>
-        <div style="display:flex;gap:4px;margin-top:4px">${['أحد','إثن','ثلا','أرب','خمي','جمع','سبت'].map((d,i)=>`<label class="chip" style="cursor:pointer"><input type="checkbox" class="mi-day" data-d="${i}" ${(it.schedule&&Array.isArray(it.schedule.days)&&it.schedule.days.includes(i))?'checked':''} style="margin-left:3px">${d}</label>`).join('')}</div></div>
+        <div style="display:flex;gap:4px;margin-top:4px;flex-wrap:wrap">${['أحد','إثن','ثلا','أرب','خمي','جمع','سبت'].map((d,i)=>`<label class="chip" style="cursor:pointer"><input type="checkbox" class="mi-day" data-d="${i}" ${(it.schedule&&Array.isArray(it.schedule.days)&&it.schedule.days.includes(i))?'checked':''} style="margin-left:3px">${d}</label>`).join('')}</div></div>
       <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-top:10px;cursor:pointer"><input type="checkbox" id="mi-combo" ${it.isCombo?'checked':''}> 🍱 هذه باقة / مجموعة</label>
       <div class="fld" style="margin:6px 0 0"><label>العناصر المضمّنة (مفصولة بفواصل، لتذكرة المطبخ)</label><input id="mi-combo-items" value="${((it.comboItems||[]).join(', ')).replace(/"/g,'&quot;')}" placeholder="مثال: برجر بالجبن، بطاطس، مشروب"></div>
     </div>
@@ -1378,7 +1570,7 @@ function itemForm(it){
       <b style="font-size:13px">مجموعات الإضافات</b>
       <button class="chip" onclick="addModGroup()">+ إضافة مجموعة</button></div>
     <div id="modGroupsBox"></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:14px 0 8px;gap:8px;flex-wrap:wrap">
       <b style="font-size:13px">الوصفة <span style="color:var(--mut);font-weight:400">— المكوّنات المستخدمة لكل عنصر (للمخزون + تكلفة الطعام)</span></b>
       <button class="chip" onclick="addRecipeRow()">+ مكوّن</button></div>
     <div id="recipeBox"></div>
@@ -1391,8 +1583,8 @@ function renderRecipe(){
   if(!_invItems.length){ box.innerHTML='<div style="color:var(--mut);font-size:12px;margin-bottom:8px">لا توجد مكوّنات بعد. أضف مخزونًا في تبويب <b>المخزون</b> أولًا، ثم أرفقه هنا.</div>'; }
   else box.innerHTML=_editRecipe.map((r,ri)=>{
     const inv=_invItems.find(i=>i.id===r.invId)||{};
-    return `<div style="display:flex;gap:6px;margin:4px 0;align-items:center">
-      <select oninput="_editRecipe[${ri}].invId=this.value" style="flex:1;${ip}">
+    return `<div style="display:flex;gap:6px;margin:4px 0;align-items:center;flex-wrap:wrap">
+      <select oninput="_editRecipe[${ri}].invId=this.value" style="flex:1;min-width:120px;${ip}">
         ${_invItems.map(i=>`<option value="${i.id}" ${i.id===r.invId?'selected':''}>${i.name} (${i.unit})</option>`).join('')}</select>
       <input type="number" step="0.01" min="0" value="${r.qty||0}" title="الكمية لكل عنصر" oninput="_editRecipe[${ri}].qty=+this.value" style="width:80px;${ip}">
       <span style="font-size:11px;color:var(--mut);white-space:nowrap;min-width:54px">${money((inv.cost||0)*(r.qty||0))}</span>
@@ -1426,18 +1618,18 @@ async function inventoryView(){
       <div class="sec-title" style="color:var(--amber)">⚠️ ${low.length} عنصر${low.length>1?'':' '} عند حد إعادة الطلب أو أقل</div>
       <div style="font-size:13px;color:var(--mut)">${low.map(i=>`${i.name} (${(+i.qty).toFixed(0)} ${i.unit})`).join(' · ')}</div></div>`:'';
   return `${lowBanner}
-    <div style="display:flex;gap:10px;margin-bottom:14px">
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800">${_invItems.length}</div><div style="color:var(--mut);font-size:12px">المكوّنات</div></div>
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800;${low.length?'color:var(--amber)':''}">${low.length}</div><div style="color:var(--mut);font-size:12px">مخزون منخفض</div></div>
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800">${money(stockValue)}</div><div style="color:var(--mut);font-size:12px">قيمة المخزون</div></div>
+    <div style="display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800">${_invItems.length}</div><div style="color:var(--mut);font-size:12px">المكوّنات</div></div>
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800;${low.length?'color:var(--amber)':''}">${low.length}</div><div style="color:var(--mut);font-size:12px">مخزون منخفض</div></div>
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800">${money(stockValue)}</div><div style="color:var(--mut);font-size:12px">قيمة المخزون</div></div>
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
       <div class="sec-title" style="margin:0">المخزون المتاح</div>
       <button class="btn primary" style="flex:0;padding:10px 18px" onclick="invForm()">+ إضافة مكوّن</button></div>
-    <div class="card"><table>
+    <div class="card"><div style="overflow-x:auto"><table>
       <thead><tr><th>المكوّن</th><th style="text-align:left">المتاح</th><th>الوحدة</th><th style="text-align:left">الحد الأدنى</th><th style="text-align:left">تكلفة الوحدة</th><th style="text-align:left">القيمة</th><th></th></tr></thead>
       <tbody>${rows||'<tr><td colspan="7" style="text-align:center;color:var(--mut);padding:20px">لا مكوّنات بعد. أضف واحدًا لبدء تتبّع المخزون وتكلفة الطعام.</td></tr>'}</tbody>
-    </table></div>
+    </table></div></div>
     <p style="font-size:12px;color:var(--mut);margin-top:12px;line-height:1.6">يُخصم المخزون تلقائيًا عند إرسال طلب له وصفة إلى المطبخ. حدّد <b>حد إعادة الطلب</b> لتنبيهات المخزون المنخفض. اربط المكوّنات بالأطباق من <b>القائمة → تعديل → الوصفة</b>.</p>`;
 }
 function invForm(id){
@@ -1501,25 +1693,25 @@ async function loyaltyView(){
       <td style="text-align:left;color:var(--mut)">${money(g.initialBalance||0)}</td>
       <td style="text-align:left;color:var(--mut)">${money(used)}</td>
       <td><span class="tag ${g.balance>0?'green':'red'}">${g.balance>0?'نشطة':'مستنفدة'}</span></td></tr>`;}).join('');
-  return `<div style="display:flex;gap:10px;margin-bottom:16px">
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800">${_custList.length}</div><div style="color:var(--mut);font-size:12px">الأعضاء</div></div>
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800;color:#c084fc">${totalPts.toLocaleString()}</div><div style="color:var(--mut);font-size:12px">نقاط معلّقة</div></div>
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800">${money(liability)}</div><div style="color:var(--mut);font-size:12px">التزام بطاقات الهدايا</div></div>
+  return `<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800">${_custList.length}</div><div style="color:var(--mut);font-size:12px">الأعضاء</div></div>
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800;color:#c084fc">${totalPts.toLocaleString()}</div><div style="color:var(--mut);font-size:12px">نقاط معلّقة</div></div>
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800">${money(liability)}</div><div style="color:var(--mut);font-size:12px">التزام بطاقات الهدايا</div></div>
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
       <div class="sec-title" style="margin:0">أعضاء الولاء</div>
       <div style="font-size:12px;color:var(--mut)">يكسب ${LOYALTY.earnRate} نقطة / $1 · ${Math.round(1/LOYALTY.redeemRate)} نقطة = ${money(1)}</div></div>
-    <div class="card"><table>
+    <div class="card"><div style="overflow-x:auto"><table>
       <thead><tr><th>الاسم</th><th>الهاتف</th><th style="text-align:left">النقاط</th><th style="text-align:left">الزيارات</th><th style="text-align:left">الإنفاق</th><th></th></tr></thead>
       <tbody>${custRows||'<tr><td colspan="6" style="text-align:center;color:var(--mut);padding:20px">لا أعضاء بعد. أرفق رقم هاتف بفاتورة في شاشة الطلب لتسجيل الضيوف.</td></tr>'}</tbody>
-    </table></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 10px">
+    </table></div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 10px;flex-wrap:wrap;gap:8px">
       <div class="sec-title" style="margin:0">بطاقات الهدايا</div>
       <button class="btn primary" style="flex:0;padding:10px 18px" onclick="issueGiftForm()">+ إصدار بطاقة هدايا</button></div>
-    <div class="card"><table>
+    <div class="card"><div style="overflow-x:auto"><table>
       <thead><tr><th>الرمز</th><th style="text-align:left">الرصيد</th><th style="text-align:left">المحمّل</th><th style="text-align:left">المستبدل</th><th>الحالة</th></tr></thead>
       <tbody>${giftRows||'<tr><td colspan="5" style="text-align:center;color:var(--mut);padding:20px">لم تُصدر بطاقات هدايا بعد.</td></tr>'}</tbody>
-    </table></div>
+    </table></div></div>
     <p style="font-size:12px;color:var(--mut);margin-top:12px;line-height:1.6">يكسب الأعضاء النقاط تلقائيًا عند إرفاقهم بفاتورة مدفوعة. استبدل النقاط أو بطاقة الهدايا عند الدفع في شاشة <b>الطلب</b>. أرصدة بطاقات الهدايا التزام حتى تُستهلك.</p>`;
 }
 async function adjPoints(id,delta){
@@ -1530,7 +1722,7 @@ function issueGiftForm(){
   const ip='width:100%;padding:9px;border-radius:8px;background:var(--panel);border:1px solid var(--line);color:var(--txt)';
   openModal(`<div class="mhd"><h3>🎁 إصدار بطاقة هدايا</h3><button class="x" onclick="closeModal()">✕</button></div><div class="mbd">
     <div class="fld"><label>مبلغ التحميل ($)</label><input id="gf-amt" type="number" step="0.01" placeholder="25.00" style="${ip}" autofocus></div>
-    <div style="display:flex;gap:6px;margin-bottom:10px">${[10,25,50,100].map(a=>`<button class="chip" onclick="document.getElementById('gf-amt').value=${a}">$${a}</button>`).join('')}</div>
+    <div style="display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap">${[10,25,50,100].map(a=>`<button class="chip" onclick="document.getElementById('gf-amt').value=${a}">$${a}</button>`).join('')}</div>
     <div class="fld"><label>رمز مخصص (اختياري)</label><input id="gf-code" placeholder="يُولَّد تلقائيًا" style="${ip}"></div>
     <button class="btn green" style="margin-top:6px" onclick="issueGift()">إصدار البطاقة</button></div>`);
 }
@@ -1564,7 +1756,7 @@ async function reservationsView(){
           <button class="chip" onclick="resvStatus('${r.id}','noshow')">لم يحضر</button>
           <button class="chip" onclick="resvStatus('${r.id}','cancelled')">✕</button>`:''}</td></tr>`).join('')
       ||'<tr><td colspan="6" style="text-align:center;color:var(--mut);padding:20px">لا حجوزات. أضف واحدة بالأعلى.</td></tr>';
-    body=`<div class="card"><table><thead><tr><th>الوقت</th><th>الضيف</th><th>العدد</th><th>الهاتف</th><th>الحالة</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    body=`<div class="card"><div style="overflow-x:auto"><table><thead><tr><th>الوقت</th><th>الضيف</th><th>العدد</th><th>الهاتف</th><th>الحالة</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
   } else {
     const rows=waits.map(w=>{const elapsed=Math.floor((Date.now()-w.createdAt)/60000);
       return `<tr style="${['cancelled','noshow','done','seated'].includes(w.status)?'opacity:.5':''}">
@@ -1576,15 +1768,15 @@ async function reservationsView(){
         <td style="text-align:left;white-space:nowrap">${w.status==='waiting'?`<button class="btn green" style="flex:0;padding:6px 10px" onclick="seatResv('${w.id}')">إجلاس</button>
           <button class="chip" onclick="resvStatus('${w.id}','cancelled')">✕</button>`:''}</td></tr>`;}).join('')
       ||'<tr><td colspan="6" style="text-align:center;color:var(--mut);padding:20px">قائمة الانتظار فارغة.</td></tr>';
-    body=`<div class="card"><table><thead><tr><th>الضيف</th><th>العدد</th><th>الوقت المتوقع</th><th>الانتظار</th><th>الحالة</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    body=`<div class="card"><div style="overflow-x:auto"><table><thead><tr><th>الضيف</th><th>العدد</th><th>الوقت المتوقع</th><th>الانتظار</th><th>الحالة</th><th></th></tr></thead><tbody>${rows}</tbody></table></div></div>`;
   }
-  return `<div style="display:flex;gap:10px;margin-bottom:16px">
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800">${upcoming.length}</div><div style="color:var(--mut);font-size:12px">حجوزات قادمة</div></div>
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800;color:#f5c451">${activeWait.length}</div><div style="color:var(--mut);font-size:12px">في قائمة الانتظار</div></div>
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800;color:#34d399">${_resvs.filter(r=>r.status==='seated').length}</div><div style="color:var(--mut);font-size:12px">جالسون اليوم</div></div>
+  return `<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800">${upcoming.length}</div><div style="color:var(--mut);font-size:12px">حجوزات قادمة</div></div>
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800;color:#f5c451">${activeWait.length}</div><div style="color:var(--mut);font-size:12px">في قائمة الانتظار</div></div>
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800;color:#34d399">${_resvs.filter(r=>r.status==='seated').length}</div><div style="color:var(--mut);font-size:12px">جالسون اليوم</div></div>
     </div>
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-      <div style="display:flex;gap:6px">${tab('reservations','📅 الحجوزات',upcoming.length)}${tab('waitlist','⏳ قائمة الانتظار',activeWait.length)}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${tab('reservations','📅 الحجوزات',upcoming.length)}${tab('waitlist','⏳ قائمة الانتظار',activeWait.length)}</div>
       <button class="btn primary" style="flex:0;padding:10px 18px" onclick="resvForm('${_resvTab==='waitlist'?'waitlist':'reservation'}')">+ ${_resvTab==='waitlist'?'أضف لقائمة الانتظار':'حجز جديد'}</button></div>
     ${body}`;
 }
@@ -1643,18 +1835,18 @@ async function locationsView(){
       <td style="text-align:left"><button class="chip" onclick="delLocation('${r.id}')">✕</button></td></tr>`).join('')
     ||'<tr><td colspan="6" style="text-align:center;color:var(--mut);padding:20px">لا فروع مسجّلة بعد. أضف واحدًا بالأعلى.</td></tr>';
   return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-      <div style="display:flex;gap:6px">${rangeBtns}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${rangeBtns}</div>
       <button class="btn primary" style="flex:0;padding:10px 18px" onclick="locForm()">+ إضافة فرع</button></div>
     <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
-      <div class="card" style="flex:1;min-width:150px"><div style="color:var(--mut);font-size:12px">صافي المبيعات الإجمالي</div><div style="font-size:26px;font-weight:800">${money(c.netSales)}</div><div style="font-size:12px;color:var(--mut)">${rows.length} فرع</div></div>
-      <div class="card" style="flex:1;min-width:150px"><div style="color:var(--mut);font-size:12px">إجمالي الطلبات</div><div style="font-size:26px;font-weight:800">${c.orders}</div></div>
-      <div class="card" style="flex:1;min-width:150px"><div style="color:var(--mut);font-size:12px">متوسط الفاتورة</div><div style="font-size:26px;font-weight:800">${money(c.avgCheck)}</div></div>
-      <div class="card" style="flex:1;min-width:150px"><div style="color:var(--mut);font-size:12px">الضريبة المحصّلة</div><div style="font-size:26px;font-weight:800">${money(c.tax)}</div></div>
+      <div class="card" style="flex:1;min-width:140px"><div style="color:var(--mut);font-size:12px">صافي المبيعات الإجمالي</div><div style="font-size:26px;font-weight:800">${money(c.netSales)}</div><div style="font-size:12px;color:var(--mut)">${rows.length} فرع</div></div>
+      <div class="card" style="flex:1;min-width:140px"><div style="color:var(--mut);font-size:12px">إجمالي الطلبات</div><div style="font-size:26px;font-weight:800">${c.orders}</div></div>
+      <div class="card" style="flex:1;min-width:140px"><div style="color:var(--mut);font-size:12px">متوسط الفاتورة</div><div style="font-size:26px;font-weight:800">${money(c.avgCheck)}</div></div>
+      <div class="card" style="flex:1;min-width:140px"><div style="color:var(--mut);font-size:12px">الضريبة المحصّلة</div><div style="font-size:26px;font-weight:800">${money(c.tax)}</div></div>
     </div>
     <div class="sec-title">المبيعات حسب الفرع</div>
-    <div class="card"><table>
+    <div class="card"><div style="overflow-x:auto"><table>
       <thead><tr><th>الفرع</th><th></th><th style="text-align:left">صافي المبيعات</th><th style="text-align:left">الطلبات</th><th style="text-align:left">المتوسط</th><th></th></tr></thead>
-      <tbody>${rollRows}</tbody></table></div>
+      <tbody>${rollRows}</tbody></table></div></div>
     <p style="font-size:12px;color:var(--mut);margin-top:12px">يُرتبط كل فرع بأعمال Tavo عبر الـ slug. يسحب المجموع المبيعات الحيّة من كل موقع مرتبط إلى عرض موحّد. أنشئ فروعًا إضافية كأعمال منفصلة عبر التسجيل، ثم سجّل الـ slug هنا.</p>`;
 }
 function locForm(){
@@ -1706,9 +1898,9 @@ async function discountsView(){
   return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
       <div style="color:var(--mut);font-size:13px">أنشئ خصومات قابلة لإعادة الاستخدام. أضف جدولًا ليُطبَّق تلقائيًا خلال الساعة السعيدة.</div>
       <button class="btn primary" style="flex:0;padding:10px 18px" onclick="discForm()">+ إضافة خصم</button></div>
-    <div class="card"><table>
+    <div class="card"><div style="overflow-x:auto"><table>
       <thead><tr><th>الاسم</th><th>المبلغ</th><th>الجدول</th><th>تلقائي</th><th>الحالة</th><th></th></tr></thead>
-      <tbody>${rows}</tbody></table></div>
+      <tbody>${rows}</tbody></table></div></div>
     <p style="font-size:12px;color:var(--mut);margin-top:12px">الخصم الذي له جدول و<b>تطبيق تلقائي</b> مفعّل سيُطبَّق تلقائيًا في نقطة البيع خلال نافذته (مثال: ساعة سعيدة 4–6م). يمكن للموظفين إزالته من أي فاتورة. بدون جدول، يكون الخصم إعدادًا مسبقًا بضغطة واحدة.</p>`;
 }
 function discLiveNow(s,now){
@@ -1727,19 +1919,19 @@ function discForm(id){
   const dayBtns=DOW_SHORT.map((lab,n)=>`<label style="display:inline-flex;align-items:center;gap:4px;margin-left:8px"><input type="checkbox" class="df-day" value="${n}" ${days.includes(n)?'checked':''}> ${lab}</label>`).join('');
   openModal(`<div class="mhd"><h3>🏷️ ${id?'تعديل':'خصم جديد'}</h3><button class="x" onclick="closeModal()">✕</button></div><div class="mbd">
     <div class="fld"><label>الاسم</label><input id="df-name" value="${d?esc(d.name):''}" placeholder="ساعة سعيدة" style="${ip}" autofocus></div>
-    <div class="fld" style="display:flex;gap:8px">
-      <div style="flex:1"><label>النوع</label><select id="df-kind" style="${ip}" onchange="dfUnit()">
+    <div class="fld" style="display:flex;gap:8px;flex-wrap:wrap">
+      <div style="flex:1;min-width:120px"><label>النوع</label><select id="df-kind" style="${ip}" onchange="dfUnit()">
         <option value="percent" ${!d||d.kind==='percent'?'selected':''}>نسبة (%)</option>
         <option value="amount" ${d&&d.kind==='amount'?'selected':''}>مبلغ ($)</option></select></div>
-      <div style="flex:1"><label>القيمة <span id="df-unit" style="color:var(--mut)">(%)</span></label><input id="df-value" type="number" min="0" step="0.01" value="${d?d.value:''}" placeholder="20" style="${ip}"></div>
+      <div style="flex:1;min-width:120px"><label>القيمة <span id="df-unit" style="color:var(--mut)">(%)</span></label><input id="df-value" type="number" min="0" step="0.01" value="${d?d.value:''}" placeholder="20" style="${ip}"></div>
     </div>
     <div class="fld"><label>وسم الإيصال</label><input id="df-reason" value="${d&&d.reason?esc(d.reason):''}" placeholder="ساعة سعيدة" style="${ip}"></div>
     <label style="display:flex;align-items:center;gap:8px;margin:10px 0 4px;cursor:pointer"><input type="checkbox" id="df-sched" ${sched?'checked':''} onchange="dfSched()"> <b>جدولته (ساعة سعيدة)</b></label>
     <div id="df-schedbox" style="${sched?'':'display:none'};padding:10px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px">
-      <div style="margin-bottom:8px">${dayBtns}</div>
-      <div style="display:flex;gap:8px;align-items:center">
-        <div><label style="font-size:12px;color:var(--mut)">البداية</label><input id="df-start" type="time" value="${sched?sched.start:'16:00'}" style="${ip}"></div>
-        <div><label style="font-size:12px;color:var(--mut)">النهاية</label><input id="df-end" type="time" value="${sched?sched.end:'18:00'}" style="${ip}"></div>
+      <div style="margin-bottom:8px;display:flex;flex-wrap:wrap;gap:4px">${dayBtns}</div>
+      <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+        <div style="flex:1;min-width:100px"><label style="font-size:12px;color:var(--mut)">البداية</label><input id="df-start" type="time" value="${sched?sched.start:'16:00'}" style="${ip}"></div>
+        <div style="flex:1;min-width:100px"><label style="font-size:12px;color:var(--mut)">النهاية</label><input id="df-end" type="time" value="${sched?sched.end:'18:00'}" style="${ip}"></div>
       </div>
       <label style="display:flex;align-items:center;gap:8px;margin-top:10px;cursor:pointer"><input type="checkbox" id="df-auto" ${!d||d.autoApply?'checked':''}> تطبيق تلقائي في نقطة البيع خلال هذه النافذة</label>
     </div>
@@ -1795,20 +1987,20 @@ async function analyticsView(){
   const tbl=(title,rows,fmt)=>`<div class="card" style="flex:1;min-width:230px"><div class="sec-title" style="margin:0 0 8px">${title}</div>
     <table>${rows.length?rows.map(fmt).join(''):'<tr><td style="color:var(--mut);padding:8px">لا بيانات في الفترة.</td></tr>'}</table></div>`;
   const barRow=(label,val,max,extra)=>{const w=max>0?Math.round((val/max)*100):0;
-    return `<tr><td style="padding:4px 0"><div style="font-size:12px;margin-bottom:2px;display:flex;justify-content:space-between"><span>${esc(label)}</span><span style="font-weight:600">${extra||money(val)}</span></div>
+    return `<tr><td style="padding:4px 0"><div style="font-size:12px;margin-bottom:2px;display:flex;justify-content:space-between;gap:6px"><span>${esc(label)}</span><span style="font-weight:600;white-space:nowrap">${extra||money(val)}</span></div>
       <div style="height:6px;background:var(--panel);border-radius:4px;overflow:hidden"><div style="width:${w}%;height:100%;background:linear-gradient(90deg,#6366f1,#a855f7)"></div></div></td></tr>`;};
   const empMax=Math.max(1,...d.byEmployee.map(e=>e.sales));
   const catMax=Math.max(1,...d.byCategory.map(e=>e.sales));
   const dpMax=Math.max(1,...d.byDaypart.map(e=>e.sales));
   const dowMax=Math.max(1,...d.byDow.map(e=>e.sales));
   return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">
-      <div style="display:flex;gap:6px">${rangeBtns}</div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap">${rangeBtns}</div>
       <div style="font-size:12px;color:var(--mut)">${new Date(from).toLocaleDateString()} – ${new Date(to).toLocaleDateString()}</div></div>
     <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
-      <div class="card" style="flex:1;min-width:150px"><div style="color:var(--mut);font-size:12px">صافي المبيعات</div><div style="font-size:24px;font-weight:800">${money(t.netSales)}</div><div style="font-size:12px">مقابل السابق ${arrow(c.salesChangePct)}</div></div>
-      <div class="card" style="flex:1;min-width:150px"><div style="color:var(--mut);font-size:12px">الطلبات</div><div style="font-size:24px;font-weight:800">${t.orders}</div><div style="font-size:12px">مقابل السابق ${arrow(c.ordersChangePct)}</div></div>
-      <div class="card" style="flex:1;min-width:150px"><div style="color:var(--mut);font-size:12px">متوسط الفاتورة</div><div style="font-size:24px;font-weight:800">${money(t.avgCheck)}</div></div>
-      <div class="card" style="flex:1;min-width:150px"><div style="color:var(--mut);font-size:12px">الضريبة المحصّلة</div><div style="font-size:24px;font-weight:800">${money(t.tax)}</div><div style="font-size:12px;color:var(--mut)">${t.taxExemptOrders} معفاة</div></div>
+      <div class="card" style="flex:1;min-width:140px"><div style="color:var(--mut);font-size:12px">صافي المبيعات</div><div style="font-size:24px;font-weight:800">${money(t.netSales)}</div><div style="font-size:12px">مقابل السابق ${arrow(c.salesChangePct)}</div></div>
+      <div class="card" style="flex:1;min-width:140px"><div style="color:var(--mut);font-size:12px">الطلبات</div><div style="font-size:24px;font-weight:800">${t.orders}</div><div style="font-size:12px">مقابل السابق ${arrow(c.ordersChangePct)}</div></div>
+      <div class="card" style="flex:1;min-width:140px"><div style="color:var(--mut);font-size:12px">متوسط الفاتورة</div><div style="font-size:24px;font-weight:800">${money(t.avgCheck)}</div></div>
+      <div class="card" style="flex:1;min-width:140px"><div style="color:var(--mut);font-size:12px">الضريبة المحصّلة</div><div style="font-size:24px;font-weight:800">${money(t.tax)}</div><div style="font-size:12px;color:var(--mut)">${t.taxExemptOrders} معفاة</div></div>
     </div>
     <div class="card" style="margin-bottom:16px"><div class="sec-title" style="margin:0 0 10px">⏰ المبيعات حسب الساعة</div>
       <div style="display:flex;gap:2px;align-items:flex-end">${heat}</div></div>
@@ -1828,13 +2020,13 @@ async function analyticsView(){
     <div class="card">
       <div class="sec-title" style="margin:0 0 10px">🔧 تقرير مخصص</div>
       <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:10px">
-        <div><label style="font-size:12px;color:var(--mut)">تجميع حسب</label><br>
-          <select id="rb-group" style="padding:8px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);color:var(--txt)">
+        <div style="flex:1;min-width:130px"><label style="font-size:12px;color:var(--mut)">تجميع حسب</label><br>
+          <select id="rb-group" style="width:100%;padding:8px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);color:var(--txt)">
             ${[['employee','الموظف'],['category','التصنيف'],['daypart','فترة اليوم'],['hour','الساعة'],['dow','يوم الأسبوع'],['method','طريقة الدفع'],['day','اليوم']].map(([v,l])=>`<option value="${v}" ${_rbGroup===v?'selected':''}>${l}</option>`).join('')}</select></div>
-        <div><label style="font-size:12px;color:var(--mut)">القياس</label><br>
-          <select id="rb-metric" style="padding:8px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);color:var(--txt)">
+        <div style="flex:1;min-width:130px"><label style="font-size:12px;color:var(--mut)">القياس</label><br>
+          <select id="rb-metric" style="width:100%;padding:8px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);color:var(--txt)">
             ${[['sales','صافي المبيعات'],['orders','الطلبات'],['avg','متوسط الفاتورة'],['tips','البقشيش']].map(([v,l])=>`<option value="${v}" ${_rbMetric===v?'selected':''}>${l}</option>`).join('')}</select></div>
-        <button class="btn primary" style="flex:0;padding:9px 18px" onclick="runReport()">تشغيل</button>
+        <button class="btn primary" style="flex:0;padding:9px 18px;min-width:100px" onclick="runReport()">تشغيل</button>
         <button class="btn ghost" style="flex:0;padding:9px 14px" onclick="exportReport()">⬇ CSV</button>
       </div>
       <div id="rb-out">${_rbRows?reportTable():'<div style="color:var(--mut);font-size:13px">اختر بُعدًا وقياسًا، ثم شغّل.</div>'}</div>
@@ -1884,21 +2076,21 @@ async function houseAccountsView(){
       <td>${i.status==='paid'?'<span class="tag green">مدفوعة</span>':'<span class="tag" style="background:#3b3320;color:#f5c451">مفتوحة</span>'}</td>
       <td style="text-align:left">${i.status==='open'?`<button class="btn green" style="flex:0;padding:6px 12px" onclick="payInvoice('${i.id}')">تعليم مدفوعة</button>`:''}</td></tr>`).join('')
     ||'<tr><td colspan="5" style="text-align:center;color:var(--mut);padding:16px">لا فواتير بعد.</td></tr>';
-  return `<div style="display:flex;gap:10px;margin-bottom:16px">
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800">${_accts.length}</div><div style="color:var(--mut);font-size:12px">الحسابات</div></div>
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800;color:#fbbf24">${money(totalOwed)}</div><div style="color:var(--mut);font-size:12px">الرصيد المستحق</div></div>
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800">${openInv.length}</div><div style="color:var(--mut);font-size:12px">فواتير مفتوحة</div></div>
+  return `<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800">${_accts.length}</div><div style="color:var(--mut);font-size:12px">الحسابات</div></div>
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800;color:#fbbf24">${money(totalOwed)}</div><div style="color:var(--mut);font-size:12px">الرصيد المستحق</div></div>
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800">${openInv.length}</div><div style="color:var(--mut);font-size:12px">فواتير مفتوحة</div></div>
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
       <div class="sec-title" style="margin:0">الحسابات</div>
       <button class="btn primary" style="flex:0;padding:10px 18px" onclick="acctForm()">+ حساب جديد</button></div>
-    <div class="card"><table>
+    <div class="card"><div style="overflow-x:auto"><table>
       <thead><tr><th>الحساب</th><th>البريد</th><th style="text-align:left">الرصيد</th><th style="text-align:left">الحد</th><th style="text-align:left">المتاح</th></tr></thead>
-      <tbody>${acctRows}</tbody></table></div>
+      <tbody>${acctRows}</tbody></table></div></div>
     <div class="sec-title" style="margin:18px 0 10px">أحدث الفواتير</div>
-    <div class="card"><table>
+    <div class="card"><div style="overflow-x:auto"><table>
       <thead><tr><th>التاريخ</th><th>الحساب</th><th style="text-align:left">المبلغ</th><th>الحالة</th><th></th></tr></thead>
-      <tbody>${invRows}</tbody></table></div>
+      <tbody>${invRows}</tbody></table></div></div>
     <p style="font-size:12px;color:var(--mut);margin-top:12px">احسب الفواتير على الحساب الآن وافترضها لاحقًا. تُحدّ الأرصدة بحد الائتمان لكل حساب؛ تعليم الفاتورة مدفوعة يمسحها من الرصيد.</p>`;
 }
 function acctForm(a){
@@ -1925,10 +2117,10 @@ async function acctDetail(id){
       <td>${i.status==='paid'?'<span class="tag green">مدفوعة</span>':'<span class="tag" style="background:#3b3320;color:#f5c451">مفتوحة</span>'}</td>
       <td style="text-align:left">${i.status==='open'?`<button class="chip" onclick="payInvoice('${i.id}',true)">دفع</button>`:''}</td></tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--mut);padding:12px">لا فواتير.</td></tr>';
   openModal(`<div class="mhd"><h3>🏛️ ${esc(a.name)}</h3><button class="x" onclick="closeModal()">✕</button></div><div class="mbd">
-    <div style="display:flex;gap:8px;margin-bottom:12px">
-      <div class="card" style="flex:1;text-align:center;padding:10px"><div style="font-size:20px;font-weight:800;color:#fbbf24">${money(a.balance||0)}</div><div style="color:var(--mut);font-size:11px">الرصيد المستحق</div></div>
-      <div class="card" style="flex:1;text-align:center;padding:10px"><div style="font-size:20px;font-weight:800">${a.creditLimit?money(a.creditLimit):'∞'}</div><div style="color:var(--mut);font-size:11px">حد الائتمان</div></div>
-      <div class="card" style="flex:1;text-align:center;padding:10px"><div style="font-size:20px;font-weight:800;color:#34d399">${a.creditLimit?money(a.available):'∞'}</div><div style="color:var(--mut);font-size:11px">المتاح</div></div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <div class="card" style="flex:1;min-width:90px;text-align:center;padding:10px"><div style="font-size:20px;font-weight:800;color:#fbbf24">${money(a.balance||0)}</div><div style="color:var(--mut);font-size:11px">الرصيد المستحق</div></div>
+      <div class="card" style="flex:1;min-width:90px;text-align:center;padding:10px"><div style="font-size:20px;font-weight:800">${a.creditLimit?money(a.creditLimit):'∞'}</div><div style="color:var(--mut);font-size:11px">حد الائتمان</div></div>
+      <div class="card" style="flex:1;min-width:90px;text-align:center;padding:10px"><div style="font-size:20px;font-weight:800;color:#34d399">${a.creditLimit?money(a.available):'∞'}</div><div style="color:var(--mut);font-size:11px">المتاح</div></div>
     </div>
     <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
       <button class="chip" onclick="closeModal();chargeForm('${a.id}','${esc(a.name)}')">＋ احسب مبلغًا</button>
@@ -1959,19 +2151,19 @@ let _crmList=[], _crmQuery='';
 async function crmView(){
   _crmList=await api('/customers').catch(()=>[]);
   const withEmail=_crmList.filter(c=>c.email).length, optedIn=_crmList.filter(c=>c.marketingOptIn!==false).length;
-  return `<div style="display:flex;gap:10px;margin-bottom:16px">
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800">${_crmList.length}</div><div style="color:var(--mut);font-size:12px">العملاء</div></div>
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800">${withEmail}</div><div style="color:var(--mut);font-size:12px">لديهم بريد</div></div>
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800;color:#34d399">${optedIn}</div><div style="color:var(--mut);font-size:12px">موافقون على التسويق</div></div>
+  return `<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800">${_crmList.length}</div><div style="color:var(--mut);font-size:12px">العملاء</div></div>
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800">${withEmail}</div><div style="color:var(--mut);font-size:12px">لديهم بريد</div></div>
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800;color:#34d399">${optedIn}</div><div style="color:var(--mut);font-size:12px">موافقون على التسويق</div></div>
     </div>
-    <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div style="display:flex;gap:8px;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap">
       <input value="${esc(_crmQuery)}" oninput="_crmQuery=this.value;document.getElementById('crmBody').innerHTML=crmRows()" placeholder="ابحث بالاسم، الهاتف، البريد…"
-        style="flex:1;max-width:340px;padding:10px 14px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--txt)">
+        style="flex:1;min-width:200px;max-width:340px;padding:10px 14px;border-radius:10px;background:var(--panel2);border:1px solid var(--line);color:var(--txt)">
       <button class="btn primary" style="flex:0;padding:10px 18px;white-space:nowrap" onclick="custForm()">+ إضافة عميل</button></div>
-    <div class="card"><table>
+    <div class="card"><div style="overflow-x:auto"><table>
       <thead><tr><th>الاسم</th><th>الهاتف</th><th>البريد</th><th style="text-align:left">النقاط</th><th style="text-align:left">الزيارات</th><th style="text-align:left">الإنفاق</th><th style="text-align:center">التسويق</th></tr></thead>
       <tbody id="crmBody">${crmRows()}</tbody>
-    </table></div>
+    </table></div></div>
     <p style="font-size:12px;color:var(--mut);margin-top:12px">اضغط على عميل لعرض ملفه الكامل، سجل طلباته، وإرسال إيصال بالبريد/رسالة. يُسجَّل العملاء تلقائيًا عند إرفاق هاتف بفاتورة.</p>`;
 }
 function crmRows(){
@@ -2009,12 +2201,12 @@ async function custProfile(id){
       <td>${esc(h.method||'')}</td><td><span class="tag ${h.status==='voided'?'red':'green'}">${esc(h.status||'')}</span></td>
       <td style="text-align:left;font-weight:600">${money(h.total||0)}</td></tr>`).join('')||'<tr><td colspan="4" style="text-align:center;color:var(--mut);padding:16px">لا طلبات بعد.</td></tr>';
   openModal(`<div class="mhd"><h3>👤 ${esc(p.name||'عميل')}</h3><button class="x" onclick="closeModal()">✕</button></div><div class="mbd">
-    <div style="display:flex;gap:8px;margin-bottom:12px">
-      <div class="card" style="flex:1;text-align:center;padding:10px"><div style="font-size:20px;font-weight:800">${money(p.lifetimeSpend||0)}</div><div style="color:var(--mut);font-size:11px">إنفاق الإجمالي</div></div>
-      <div class="card" style="flex:1;text-align:center;padding:10px"><div style="font-size:20px;font-weight:800">${p.orderCount||0}</div><div style="color:var(--mut);font-size:11px">الطلبات</div></div>
-      <div class="card" style="flex:1;text-align:center;padding:10px"><div style="font-size:20px;font-weight:800;color:#c084fc">${p.points||0}</div><div style="color:var(--mut);font-size:11px">النقاط</div></div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+      <div class="card" style="flex:1;min-width:90px;text-align:center;padding:10px"><div style="font-size:20px;font-weight:800">${money(p.lifetimeSpend||0)}</div><div style="color:var(--mut);font-size:11px">إنفاق الإجمالي</div></div>
+      <div class="card" style="flex:1;min-width:90px;text-align:center;padding:10px"><div style="font-size:20px;font-weight:800">${p.orderCount||0}</div><div style="color:var(--mut);font-size:11px">الطلبات</div></div>
+      <div class="card" style="flex:1;min-width:90px;text-align:center;padding:10px"><div style="font-size:20px;font-weight:800;color:#c084fc">${p.points||0}</div><div style="color:var(--mut);font-size:11px">النقاط</div></div>
     </div>
-    <div style="font-size:13px;color:var(--mut);margin-bottom:6px">📞 ${esc(p.phone||'—')} &nbsp; ✉️ ${esc(p.email||'—')} &nbsp; ${p.marketingOptIn===false?'<span class="tag red">منسحب</span>':'<span class="tag green">مشترك</span>'}</div>
+    <div style="font-size:13px;color:var(--mut);margin-bottom:6px;word-break:break-word">📞 ${esc(p.phone||'—')} &nbsp; ✉️ ${esc(p.email||'—')} &nbsp; ${p.marketingOptIn===false?'<span class="tag red">منسحب</span>':'<span class="tag green">مشترك</span>'}</div>
     ${p.notes?`<div style="font-size:13px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:8px 10px;margin-bottom:10px">📝 ${esc(p.notes)}</div>`:''}
     <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap">
       <button class="chip" onclick="closeModal();custForm(${JSON.stringify(p).replace(/"/g,'&quot;')})">✏️ تعديل</button>
@@ -2045,10 +2237,10 @@ async function marketingView(){
       <td style="text-align:left;color:${c.failed?'#f87171':'var(--mut)'}">${c.failed}</td></tr>`).join('')
     ||'<tr><td colspan="7" style="text-align:center;color:var(--mut);padding:20px">لا حملات بعد. أنشئ أول حملة بالأعلى.</td></tr>';
   const ip='width:100%;padding:9px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);color:var(--txt)';
-  return `<div style="display:flex;gap:10px;margin-bottom:16px">
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:22px;font-weight:800">${(_segReach.totalCustomers)||0}</div><div style="color:var(--mut);font-size:12px">العملاء</div></div>
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:14px;font-weight:700">✉️ بريد ${liveBadge(status.email)}</div><div style="color:var(--mut);font-size:12px;margin-top:4px">رسائل ${liveBadge(status.sms)}</div></div>
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:22px;font-weight:800">${_campaigns.length}</div><div style="color:var(--mut);font-size:12px">حملات أُرسلت</div></div>
+  return `<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:22px;font-weight:800">${(_segReach.totalCustomers)||0}</div><div style="color:var(--mut);font-size:12px">العملاء</div></div>
+      <div class="card" style="flex:1;min-width:140px;text-align:center"><div style="font-size:14px;font-weight:700">✉️ بريد ${liveBadge(status.email)}</div><div style="color:var(--mut);font-size:12px;margin-top:4px">رسائل ${liveBadge(status.sms)}</div></div>
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:22px;font-weight:800">${_campaigns.length}</div><div style="color:var(--mut);font-size:12px">حملات أُرسلت</div></div>
     </div>
     <div class="card" style="margin-bottom:16px">
       <div class="sec-title" style="margin:0 0 10px">📣 حملة جديدة</div>
@@ -2059,14 +2251,14 @@ async function marketingView(){
       </div>
       <div class="fld" id="mk-subjwrap"><label>الموضوع</label><input id="mk-subject" placeholder="لا تفوّت خصم 20% هذا الأسبوع" style="${ip}"></div>
       <div class="fld"><label>الرسالة</label><textarea id="mk-body" rows="3" placeholder="اكتب رسالتك…" style="${ip}"></textarea></div>
-      <div style="display:flex;justify-content:space-between;align-items:center">
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px">
         <div id="mk-reach" style="font-size:13px;color:var(--mut)"></div>
         <button class="btn primary" style="flex:0;padding:10px 22px" onclick="sendCampaign()">إرسال الحملة</button></div>
     </div>
     <div class="sec-title">سجل الحملات</div>
-    <div class="card"><table>
+    <div class="card"><div style="overflow-x:auto"><table>
       <thead><tr><th>التاريخ</th><th>الاسم</th><th>القناة</th><th>الجمهور</th><th style="text-align:left">الوصول</th><th style="text-align:left">أُرسل</th><th style="text-align:left">فشل</th></tr></thead>
-      <tbody>${campRows}</tbody></table></div>
+      <tbody>${campRows}</tbody></table></div></div>
     <p style="font-size:12px;color:var(--mut);margin-top:12px">تُرسل الرسائل فقط للعملاء الموافقين الذين لديهم ${'بريد/هاتف'} صالح للقناة المختارة. اربط SendGrid (بريد) أو Twilio (رسائل) عبر متغيرات البيئة للتحويل من المحاكاة إلى التسليم الحقيقي.</p>`;
 }
 function mkChannel(){
@@ -2105,23 +2297,23 @@ async function purchasingView(){
       <td>${statusTag[p.status]||p.status}</td>
       <td style="text-align:left">${p.status==='ordered'?`<button class="btn green" style="flex:0;padding:7px 12px" onclick="receivePO('${p.id}')">📥 استلام</button>`:''}</td></tr>`).join('')
     ||'<tr><td colspan="5" style="text-align:center;color:var(--mut);padding:16px">لا أوامر شراء بعد.</td></tr>';
-  return `<div style="display:flex;gap:10px;margin-bottom:16px">
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800">${_vendors.length}</div><div style="color:var(--mut);font-size:12px">الموردون</div></div>
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800">${_pos.length}</div><div style="color:var(--mut);font-size:12px">أوامر الشراء</div></div>
-      <div class="card" style="flex:1;text-align:center"><div style="font-size:24px;font-weight:800;color:#fbbf24">${money(onOrder)}</div><div style="color:var(--mut);font-size:12px">قيد الطلب</div></div>
+  return `<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap">
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800">${_vendors.length}</div><div style="color:var(--mut);font-size:12px">الموردون</div></div>
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800">${_pos.length}</div><div style="color:var(--mut);font-size:12px">أوامر الشراء</div></div>
+      <div class="card" style="flex:1;min-width:100px;text-align:center"><div style="font-size:24px;font-weight:800;color:#fbbf24">${money(onOrder)}</div><div style="color:var(--mut);font-size:12px">قيد الطلب</div></div>
     </div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
       <div class="sec-title" style="margin:0">أوامر الشراء</div>
       <button class="btn primary" style="flex:0;padding:10px 18px" onclick="newPOForm()">+ أمر شراء جديد</button></div>
-    <div class="card"><table>
+    <div class="card"><div style="overflow-x:auto"><table>
       <thead><tr><th>التاريخ</th><th>المورّد</th><th style="text-align:left">الإجمالي</th><th>الحالة</th><th></th></tr></thead>
-      <tbody>${poRows}</tbody></table></div>
-    <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 10px">
+      <tbody>${poRows}</tbody></table></div></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 10px;flex-wrap:wrap;gap:8px">
       <div class="sec-title" style="margin:0">الموردون</div>
       <button class="btn ghost" style="flex:0;padding:10px 18px" onclick="vendorForm()">+ إضافة مورّد</button></div>
-    <div class="card"><table>
+    <div class="card"><div style="overflow-x:auto"><table>
       <thead><tr><th>الاسم</th><th>جهة الاتصال</th><th>البريد</th><th>الهاتف</th><th></th></tr></thead>
-      <tbody>${vRows}</tbody></table></div>
+      <tbody>${vRows}</tbody></table></div></div>
     <p style="font-size:12px;color:var(--mut);margin-top:12px">استلام أمر شراء يضيف تلقائيًا كمية كل سطر إلى مخزون المنتج المرتبط.</p>`;
 }
 function vendorForm(v){
@@ -2162,8 +2354,8 @@ function addPOLine(productId){
 }
 function paintPOLines(){
   const el=document.getElementById('po-lines'); if(!el) return;
-  el.innerHTML=_poLines.map((l,i)=>`<div style="display:flex;gap:6px;align-items:center;margin-bottom:6px">
-      <div style="flex:1;font-size:13px">${esc(l.name)}</div>
+  el.innerHTML=_poLines.map((l,i)=>`<div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;flex-wrap:wrap">
+      <div style="flex:1;min-width:120px;font-size:13px">${esc(l.name)}</div>
       <input type="number" min="0" value="${l.qty}" oninput="_poLines[${i}].qty=Number(this.value)||0;poTotalPaint()" style="width:60px;padding:6px;border-radius:6px;background:var(--panel2);border:1px solid var(--line);color:var(--txt)" title="الكمية">
       <span style="color:var(--mut);font-size:12px">×</span>
       <input type="number" min="0" step="0.01" value="${l.cost}" oninput="_poLines[${i}].cost=Number(this.value)||0;poTotalPaint()" style="width:74px;padding:6px;border-radius:6px;background:var(--panel2);border:1px solid var(--line);color:var(--txt)" title="تكلفة الوحدة">
@@ -2200,15 +2392,15 @@ async function stocktakeView(){
         <td style="text-align:left"><input type="number" min="0" value="${counted}" oninput="_activeTake.counts[${i}].counted=this.value===''?null:Number(this.value);stPaintVar(${i})" style="width:80px;padding:6px;border-radius:6px;background:var(--panel2);border:1px solid var(--line);color:var(--txt);text-align:left"></td>
         <td id="stv-${i}" style="text-align:left;font-weight:600;color:${v==null?'var(--mut)':(v===0?'var(--mut)':(v<0?'#f87171':'#34d399'))}">${v==null?'—':(v>0?'+'+v:v)}</td></tr>`;
     }).join('');
-    return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+    return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
         <div><div class="sec-title" style="margin:0">${esc(t.name)}</div><div style="font-size:12px;color:var(--mut)">أدخل جردك الفعلي، ثم طبّق لتحديث المخزون.</div></div>
-        <div style="display:flex;gap:6px">
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
           <button class="btn ghost" style="flex:0;padding:9px 16px" onclick="saveTake()">حفظ</button>
           <button class="btn primary" style="flex:0;padding:9px 16px" onclick="applyTake()">تطبيق وإغلاق</button>
           <button class="chip" onclick="_activeTake=null;render()">رجوع</button></div></div>
-      <div class="card"><table>
+      <div class="card"><div style="overflow-x:auto"><table>
         <thead><tr><th>المنتج</th><th style="text-align:left">المتوقع</th><th style="text-align:left">المجرد</th><th style="text-align:left">الفرق</th></tr></thead>
-        <tbody>${rows}</tbody></table></div>`;
+        <tbody>${rows}</tbody></table></div></div>`;
   }
   const rows=_takes.map(s=>{
     const totVar=(s.counts||[]).reduce((a,c)=>a+(c.variance||0),0);
@@ -2218,12 +2410,12 @@ async function stocktakeView(){
       <td>${s.status==='closed'?'<span class="tag green">مُطبَّق</span>':'<span class="tag" style="background:#3b3320;color:#f5c451">مفتوح</span>'}</td>
       <td style="text-align:left;color:${totVar<0?'#f87171':(totVar>0?'#34d399':'var(--mut)')}">${s.status==='closed'?(totVar>0?'+'+totVar:totVar):'—'}</td></tr>`;
   }).join('')||'<tr><td colspan="5" style="text-align:center;color:var(--mut);padding:20px">لا جرد بعد.</td></tr>';
-  return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+  return `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:8px">
       <div class="sec-title" style="margin:0">عمليات الجرد</div>
       <button class="btn primary" style="flex:0;padding:10px 18px" onclick="newTake()">+ جرد جديد</button></div>
-    <div class="card"><table>
+    <div class="card"><div style="overflow-x:auto"><table>
       <thead><tr><th>التاريخ</th><th>الاسم</th><th>العناصر</th><th>الحالة</th><th style="text-align:left">صافي الفرق</th></tr></thead>
-      <tbody>${rows}</tbody></table></div>
+      <tbody>${rows}</tbody></table></div></div>
     <p style="font-size:12px;color:var(--mut);margin-top:12px">يلتقط الجرد لقطة من المتاح الحالي لكل منتج متتبَّع المخزون. أدخل ما جردته فعليًا، ثم طبّق لتصحيح الدفاتر وتسجيل الفرق.</p>`;
 }
 function stPaintVar(i){
@@ -2264,12 +2456,12 @@ async function askView(){
       <h3 style="margin:0 0 6px">اسأل Tavo أي شيء عن عملك</h3>
       <p style="color:var(--mut);font-size:13px;max-width:440px;margin:0 auto">أقرأ مبيعاتك الحية ومخزونك وولاءك وبطاقات الهدايا وأجيب بلغة واضحة. جرّب أحد هذه:</p></div>`;
   const bubbles=_askLog.map(m=>{
-    if(m.role==='you') return `<div style="display:flex;justify-content:flex-start;margin:10px 0"><div style="background:var(--brand);color:#fff;padding:11px 15px;border-radius:16px 16px 16px 4px;max-width:80%;font-size:14px">${esc(m.text)}</div></div>`;
+    if(m.role==='you') return `<div style="display:flex;justify-content:flex-start;margin:10px 0"><div style="background:var(--brand);color:#fff;padding:11px 15px;border-radius:16px 16px 16px 4px;max-width:80%;font-size:14px;word-break:break-word">${esc(m.text)}</div></div>`;
     return `<div style="display:flex;gap:10px;margin:10px 0"><div style="width:34px;height:34px;flex:0 0 auto;border-radius:10px;background:linear-gradient(135deg,#a855f7,#6366f1);display:grid;place-items:center;font-size:18px">✨</div>
-      <div style="background:var(--panel2);border:1px solid var(--line);padding:12px 15px;border-radius:16px 16px 4px 16px;max-width:80%;font-size:14px;white-space:pre-wrap;line-height:1.6">${esc(m.text)}</div></div>`;
+      <div style="background:var(--panel2);border:1px solid var(--line);padding:12px 15px;border-radius:16px 16px 4px 16px;max-width:80%;font-size:14px;white-space:pre-wrap;line-height:1.6;word-break:break-word">${esc(m.text)}</div></div>`;
   }).join('');
   const sugg=(_askLog.length?_askSugg.slice(0,3):_askSugg).map(s=>`<button class="chip" style="margin:4px" onclick="askQuestion('${s.replace(/'/g,"\\'")}')">${esc(s)}</button>`).join('');
-  return `<div style="max-width:760px;margin:0 auto;display:flex;flex-direction:column;height:calc(100vh - 130px)">
+  return `<div style="max-width:760px;margin:0 auto;display:flex;flex-direction:column;height:calc(100vh - 130px);min-height:400px">
     <div id="askScroll" style="flex:1;overflow-y:auto;padding:0 4px">
       ${intro}${bubbles}
       ${_askBusy?'<div style="display:flex;gap:10px;margin:10px 0"><div style="width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#a855f7,#6366f1);display:grid;place-items:center;font-size:18px">✨</div><div style="background:var(--panel2);border:1px solid var(--line);padding:14px 18px;border-radius:16px;color:var(--mut)">أفكر…</div></div>':''}
@@ -2277,7 +2469,7 @@ async function askView(){
     </div>
     <div style="display:flex;gap:8px;padding:12px 0 4px">
       <input id="askInput" placeholder="اسأل عن المبيعات، المخزون، البقشيش، الولاء…" onkeydown="if(event.key==='Enter')submitAsk()"
-        style="flex:1;padding:14px 16px;border-radius:14px;background:var(--panel2);border:1px solid var(--line);color:var(--txt);font-size:15px">
+        style="flex:1;min-width:0;padding:14px 16px;border-radius:14px;background:var(--panel2);border:1px solid var(--line);color:var(--txt);font-size:15px">
       <button class="btn primary" style="flex:0;padding:0 22px" onclick="submitAsk()">اسأل</button>
     </div></div>`;
 }
@@ -2303,7 +2495,7 @@ async function clockView(){
     ? `<div class="card" style="max-width:460px;border-color:var(--green)">
         <div class="sec-title" style="color:var(--green)">🟢 مسجّل حضور</div>
         <p style="font-size:13px;color:var(--mut);margin:0 0 6px">منذ ${new Date(open.clockIn).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})} · ${open.breakMins?('استراحة '+open.breakMins+'د · '):''}<b>${fmtDur(Date.now()-open.clockIn-(open.breakMins||0)*60000)}</b> عمل</p>
-        <div style="display:flex;gap:8px;margin-top:10px">
+        <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
           <button class="btn ghost" onclick="addBreak()">☕ +30د استراحة</button>
           <button class="btn primary" style="background:var(--red);border-color:var(--red)" onclick="clockOut()">تسجيل انصراف</button></div></div>`
     : `<div class="card" style="max-width:460px">
@@ -2318,8 +2510,8 @@ async function clockView(){
       <td style="text-align:left;font-weight:700">${hrs.toFixed(2)}س</td></tr>`;}).join('');
   return `${card}
     <div class="card" style="margin-top:16px;max-width:560px"><div class="sec-title">وردياتك الأخيرة</div>
-      <table><thead><tr><th>التاريخ</th><th>من–إلى</th><th style="text-align:left">استراحة</th><th style="text-align:left">الساعات</th></tr></thead>
-      <tbody>${recent||'<tr><td colspan="4" style="text-align:center;color:var(--mut);padding:16px">لا ورديات مكتملة بعد.</td></tr>'}</tbody></table></div>`;
+      <div style="overflow-x:auto"><table><thead><tr><th>التاريخ</th><th>من–إلى</th><th style="text-align:left">استراحة</th><th style="text-align:left">الساعات</th></tr></thead>
+      <tbody>${recent||'<tr><td colspan="4" style="text-align:center;color:var(--mut);padding:16px">لا ورديات مكتملة بعد.</td></tr>'}</tbody></table></div></div>`;
 }
 async function clockIn(){ try{ await api('/shifts/clock-in',{method:'POST'}); render(); toast('🟢 تم تسجيل الحضور'); }catch(e){ toast('⚠️ '+e.message); } }
 async function clockOut(){ try{ const r=await api('/shifts/clock-out',{method:'POST'}); render(); toast('👋 تم تسجيل الانصراف · '+r.hours+'س'+(r.pay?(' · '+money(r.pay)):'')); }catch(e){ toast('⚠️ '+e.message); } }
@@ -2337,8 +2529,8 @@ async function drawerView(){
       <td style="text-align:left;font-weight:700;color:${Math.abs(d.variance)<0.005?'var(--green)':(d.variance<0?'var(--red)':'var(--amber)')}">${d.variance>0?'+':''}${money(d.variance)}</td>
       <td style="color:var(--mut)">${d.closedBy||''}</td></tr>`).join('');
   const histCard=`<div class="card" style="margin-top:16px"><div class="sec-title">أحدث عمليات الإغلاق</div>
-    <table><thead><tr><th>أُغلق</th><th style="text-align:left">الرصيد الافتتاحي</th><th style="text-align:left">المتوقع</th><th style="text-align:left">المجرد</th><th style="text-align:left">الفرق</th><th>بواسطة</th></tr></thead>
-    <tbody>${histRows||'<tr><td colspan="6" style="text-align:center;color:var(--mut);padding:16px">لا درج مُغلق بعد.</td></tr>'}</tbody></table></div>`;
+    <div style="overflow-x:auto"><table><thead><tr><th>أُغلق</th><th style="text-align:left">الرصيد الافتتاحي</th><th style="text-align:left">المتوقع</th><th style="text-align:left">المجرد</th><th style="text-align:left">الفرق</th><th>بواسطة</th></tr></thead>
+    <tbody>${histRows||'<tr><td colspan="6" style="text-align:center;color:var(--mut);padding:16px">لا درج مُغلق بعد.</td></tr>'}</tbody></table></div></div>`;
   if(!st.open){
     return `<div class="card" style="max-width:460px">
       <div class="sec-title">💵 افتح درج النقدية</div>
@@ -2348,7 +2540,7 @@ async function drawerView(){
   }
   const d=st.drawer;
   return `<div class="card" style="max-width:520px">
-      <div style="display:flex;justify-content:space-between;align-items:center"><div class="sec-title" style="margin:0">💵 الدرج مفتوح</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px"><div class="sec-title" style="margin:0">💵 الدرج مفتوح</div>
         <span class="tag green">منذ ${new Date(d.openedAt).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})} · ${d.openedBy}</span></div>
       <div class="totals" style="border-top:none;padding:10px 0 0">
         <div class="totrow"><span>الرصيد الافتتاحي</span><span>${money(d.startingFloat)}</span></div>
@@ -2356,7 +2548,7 @@ async function drawerView(){
         <div class="totrow"><span>إيداع</span><span>${money(d.paidIn)}</span></div>
         <div class="totrow"><span>سحب</span><span>−${money(d.paidOut)}</span></div>
         <div class="totrow big"><span>المتوقع في الدرج</span><span>${money(d.expected)}</span></div></div>
-      <div style="display:flex;gap:8px;margin-top:12px">
+      <div style="display:flex;gap:8px;margin-top:12px;flex-wrap:wrap">
         <button class="btn ghost" onclick="drawerMove('in')">＋ إيداع</button>
         <button class="btn ghost" onclick="drawerMove('out')">− سحب</button>
         <button class="btn primary" onclick="closeDrawerForm()">إغلاق وجرد</button></div></div>${histCard}`;
@@ -2402,14 +2594,14 @@ function renderModGroups(){
   const ip='padding:7px 9px;border-radius:8px;background:var(--panel);border:1px solid var(--line);color:var(--txt)';
   box.innerHTML=_editMods.map((g,gi)=>`
     <div class="card" style="padding:10px;margin-bottom:8px;background:var(--panel2)">
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
-        <input value="${(g.name||'').replace(/"/g,'&quot;')}" placeholder="المجموعة (مثال: الحجم)" oninput="_editMods[${gi}].name=this.value" style="flex:1;${ip}">
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px;flex-wrap:wrap">
+        <input value="${(g.name||'').replace(/"/g,'&quot;')}" placeholder="المجموعة (مثال: الحجم)" oninput="_editMods[${gi}].name=this.value" style="flex:1;min-width:120px;${ip}">
         <label style="font-size:12px;display:flex;align-items:center;gap:4px;white-space:nowrap"><input type="checkbox" ${g.required?'checked':''} onchange="_editMods[${gi}].required=this.checked">إلزامي</label>
         <input type="number" min="0" value="${g.max||0}" title="أقصى عدد اختيارات (0 = بلا حد)" oninput="_editMods[${gi}].max=+this.value" style="width:50px;${ip}">
         <button class="chip" style="color:var(--red)" onclick="removeModGroup(${gi})">✕</button>
       </div>
-      ${(g.options||[]).map((o,oi)=>`<div style="display:flex;gap:6px;margin:4px 0 4px 12px">
-        <input value="${(o.name||'').replace(/"/g,'&quot;')}" placeholder="خيار" oninput="_editMods[${gi}].options[${oi}].name=this.value" style="flex:1;${ip}">
+      ${(g.options||[]).map((o,oi)=>`<div style="display:flex;gap:6px;margin:4px 0 4px 12px;flex-wrap:wrap">
+        <input value="${(o.name||'').replace(/"/g,'&quot;')}" placeholder="خيار" oninput="_editMods[${gi}].options[${oi}].name=this.value" style="flex:1;min-width:100px;${ip}">
         <input type="number" step="0.01" value="${o.price||0}" placeholder="+$" oninput="_editMods[${gi}].options[${oi}].price=+this.value" style="width:78px;${ip}">
         <button class="chip" style="color:var(--red)" onclick="removeModOption(${gi},${oi})">−</button></div>`).join('')}
       <button class="chip" style="margin-right:12px" onclick="addModOption(${gi})">+ خيار</button>
@@ -2504,13 +2696,13 @@ async function teamView(){
       <div class="card"><h4>بقشيش اليوم</h4><div class="val">${money(pool.totalTips||0)}</div></div></div>
     <div class="row2">
       <div class="card"><div class="sec-title">🟢 على الساعة الآن (${active.length})</div>
-        <table><thead><tr><th>الاسم</th><th>الدور</th><th>الحضور</th><th style="text-align:left">الساعات</th><th style="text-align:left">الأجر</th></tr></thead>
-        <tbody>${activeRows||'<tr><td colspan="5" style="text-align:center;color:var(--mut);padding:14px">لا أحد مسجّل حضور.</td></tr>'}</tbody></table></div>
+        <div style="overflow-x:auto"><table><thead><tr><th>الاسم</th><th>الدور</th><th>الحضور</th><th style="text-align:left">الساعات</th><th style="text-align:left">الأجر</th></tr></thead>
+        <tbody>${activeRows||'<tr><td colspan="5" style="text-align:center;color:var(--mut);padding:14px">لا أحد مسجّل حضور.</td></tr>'}</tbody></table></div></div>
       <div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div class="sec-title" style="margin:0">💵 الأجور بالساعة</div><button class="chip" onclick="saveWages()">حفظ</button></div>
         <table style="margin-top:8px"><tbody>${wageRows||'<tr><td style="color:var(--mut);padding:10px">لا موظفين بعد.</td></tr>'}</tbody></table></div></div>
     <div class="card" style="margin-top:16px"><div class="sec-title">💰 صندوق البقشيش — اليوم (${money(pool.totalTips||0)} موزّع حسب الساعات)</div>
-      <table><thead><tr><th>الاسم</th><th style="text-align:left">الساعات</th><th style="text-align:left">حصة البقشيش</th></tr></thead>
-      <tbody>${poolRows||'<tr><td colspan="3" style="text-align:center;color:var(--mut);padding:14px">لا بقشيش أو ورديات مسجّلة اليوم بعد.</td></tr>'}</tbody></table></div>`;
+      <div style="overflow-x:auto"><table><thead><tr><th>الاسم</th><th style="text-align:left">الساعات</th><th style="text-align:left">حصة البقشيش</th></tr></thead>
+      <tbody>${poolRows||'<tr><td colspan="3" style="text-align:center;color:var(--mut);padding:14px">لا بقشيش أو ورديات مسجّلة اليوم بعد.</td></tr>'}</tbody></table></div></div>`;
 }
 async function saveWages(){
   try{ await api('/tenant',{method:'PUT',body:JSON.stringify({settings:{wages:_wages}})}); toast('✅ حُفظت الأجور'); }
@@ -2522,9 +2714,9 @@ function settingsView(){
   return `<div class="card" style="margin-bottom:14px">
       <div class="sec-title">🏪 نوع العمل</div>
       <p style="font-size:13px;color:var(--mut);margin:0 0 12px">بدّل بين نقاط بيع مطعم (طاولات، مطبخ، QR وتوصيل) وسجل تجزئة (باركود، SKU، جرد). يغيّر التطبيق بالكامل ليناسب عملك.</p>
-      <div style="display:flex;gap:10px">
-        <button class="btn ${!isRetail()?'primary':'ghost'}" style="flex:1;padding:14px" onclick="setBizMode('restaurant')">🍽️ مطعم${!isRetail()?' ✓':''}</button>
-        <button class="btn ${isRetail()?'primary':'ghost'}" style="flex:1;padding:14px" onclick="setBizMode('retail')">🛍️ تجزئة${isRetail()?' ✓':''}</button>
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <button class="btn ${!isRetail()?'primary':'ghost'}" style="flex:1;min-width:140px;padding:14px" onclick="setBizMode('restaurant')">🍽️ مطعم${!isRetail()?' ✓':''}</button>
+        <button class="btn ${isRetail()?'primary':'ghost'}" style="flex:1;min-width:140px;padding:14px" onclick="setBizMode('retail')">🛍️ تجزئة${isRetail()?' ✓':''}</button>
       </div></div>
     <div class="card" style="margin-bottom:14px">
       <div class="sec-title">💵 رسم الخدمة والبقشيش التلقائي</div>
@@ -2565,9 +2757,9 @@ function loginScreen(){
   $("#app").style.display='none';
   let scr=document.getElementById('loginScreen');
   if(!scr){scr=document.createElement('div');scr.id='loginScreen';document.body.appendChild(scr);}
-  scr.style.cssText='position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:200';
+  scr.style.cssText='position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--bg);z-index:200;overflow-y:auto;padding:16px';
   const keys=[1,2,3,4,5,6,7,8,9,'C',0,'⏎'];
-  scr.innerHTML=`<div style="text-align:center;width:300px">
+  scr.innerHTML=`<div style="text-align:center;width:300px;max-width:100%">
     <div class="logo" style="margin:0 auto 14px;width:60px;height:60px;font-size:26px">T</div>
     <h2 style="margin:0 0 4px">Tavo POS</h2>
     <p style="color:var(--mut);font-size:13px;margin:0 0 18px">أدخل رقمك السري لتسجيل الحضور</p>
