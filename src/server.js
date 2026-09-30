@@ -22,7 +22,7 @@ const LOYALTY_EARN = parseFloat(process.env.LOYALTY_EARN_RATE || '1');      // p
 const LOYALTY_REDEEM = parseFloat(process.env.LOYALTY_REDEEM_RATE || '0.05'); // $ per point (100pts = $5)
 
 // Store is initialized in start(); handlers access it via this reference.
-const store = await getStore();
+let store;
 const h = fn => (req, res) => fn(req, res).catch(e => {
   if (e && e.status) return res.status(e.status).json({ error: e.message });
   console.error(e); res.status(500).json({ error: e.message });
@@ -1790,11 +1790,22 @@ async function start() {
   }
 }
 
-// التعديل: تصدير تطبيق Express لـ Vercel
-export default app;
 
-// تشغيل دالة التهيئة (ستقوم بتهيئة قاعدة البيانات وتتجاهل تشغيل المنفذ على Vercel)
-start().catch(e => { console.error('Failed to start:', e); process.exit(1); });
+
+
+const startPromise = start();
+
+app.use(async (req, res, next) => {
+    try {
+        await startPromise;
+        next();
+    } catch (e) {
+        console.error('Initialization failed:', e);
+        res.status(500).json({ error: 'Server initialization failed' });
+    }
+});
+
+export default app;
 //   app.listen(PORT, () => {
 //     console.log(`\n  Tavo POS running → http://localhost:${PORT}`);
 //     console.log(`  Database: ${storeKind().toUpperCase()}   Payment mode: ${usingStripe ? 'STRIPE (test)' : 'MOCK (no key set)'}\n`);
