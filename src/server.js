@@ -173,7 +173,7 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 const round = n => Math.round(n * 100) / 100;
 
 async function nextOrderNumber(tenantId = DEFAULT_TENANT) {
-  const result = await neondb.query(
+  const result = await db.query(
     `SELECT next_order_number($1) AS number`,
     [tenantId]
   );
