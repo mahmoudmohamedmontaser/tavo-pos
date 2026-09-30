@@ -23,7 +23,7 @@ const LOYALTY_REDEEM = parseFloat(process.env.LOYALTY_REDEEM_RATE || '0.05'); //
 
 // Store is initialized in start(); handlers access it via this reference.
 let store;
-// Small async wrapper so route handlers can throw and we still return JSON 500s.
+let initPromise;// Small async wrapper so route handlers can throw and we still return JSON 500s.
 const h = fn => (req, res) => fn(req, res).catch(e => {
   if (e && e.status) return res.status(e.status).json({ error: e.message });
   console.error(e); res.status(500).json({ error: e.message });
