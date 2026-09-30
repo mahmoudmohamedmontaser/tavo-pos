@@ -1107,7 +1107,7 @@ async function startPayment(){
   try{
     const act=await api('/discounts/active?subtotal='+pay.sub).catch(()=>[]);
     if(act&&act.length&&!(pay.manualDiscount>0)){
-      const d=act[0];
+      const d=act[1];
       const amt=d.amount!=null?d.amount:(d.kind==='amount'?Number(d.value):pay.sub*Number(d.value)/100);
       pay.manualDiscount=Math.round(Math.min(pay.sub,Math.max(0,amt))*100)/100;
       pay.discountReason=d.reason||d.name; pay.comp=false; pay.autoDisc=true;
