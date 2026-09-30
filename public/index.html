@@ -830,6 +830,134 @@ html[dir="ltr"] .dir-flip{ transform:none; display:inline-block; }
   .an-wf-row.an-wf-total{font-size:14px}
   .an-dual{grid-template-columns:1fr}
 }
+
+/* ============================================================
+   Orders page + Menu item sales analytics (frontend-only v1)
+   ============================================================ */
+
+.ord-toolbar{
+  display:flex; gap:10px; align-items:center; flex-wrap:wrap;
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r-md); padding:10px 12px; margin-bottom:14px;
+}
+.ord-search{
+  flex:1 1 220px; min-width:0;
+  display:flex; align-items:center; gap:8px;
+  background:var(--surface-2); border:1px solid var(--border);
+  border-radius:var(--r-sm); padding:0 12px;
+  transition:border-color var(--dur-fast) var(--ease);
+}
+.ord-search:focus-within{ border-color:var(--brand); box-shadow:var(--focus); }
+.ord-search input{
+  flex:1; min-width:0; padding:11px 0; background:transparent; border:none;
+  color:var(--txt); font-size:14px; outline:none;
+}
+.ord-search .ic{ color:var(--mut); font-size:15px; }
+
+.ord-kpis{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:1px;
+  background:var(--border); border:1px solid var(--border); border-radius:var(--r-md);
+  overflow:hidden; margin-bottom:12px;
+}
+.ord-kpi{ background:var(--surface); padding:12px 14px; display:flex; flex-direction:column; gap:4px; }
+.ord-kpi__l{ font-size:11px; color:var(--mut); letter-spacing:.03em; text-transform:uppercase; font-weight:600; }
+.ord-kpi__v{ font-size:22px; font-weight:800; font-variant-numeric:tabular-nums; letter-spacing:-.02em; }
+
+.ord-filters{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+.ord-filters .chip{ padding:6px 12px; font-size:12.5px; }
+
+.ord-num{
+  display:inline-flex; align-items:center;
+  font-family:var(--num-font);
+  font-weight:800; font-size:15px; letter-spacing:-.01em;
+  color:var(--brand);
+  direction:ltr; unicode-bidi:isolate;
+  font-variant-numeric:tabular-nums;
+}
+
+.ord-table-wrap{ overflow-x:auto; }
+.ord-cards{ display:none; flex-direction:column; gap:10px; padding:10px; }
+.ord-card{
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--r-md); padding:12px 14px;
+  cursor:pointer;
+  transition:border-color var(--dur-fast) var(--ease), transform var(--dur-fast) var(--ease);
+}
+.ord-card:hover{ border-color:var(--border-2); }
+.ord-card:active{ transform:scale(.99); }
+.ord-card__top{ display:flex; justify-content:space-between; align-items:baseline; gap:8px; margin-bottom:4px; }
+.ord-card__meta{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:12px; color:var(--mut); }
+.ord-card__bottom{ display:flex; justify-content:space-between; align-items:center; margin-top:8px; }
+
+.ord-item{
+  display:flex; justify-content:space-between; gap:10px;
+  padding:8px 0; border-bottom:1px dashed var(--border);
+}
+.ord-item:last-child{ border-bottom:none; }
+.ord-item__nm{ font-weight:600; font-size:13px; }
+.ord-item__mods{ font-size:11px; color:var(--amber); margin-top:2px; line-height:1.4; }
+.ord-item__qty{ font-size:11.5px; color:var(--mut); font-variant-numeric:tabular-nums; margin-top:2px; }
+.ord-item__pr{ font-weight:700; font-size:13px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+
+@media (max-width:760px){
+  .ord-table-wrap{ display:none; }
+  .ord-cards{ display:flex; }
+  .ord-toolbar{ flex-direction:column; align-items:stretch; }
+  .ord-search{ flex:1 1 auto; }
+}
+
+.receipt-ordernum{
+  display:block; text-align:center; font-weight:800;
+  font-size:15px; letter-spacing:-.01em; margin:6px 0 2px;
+  font-family:var(--num-font);
+  direction:ltr; unicode-bidi:isolate;
+  font-variant-numeric:tabular-nums;
+}
+
+.mis-toolbar{
+  display:flex; gap:10px; flex-wrap:wrap; align-items:center; justify-content:space-between;
+  margin-bottom:12px;
+}
+.mis-search{
+  display:flex; align-items:center; gap:6px;
+  flex:1 1 200px; min-width:0; max-width:320px;
+  background:var(--surface-2); border:1px solid var(--border);
+  border-radius:var(--r-sm); padding:0 10px;
+  transition:border-color var(--dur-fast) var(--ease);
+}
+.mis-search:focus-within{ border-color:var(--brand); box-shadow:var(--focus); }
+.mis-search input{
+  flex:1; min-width:0; padding:9px 0;
+  background:transparent; border:none; color:var(--txt); font-size:13px; outline:none;
+}
+.mis-sorts{ display:flex; gap:6px; flex-wrap:wrap; }
+.mis-sorts .chip{ padding:6px 10px; font-size:12px; }
+
+.mis-table{ width:100%; border-collapse:separate; border-spacing:0; font-size:13px; }
+.mis-table th{
+  text-align:start; font-size:11px; color:var(--mut);
+  text-transform:uppercase; letter-spacing:.04em;
+  padding:9px 10px; border-bottom:1px solid var(--border);
+  background:transparent; font-weight:600;
+}
+.mis-table td{
+  padding:10px; border-bottom:1px solid var(--border); vertical-align:middle;
+}
+.mis-table tbody tr:hover td{ background:var(--surface-2); }
+.mis-table tbody tr:last-child td{ border-bottom:none; }
+.mis-table .num{ text-align:left; font-variant-numeric:tabular-nums; font-weight:600; }
+
+@media (max-width:600px){
+  .mis-toolbar{ flex-direction:column; align-items:stretch; }
+  .mis-search{ max-width:none; }
+}
+
+@media print{
+  #printArea .receipt-ordernum{
+    display:block; text-align:center; font-weight:800;
+    font-size:14px; margin:5px 0 2px;
+  }
+}
 </style>
 </head>
 <body>
@@ -1089,7 +1217,7 @@ async function flushOutbox(){
       OUTBOX.shift(); saveOutbox();
     }
     toast('✅ تمت مزامنة كل العناصر بالانتظار','success');
-    if(['kds','floor','dash'].includes(route)) render();
+    if(['kds','floor','dash','orders'].includes(route)) render();
   } catch(e){
   } finally { _flushing=false; updateConn(); }
 }
@@ -1114,7 +1242,7 @@ const MODIFIERS = ["بدون بصل","جبن إضافي (+$1.50)","إضافة ل
 
 const NAV_SECTIONS = [
   { label: '',            items: ['pos','floor','reservations','kds'] },
-  { label: 'الطلبات',     items: ['online','qr'] },
+  { label: 'الطلبات',     items: ['orders','online','qr'] },
   { label: 'التقارير',    items: ['dash','analytics','locations'] },
   { label: 'الإدارة',     items: ['menu','inventory','purchasing','stocktake','discounts'] },
   { label: 'العملاء',     items: ['loyalty','crm','houseaccounts','marketing'] },
@@ -1125,6 +1253,7 @@ const NAV_SECTIONS = [
 const NAV_ITEMS = {
   pos:{ic:'🧾',label:'الطلب'},           floor:{ic:'🍽️',label:'الطاولات'},
   reservations:{ic:'📅',label:'الحجوزات'}, kds:{ic:'👨‍🍳',label:'المطبخ'},
+  orders:{ic:'📋',label:'الأوردرات'},
   online:{ic:'📲',label:'إلكتروني'},     qr:{ic:'🔳',label:'QR'},
   dash:{ic:'📊',label:'التقارير'},        analytics:{ic:'📈',label:'التحليلات'},
   locations:{ic:'🏢',label:'الفروع'},     menu:{ic:'📖',label:'القائمة'},
@@ -1138,6 +1267,7 @@ const NAV_ITEMS = {
 };
 const titles = Object.fromEntries(Object.entries(NAV_ITEMS).map(([k,v])=>[k,[v.label,'']]));
 titles.pos=["الطلب","أنشئ فاتورة"];
+titles.orders=["الأوردرات","جميع الأوردرات والفواتير"];
 titles.floor=["الطاولات","مخطط الصالة"];
 titles.reservations=["الحجوزات","الحجوزات وقائمة الانتظار"];
 titles.kds=["شاشة المطبخ","التذاكر النشطة"];
@@ -1231,7 +1361,12 @@ function allowedNav(){
   const r = (ME&&ME.routes)||[];
   const retailMap = { pos:{ic:'🛒',label:'بيع'}, menu:{ic:'🏷️',label:'المنتجات'}, inventory:{ic:'📦',label:'المخزون'} };
   const hideRetail = new Set(['floor','kds','qr','online','reservations']);
-  const visible = id => r.includes(id) && (!isRetail() || !hideRetail.has(id));
+  const visible = id => {
+    if(id === 'orders'){
+      return r.includes('dash') || r.includes('analytics') || r.includes('pos') || r.includes('kds');
+    }
+    return r.includes(id) && (!isRetail() || !hideRetail.has(id));
+  };
   return NAV_SECTIONS
     .map(sec => ({
       label: sec.label,
@@ -1257,7 +1392,7 @@ function renderNav(){
 }
 
 function go(r){
-  if(!((ME&&ME.routes)||[]).includes(r)){toast('غير مسموح لدورك','warning');return}
+  if(r !== 'orders' && !((ME&&ME.routes)||[]).includes(r)){toast('غير مسموح لدورك','warning');return}
   route=r;renderNav();render();
   const app=document.getElementById('app');
   if(app.classList.contains('mobile-nav-open')) app.classList.remove('mobile-nav-open');
@@ -1270,6 +1405,7 @@ async function render(){
   const v=$("#view");
   try{
     if(route==="pos")v.innerHTML=posView();
+    else if(route==="orders")v.innerHTML=ordersView();
     else if(route==="floor")v.innerHTML=await floorView();
     else if(route==="reservations")v.innerHTML=await reservationsView();
     else if(route==="kds")v.innerHTML=await kdsView();
@@ -1562,6 +1698,8 @@ async function startPayment(){
    pay={
      lines:JSON.parse(JSON.stringify(check)),
      table:tableNo,
+     orderNumber: null,
+     orderId: null,
      sub:t.sub,
      effRate:t.effRate,
      tip:0,
@@ -1742,6 +1880,10 @@ async function submitSplit(){
       orderId:pay.orderId||null, table:pay.table,
       tenders:_split.tenders.map(t=>({method:t.method,amount:t.amount})),
       customerId:pay.customer?pay.customer.id:null, pointsRedeemed:pay.pointsRedeemed||0})});
+    if(r){
+      pay.orderNumber = r.number || r.orderNumber || r.order_no || null;
+      pay.orderId     = r.id || null;
+    }
     try{ await loadMenu(); }catch(e){}
     check=[];tableNo=null;checkCustomer=null;activeSeat=null;_split=null;
     showReceipt(r.total);renderNav();
@@ -1814,6 +1956,10 @@ async function completePayment(intentId,grand){
       lines:pay.lines.map(l=>({name:l.name,price:l.price,qty:l.qty,mods:l.mods})),
       tip:pay.tip, table:pay.table, discount:trueDisc, discountReason:pay.discountReason||null, comp:!!pay.comp, serviceCharge:pay.serviceCharge||0, taxExempt:!!pay.taxExempt,
       customerId: pay.customer?pay.customer.id:null, pointsRedeemed: pay.pointsRedeemed||0})});
+    if(r){
+      pay.orderNumber = r.number || r.orderNumber || r.order_no || null;
+      pay.orderId     = r.id || null;
+    }
     if(pay.customer && r && r.pointsBalance!=null) toast('💳 '+(r.pointsEarned||0)+' نقطة مكتسبة · الرصيد '+r.pointsBalance,'success');
     _lastPayId=(r&&r.id)||null;
     _lastPayCustomer=pay.customer?{email:pay.customer.email||'',phone:pay.customer.phone||''}:null;
@@ -1826,7 +1972,12 @@ let _lastPayId=null, _lastPayCustomer=null;
 function receiptInner(p,calc,grand,when){
   const c=calc||{sub:p.sub||0,disc:0,svc:0,tax:0,tip:p.tip||0,total:grand,gift:0,due:grand};
   const items=p.lines.map(l=>`<div class="r"><span>${l.qty}× ${l.name}</span><span>${money(l.price*l.qty)}</span></div>${(l.mods&&l.mods.length)?`<div style="color:#777;font-size:11px;margin-left:14px">${l.mods.join(", ")}</div>`:""}`).join("");
-  return `<div class="c"><b>TAVO</b><br>123 Main St · (555) 010-2233</div><hr>
+  const orderLine = p.orderNumber
+    ? `<div class="c receipt-ordernum">ORDER #${esc(String(p.orderNumber))}</div>`
+    : '';
+  return `<div class="c"><b>TAVO</b><br>123 Main St · (555) 010-2233</div>
+    ${orderLine}
+    <hr>
     <div class="r"><span>${when}</span></div>${p.table?`<div class="r"><span>طاولة</span><span>${p.table}</span></div>`:`<div class="r"><span>سفري</span><span></span></div>`}<hr>
     ${items}<hr><div class="r"><span>المجموع الفرعي</span><span>${money(c.sub)}</span></div>
     ${c.disc>0?`<div class="r"><span>خصم${p.discountReason?(' ('+p.discountReason+')'):''}</span><span>−${money(c.disc)}</span></div>`:''}
@@ -2283,15 +2434,621 @@ async function doRefund(id,max){
 }
 
 /* ============================================================
+   ORDERS PAGE — frontend-only. Reuses /orders?status=open,
+   /orders?status=cooking and /payments.
+   ============================================================ */
+let _ordState = {
+  data: null,
+  loading: false,
+  error: null,
+  search: '',
+  status: 'all',    // all | open | paid | refunded
+  type:   'all',    // all | dine-in | takeaway | delivery
+  sort:   'newest'  // newest | oldest | total-desc | total-asc | number
+};
+
+const ORDER_STATUS_META = {
+  open:               { ar:'مفتوح',        cls:'blue'  },
+  cooking:            { ar:'قيد التحضير',  cls:'amber' },
+  ready:              { ar:'جاهز',         cls:'green' },
+  paid:               { ar:'مدفوع',        cls:'green' },
+  completed:          { ar:'مكتمل',        cls:''      },
+  refunded:           { ar:'مُرتجع',       cls:'red'   },
+  partially_refunded: { ar:'مُرتجع جزئيًا',cls:'amber' },
+  voided:             { ar:'ملغى',         cls:'red'   },
+  cancelled:          { ar:'ملغى',         cls:'red'   }
+};
+
+function orderStatusTag(st){
+  const m = ORDER_STATUS_META[st] || { ar: st || '—', cls: '' };
+  return `<span class="tag ${m.cls}">${esc(m.ar)}</span>`;
+}
+
+function orderTypeTag(o){
+  const pm = o.channel === 'delivery' && o.platform
+    ? (PLATFORM_META[o.platform] || PLATFORM_META.other) : null;
+  if(pm) return `<span class="tag" style="background:${pm.color}22;color:${pm.color}">${pm.emoji} ${esc(pm.name)}</span>`;
+  if(o.channel === 'qr') return `<span class="tag" style="background:rgba(168,85,247,.15);color:#c084fc">📱 QR</span>`;
+  if(o.table) return `<span class="tag blue">داخل الصالة</span>`;
+  return `<span class="tag">سفري</span>`;
+}
+
+function orderItemsCount(o){
+  return (o.lines||[]).reduce((s,l) => s + (Number(l.qty)||0), 0);
+}
+
+function orderLineTotal(l){
+  const qty   = Number(l.qty)   || 0;
+  const price = Number(l.price) || 0;
+  const mods  = (l.mods||[]).reduce((s,m) => {
+    const x = String(m).match(/\+\$([0-9.]+)/);
+    return s + (x ? +x[1] : 0);
+  }, 0);
+  return (price + mods) * qty;
+}
+
+function normalizeOrderRecord(raw, kind){
+  if(kind === 'payment'){
+    const lines = Array.isArray(raw.lines) ? raw.lines : [];
+    const status =
+      raw.status === 'refunded' ? 'refunded' :
+      raw.status === 'partially_refunded' ? 'partially_refunded' :
+      raw.status === 'voided' ? 'voided' :
+      'paid';
+    return {
+      id: raw.id,
+      number: raw.number || raw.orderNumber || raw.order_no || null,
+      table: raw.table || null,
+      status,
+      lines,
+      subtotal: raw.subtotal != null ? Number(raw.subtotal) : null,
+      tax: raw.tax != null ? Number(raw.tax) : null,
+      tip: raw.tip != null ? Number(raw.tip) : null,
+      discount: raw.discount != null ? Number(raw.discount) : null,
+      serviceCharge: raw.serviceCharge != null ? Number(raw.serviceCharge) : null,
+      total: Number(raw.total) || 0,
+      method: raw.method || null,
+      createdAt: raw.createdAt || raw.paidAt || raw.timestamp || 0,
+      channel: raw.channel || null,
+      platform: raw.platform || null,
+      refundedAmount: Number(raw.refundedAmount) || 0,
+      source: 'payment'
+    };
+  }
+  const lines = Array.isArray(raw.lines) ? raw.lines : [];
+  const lineSum = lines.reduce((s,l) => s + orderLineTotal(l), 0);
+  return {
+    id: raw.id,
+    number: raw.number || null,
+    table: raw.table || null,
+    status: raw.status || 'open',
+    lines,
+    subtotal: lineSum,
+    tax: null,
+    tip: null,
+    discount: null,
+    serviceCharge: null,
+    total: Number(raw.total) || lineSum,
+    method: null,
+    createdAt: raw.createdAt || raw.firedAt || 0,
+    channel: raw.channel || null,
+    platform: raw.platform || null,
+    refundedAmount: 0,
+    source: 'order'
+  };
+}
+
+async function loadOrdersData(force){
+  if(_ordState.data && !force) return _ordState.data;
+  _ordState.loading = true;
+  _ordState.error = null;
+  try{
+    const [open, cooking, pays] = await Promise.all([
+      api('/orders?status=open').catch(()=>null),
+      api('/orders?status=cooking').catch(()=>null),
+      api('/payments').catch(()=>null)
+    ]);
+    if(open === null && cooking === null && pays === null){
+      throw new Error('فشل تحميل الأوردرات');
+    }
+    const all = [];
+    const seen = new Set();
+    const push = rec => {
+      const k = rec.source + '_' + rec.id;
+      if(seen.has(k)) return;
+      seen.add(k);
+      all.push(rec);
+    };
+    (open    || []).forEach(o => push(normalizeOrderRecord(o, 'order')));
+    (cooking || []).forEach(o => push(normalizeOrderRecord(o, 'order')));
+    (pays    || []).forEach(p => push(normalizeOrderRecord(p, 'payment')));
+    all.sort((a,b) => (b.createdAt||0) - (a.createdAt||0));
+    _ordState.data = all;
+    _ordState.error = null;
+  }catch(e){
+    _ordState.data  = null;
+    _ordState.error = e;
+  }finally{
+    _ordState.loading = false;
+  }
+  return _ordState.data;
+}
+
+function ordFiltered(){
+  const list = _ordState.data || [];
+  const q    = _ordState.search.trim().toLowerCase();
+  return list.filter(o => {
+    if(_ordState.status !== 'all'){
+      if(_ordState.status === 'open'     && !['open','cooking','ready'].includes(o.status)) return false;
+      if(_ordState.status === 'paid'     && !['paid','completed'].includes(o.status))       return false;
+      if(_ordState.status === 'refunded' && !['refunded','partially_refunded'].includes(o.status)) return false;
+    }
+    if(_ordState.type !== 'all'){
+      if(_ordState.type === 'dine-in'  && !o.table)                        return false;
+      if(_ordState.type === 'takeaway' && (o.table || o.channel==='delivery')) return false;
+      if(_ordState.type === 'delivery' && o.channel !== 'delivery')        return false;
+    }
+    if(q){
+      const num   = o.number ? String(o.number).toLowerCase() : '';
+      const id    = String(o.id||'').toLowerCase();
+      const tbl   = o.table ? String(o.table).toLowerCase() : '';
+      if(!num.includes(q) && !id.includes(q) && !tbl.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function ordSorted(list){
+  const arr = list.slice();
+  switch(_ordState.sort){
+    case 'oldest':     arr.sort((a,b)=>(a.createdAt||0)-(b.createdAt||0)); break;
+    case 'total-desc': arr.sort((a,b)=>(b.total||0)-(a.total||0));         break;
+    case 'total-asc':  arr.sort((a,b)=>(a.total||0)-(b.total||0));         break;
+    case 'number':     arr.sort((a,b)=>String(a.number||'').localeCompare(String(b.number||''), undefined, {numeric:true})); break;
+    case 'newest':
+    default:           arr.sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)); break;
+  }
+  return arr;
+}
+
+function fmtOrderTime(ts){
+  if(!ts) return '—';
+  const d = new Date(ts);
+  return d.toLocaleString('ar-EG',{hour:'2-digit',minute:'2-digit',day:'2-digit',month:'short'});
+}
+
+function ordKpis(){
+  const list = _ordState.data || [];
+  const openN = list.filter(o => ['open','cooking','ready'].includes(o.status)).length;
+  const paidN = list.filter(o => ['paid','completed'].includes(o.status)).length;
+  const today = new Date(); today.setHours(0,0,0,0);
+  const todaySales = list
+    .filter(o => o.source === 'payment' && o.createdAt && o.createdAt >= today.getTime())
+    .reduce((s,o) => s + (Number(o.total)||0), 0);
+  const kpi = (lbl,val) => `<div class="ord-kpi"><div class="ord-kpi__l">${lbl}</div><div class="ord-kpi__v">${val}</div></div>`;
+  return `${kpi('إجمالي الأوردرات', list.length.toLocaleString('en-US'))}
+    ${kpi('مفتوحة',           openN.toLocaleString('en-US'))}
+    ${kpi('مدفوعة',           paidN.toLocaleString('en-US'))}
+    ${kpi('مبيعات اليوم',     money(todaySales))}`;
+}
+
+function ordRowHTML(o){
+  const num   = o.number != null ? '#'+esc(String(o.number))
+                                  : (o.source==='payment' ? '#'+esc(String(o.id).slice(-6)) : '—');
+  const items = orderItemsCount(o);
+  const time  = fmtOrderTime(o.createdAt);
+  const method = o.method
+    ? `<span class="tag ${o.method==='card'?'blue':o.method==='cash'?'green':'amber'}">${esc(o.method)}</span>`
+    : '—';
+  const key = o.source + '_' + String(o.id);
+  return `<tr onclick="openOrderDetails('${esc(key)}')">
+    <td><span class="ord-num">${num}</span></td>
+    <td style="color:var(--mut);white-space:nowrap">${esc(time)}</td>
+    <td>${orderTypeTag(o)}</td>
+    <td>${o.table ? ('T'+esc(String(o.table))) : '—'}</td>
+    <td>${items} <span style="color:var(--mut);font-size:11px">عنصر</span></td>
+    <td style="text-align:left;font-weight:700;font-variant-numeric:tabular-nums">${money(o.total)}</td>
+    <td>${method}</td>
+    <td>${orderStatusTag(o.status)}</td>
+  </tr>`;
+}
+
+function ordCardHTML(o){
+  const num   = o.number != null ? '#'+esc(String(o.number))
+                                  : (o.source==='payment' ? '#'+esc(String(o.id).slice(-6)) : '—');
+  const items = orderItemsCount(o);
+  const time  = fmtOrderTime(o.createdAt);
+  const key   = o.source + '_' + String(o.id);
+  return `<div class="ord-card" onclick="openOrderDetails('${esc(key)}')">
+    <div class="ord-card__top">
+      <span class="ord-num">${num}</span>
+      <span style="font-weight:800;font-variant-numeric:tabular-nums">${money(o.total)}</span>
+    </div>
+    <div class="ord-card__meta">
+      ${orderTypeTag(o)}
+      ${o.table?`<span>🍽 طاولة ${esc(String(o.table))}</span>`:''}
+      <span>${esc(time)}</span>
+    </div>
+    <div class="ord-card__bottom">
+      <span style="font-size:12px;color:var(--mut)">${items} عنصر</span>
+      ${orderStatusTag(o.status)}
+    </div>
+  </div>`;
+}
+
+function ordStatusChips(){
+  const c = (id,lbl) => `<button class="chip ${_ordState.status===id?'sel':''}" onclick="_ordState.status='${id}';paintOrders()">${lbl}</button>`;
+  return `<div class="ord-filters">
+    ${c('all','الكل')}${c('open','مفتوح')}${c('paid','مدفوع')}${c('refunded','مُرتجع')}
+    <span style="width:1px;background:var(--border);margin:0 4px"></span>
+    ${(()=>{const t=(id,l)=>`<button class="chip ${_ordState.type===id?'sel':''}" onclick="_ordState.type='${id}';paintOrders()">${l}</button>`;
+      return t('all','كل الأنواع')+t('dine-in','داخل الصالة')+t('takeaway','سفري')+t('delivery','توصيل');})()}
+  </div>`;
+}
+
+function ordSortSelect(){
+  const opts = [
+    ['newest','الأحدث أولاً'],
+    ['oldest','الأقدم أولاً'],
+    ['total-desc','الأعلى إجماليًا'],
+    ['total-asc','الأقل إجماليًا'],
+    ['number','رقم الأوردر']
+  ];
+  return `<select onchange="_ordState.sort=this.value;paintOrders()"
+    style="padding:8px 10px;border-radius:10px;background:var(--surface-2);border:1px solid var(--border);color:var(--txt);font-size:13px">
+    ${opts.map(([v,l])=>`<option value="${v}" ${_ordState.sort===v?'selected':''}>${l}</option>`).join('')}
+  </select>`;
+}
+
+function ordBodyHTML(){
+  if(_ordState.loading){
+    return `<div class="card">${Array.from({length:6})
+      .map(()=>`<div class="skel skel-line" style="height:36px;margin:6px 0"></div>`).join('')}</div>`;
+  }
+  if(_ordState.error){
+    return `<div class="card" style="border-color:var(--red);text-align:center;padding:24px">
+      <div style="font-size:22px;margin-bottom:8px">⚠️</div>
+      <div style="font-weight:700;margin-bottom:4px">تعذر تحميل الأوردرات</div>
+      <div style="color:var(--mut);font-size:13px;margin-bottom:14px">حدث خطأ أثناء تحميل البيانات.</div>
+      <button class="btn primary" onclick="refreshOrders(true)">🔄 حاول مرة أخرى</button>
+    </div>`;
+  }
+  const list = _ordState.data || [];
+  const sorted = ordSorted(ordFiltered());
+  if(!list.length){
+    return `<div class="card" style="text-align:center;padding:48px 20px">
+      <div style="font-size:38px;opacity:.5;margin-bottom:10px">📋</div>
+      <div style="font-weight:700;margin-bottom:4px">لا توجد أوردرات</div>
+      <div style="color:var(--mut);font-size:13px">لم يتم إنشاء أي أوردر حتى الآن.</div>
+    </div>`;
+  }
+  if(!sorted.length){
+    return `<div class="card" style="text-align:center;padding:40px 20px">
+      <div style="font-size:32px;opacity:.5;margin-bottom:10px">🔍</div>
+      <div style="font-weight:700;margin-bottom:4px">لا توجد نتائج</div>
+      <div style="color:var(--mut);font-size:13px;margin-bottom:14px">جرّب تغيير البحث أو الفلاتر.</div>
+      <button class="chip" onclick="resetOrderFilters()">↺ إعادة تعيين الفلاتر</button>
+    </div>`;
+  }
+  return `
+    <div class="card" style="padding:0;overflow:hidden">
+      <div class="ord-table-wrap">
+        <table class="an-txn-table">
+          <thead><tr>
+            <th>الأوردر</th><th>الوقت</th><th>النوع</th><th>الطاولة</th>
+            <th>العناصر</th><th style="text-align:left">الإجمالي</th>
+            <th>الدفع</th><th>الحالة</th>
+          </tr></thead>
+          <tbody>${sorted.map(ordRowHTML).join('')}</tbody>
+        </table>
+      </div>
+      <div class="ord-cards">${sorted.map(ordCardHTML).join('')}</div>
+    </div>`;
+}
+
+function ordersView(){
+  if(!_ordState.data && !_ordState.loading && !_ordState.error){
+    _ordState.loading = true;
+    setTimeout(() => {
+      loadOrdersData().then(() => paintOrders());
+    }, 0);
+  }
+  return `
+    <div class="ord-toolbar">
+      <div class="ord-search">
+        <span class="ic">🔍</span>
+        <input placeholder="ابحث برقم الأوردر..." value="${esc(_ordState.search)}"
+          oninput="_ordState.search=this.value;paintOrders()">
+      </div>
+      ${ordSortSelect()}
+      <button class="btn ghost" style="padding:9px 14px;flex:0" onclick="refreshOrders(true)">🔄 تحديث</button>
+    </div>
+    <div id="ordKpis" class="ord-kpis">${ordKpis()}</div>
+    <div id="ordFilters" style="margin-bottom:12px">${ordStatusChips()}</div>
+    <div id="ordBody">${ordBodyHTML()}</div>`;
+}
+
+function paintOrders(){
+  const k = document.getElementById('ordKpis');    if(k) k.innerHTML = ordKpis();
+  const f = document.getElementById('ordFilters');  if(f) f.innerHTML = ordStatusChips();
+  const b = document.getElementById('ordBody');     if(b) b.innerHTML = ordBodyHTML();
+}
+
+async function refreshOrders(){
+  _ordState.data    = null;
+  _ordState.loading = true;
+  _ordState.error   = null;
+  const b = document.getElementById('ordBody'); if(b) b.innerHTML = ordBodyHTML();
+  await loadOrdersData(true);
+  paintOrders();
+  toast('🔄 تم تحديث الأوردرات','success');
+}
+
+function resetOrderFilters(){
+  _ordState.search = '';
+  _ordState.status = 'all';
+  _ordState.type   = 'all';
+  _ordState.sort   = 'newest';
+  render();
+}
+
+function openOrderDetails(key){
+  const o = (_ordState.data || []).find(x => (x.source + '_' + String(x.id)) === key);
+  if(!o){ toast('لم يتم العثور على الأوردر','warning'); return; }
+  const num  = o.number != null ? '#'+esc(String(o.number)) : '#'+esc(String(o.id).slice(-6));
+  const items = (o.lines||[]).map(l => {
+    const qty   = Number(l.qty)   || 0;
+    const price = Number(l.price) || 0;
+    const lt    = orderLineTotal(l);
+    const mods  = (l.mods||[]).length
+      ? `<div class="ord-item__mods">↳ ${esc(l.mods.join('، '))}</div>` : '';
+    return `<div class="ord-item">
+      <div style="flex:1;min-width:0">
+        <div class="ord-item__nm">${esc(l.name||'—')}</div>
+        <div class="ord-item__qty">${qty} × ${money(price)}</div>
+        ${mods}
+      </div>
+      <div class="ord-item__pr">${money(lt)}</div>
+    </div>`;
+  }).join('') || '<div style="color:var(--mut);text-align:center;padding:14px;font-size:13px">لا تفاصيل عناصر متوفرة.</div>';
+
+  const fin = [];
+  if(o.subtotal   != null) fin.push(['المجموع الفرعي', money(o.subtotal)]);
+  if(o.discount)           fin.push(['الخصم',          '−'+money(o.discount)]);
+  if(o.serviceCharge)      fin.push(['رسم الخدمة',     money(o.serviceCharge)]);
+  if(o.tax        != null) fin.push(['الضريبة',        money(o.tax)]);
+  if(o.tip)                fin.push(['البقشيش',        money(o.tip)]);
+  if(o.refundedAmount)     fin.push(['مُرتجع',          '−'+money(o.refundedAmount)]);
+  fin.push(['الإجمالي', money(o.total), true]);
+
+  const refundData = encodeURIComponent(JSON.stringify({
+    id: o.id, total: Number(o.total), refundedAmount: Number(o.refundedAmount || 0)
+  }));
+
+  openModal(`<div class="mhd">
+    <h3 style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+      <span class="ord-num" style="font-size:20px">${num}</span>
+      ${orderStatusTag(o.status)}
+    </h3>
+    <button class="x" onclick="closeModal()">✕</button>
+  </div>
+  <div class="mbd">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;font-size:12.5px;color:var(--mut);align-items:center">
+      <span>📅 ${esc(fmtOrderTime(o.createdAt))}</span>
+      ${orderTypeTag(o)}
+      ${o.table?`<span>🍽 طاولة ${esc(String(o.table))}</span>`:''}
+      ${o.method?`<span>💳 ${esc(o.method)}</span>`:''}
+    </div>
+
+    <div class="sec-title" style="margin:0 0 6px">العناصر (${(o.lines||[]).length})</div>
+    <div class="card" style="background:var(--surface-2);max-height:300px;overflow:auto;margin-bottom:14px">
+      ${items}
+    </div>
+
+    <div class="sec-title" style="margin:0 0 6px">الملخص المالي</div>
+    <div class="card" style="background:var(--surface-2)">
+      ${fin.map(([lbl,val,big]) => `<div class="totrow"${big?' style="font-weight:800;font-size:15px;border-top:1px dashed var(--border);margin-top:6px;padding-top:8px;color:var(--txt)"':''}>
+        <span>${lbl}</span><span>${val}</span></div>`).join('')}
+    </div>
+
+    ${o.source==='payment' ? `
+      <div style="display:flex;gap:8px;margin-top:14px;flex-wrap:wrap">
+        <button class="btn ghost" style="flex:0;padding:10px 16px"
+          onclick="closeModal();printOrderReceipt('${esc(String(o.id))}')">🖨 طباعة الإيصال</button>
+        ${o.status !== 'refunded' ? `
+          <button class="btn ghost" style="flex:0;padding:10px 16px;color:var(--red)"
+            onclick="closeModal();openRefund(decodeURIComponent('${refundData}'))">↩️ استرجاع</button>` : ''}
+      </div>` : ''}
+  </div>`);
+}
+
+function printOrderReceipt(id){
+  const o = (_ordState.data||[]).find(x => x.source==='payment' && String(x.id)===String(id));
+  if(!o){ toast('لم يتم العثور على الإيصال','warning'); return; }
+  const when  = fmtOrderTime(o.createdAt);
+  const num   = o.number != null ? ('#'+o.number) : ('#'+String(o.id).slice(-6));
+  const lines = (o.lines||[]).map(l =>
+    `<div class="r"><span>${l.qty}× ${esc(l.name)}</span><span>${money(orderLineTotal(l))}</span></div>`
+  ).join('');
+  const html = `<div class="c"><b>TAVO</b><br>123 Main St · (555) 010-2233</div>
+    <div class="c receipt-ordernum">ORDER ${esc(num)}</div>
+    <hr>
+    <div class="r"><span>${esc(when)}</span></div>
+    ${o.table?`<div class="r"><span>طاولة</span><span>${esc(String(o.table))}</span></div>`
+              :`<div class="r"><span>سفري</span><span></span></div>`}
+    <hr>
+    ${lines}<hr>
+    ${o.subtotal     != null?`<div class="r"><span>المجموع الفرعي</span><span>${money(o.subtotal)}</span></div>`:''}
+    ${o.discount?            `<div class="r"><span>خصم</span><span>−${money(o.discount)}</span></div>`:''}
+    ${o.serviceCharge?       `<div class="r"><span>رسم الخدمة</span><span>${money(o.serviceCharge)}</span></div>`:''}
+    ${o.tax          != null?`<div class="r"><span>الضريبة</span><span>${money(o.tax)}</span></div>`:''}
+    ${o.tip?                 `<div class="r"><span>البقشيش</span><span>${money(o.tip)}</span></div>`:''}
+    <div class="r"><b>الإجمالي</b><b>${money(o.total)}</b></div>
+    <div class="r"><span>مدفوع (${esc(o.method||'—')})</span><span>${money(o.total)}</span></div>
+    <hr><div class="c">شكرًا لك! 🙏</div>`;
+  doPrint(html);
+}
+
+/* ============================================================
+   MENU ITEM SALES ANALYTICS — frontend aggregation from loaded
+   /payments data (falls back to /reports/analytics byProduct).
+   ============================================================ */
+let _misState = { search:'', sort:'revenue-desc' };
+
+function computeMenuSales(from, to){
+  const map = new Map();
+  let hasLines = false;
+  const pays = (_anPayments || []).filter(p => {
+    if(p.status === 'refunded') return false;
+    const t = _anTime(p);
+    return t && t >= from && t <= to;
+  });
+  for(const p of pays){
+    if(Array.isArray(p.lines) && p.lines.length){
+      hasLines = true;
+      for(const l of p.lines){
+        const name  = String(l.name || '—');
+        const qty   = Number(l.qty)   || 0;
+        const price = Number(l.price) || 0;
+        if(!map.has(name)) map.set(name, { name, qty:0, revenue:0 });
+        const e = map.get(name);
+        e.qty     += qty;
+        e.revenue += qty * price;
+      }
+    }
+  }
+  if(!hasLines){
+    const byProd = (_anData && Array.isArray(_anData.byProduct)) ? _anData.byProduct : [];
+    for(const p of byProd){
+      const name = String(p.key == null ? '' : p.key);
+      const rev  = Number(p.sales) || 0;
+      if(!map.has(name)) map.set(name, { name, qty:0, revenue:0 });
+      map.get(name).revenue += rev;
+    }
+  }
+  return { data: Array.from(map.values()), hasLines };
+}
+
+function misSorted(data){
+  const arr = data.slice();
+  switch(_misState.sort){
+    case 'revenue-asc': arr.sort((a,b)=>a.revenue-b.revenue); break;
+    case 'qty-desc':    arr.sort((a,b)=>b.qty-a.qty);         break;
+    case 'qty-asc':     arr.sort((a,b)=>a.qty-b.qty);         break;
+    case 'name-asc':    arr.sort((a,b)=>a.name.localeCompare(b.name)); break;
+    case 'name-desc':   arr.sort((a,b)=>b.name.localeCompare(a.name)); break;
+    case 'revenue-desc':
+    default:            arr.sort((a,b)=>b.revenue-a.revenue); break;
+  }
+  return arr;
+}
+
+function misFiltered(data){
+  const q = _misState.search.trim().toLowerCase();
+  return q ? data.filter(d => d.name.toLowerCase().includes(q)) : data;
+}
+
+function misSectionHTML(from, to){
+  const { data, hasLines } = computeMenuSales(from, to);
+  const filtered = misFiltered(data);
+  const sorted   = misSorted(filtered);
+  const totalQty = data.reduce((s,x)=>s+x.qty,0);
+  const totalRev = data.reduce((s,x)=>s+x.revenue,0);
+
+  const sortChips = [
+    ['revenue-desc','الأعلى إيرادًا ↓'],
+    ['revenue-asc','الأدنى إيرادًا ↑'],
+    ['qty-desc','الأكثر كمية ↓'],
+    ['qty-asc','الأقل كمية ↑'],
+    ['name-asc','الاسم A→Z']
+  ].map(([v,l]) =>
+    `<button class="chip ${_misState.sort===v?'sel':''}" onclick="_misState.sort='${v}';paintMenuSales()">${l}</button>`
+  ).join('');
+
+  const toolbar = `<div class="mis-toolbar">
+    <div class="mis-search">
+      <span style="color:var(--mut)">🔍</span>
+      <input placeholder="ابحث في العناصر..." value="${esc(_misState.search)}"
+        oninput="_misState.search=this.value;paintMenuSales()">
+    </div>
+    <div class="mis-sorts">${sortChips}</div>
+  </div>`;
+
+  const kpiStrip = `<div class="an-kpi-strip" style="margin-bottom:12px">
+    <div class="an-kpi">
+      <div class="an-kpi__head"><div class="an-kpi__label">إجمالي الوحدات المُباعة</div><div class="an-kpi__ic">📦</div></div>
+      <div class="an-kpi__value">${totalQty.toLocaleString('en-US')}</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi__head"><div class="an-kpi__label">إجمالي مبيعات العناصر</div><div class="an-kpi__ic">💰</div></div>
+      <div class="an-kpi__value">${money(totalRev)}</div>
+    </div>
+    <div class="an-kpi">
+      <div class="an-kpi__head"><div class="an-kpi__label">عدد العناصر</div><div class="an-kpi__ic">🍽️</div></div>
+      <div class="an-kpi__value">${data.length.toLocaleString('en-US')}</div>
+    </div>
+  </div>`;
+
+  let body;
+  if(!sorted.length){
+    body = `<div class="an-empty">${_misState.search
+      ? 'لا توجد نتائج — جرّب بحثًا مختلفًا.'
+      : 'لا توجد مبيعات عناصر لهذه الفترة.'}</div>`;
+  } else {
+    const chartTop = sorted.slice(0,10);
+    body = `<div class="an-grid-2" style="align-items:start;margin-bottom:14px">
+      <div class="card">
+        <div class="an-section__title" style="margin-bottom:10px">📊 مبيعات العناصر (رسم)</div>
+        ${svgBars(chartTop.map(d=>({label:d.name, value:d.revenue})), {emptyMsg:'لا بيانات'})}
+      </div>
+      <div class="card">
+        <div class="an-section__title" style="margin-bottom:10px">📦 الكميات المُباعة (رسم)</div>
+        ${svgBars(chartTop.map(d=>({label:d.name, value:d.qty, valueLabel:d.qty+'×'})), {emptyMsg:'لا بيانات'})}
+      </div>
+    </div>
+    <div style="overflow-x:auto">
+      <table class="mis-table">
+        <thead><tr>
+          <th>العنصر</th>
+          <th style="text-align:left">الكمية المُباعة</th>
+          <th style="text-align:left">إجمالي المبيعات</th>
+          <th style="text-align:left">الحصة</th>
+        </tr></thead>
+        <tbody>
+          ${sorted.map(d => {
+            const share = totalRev > 0 ? (d.revenue/totalRev*100).toFixed(1) : '0.0';
+            return `<tr>
+              <td><b>${esc(d.name)}</b></td>
+              <td class="num">${d.qty.toLocaleString('en-US')} <span style="color:var(--mut);font-weight:400;font-size:11px">وحدة</span></td>
+              <td class="num">${money(d.revenue)}</td>
+              <td class="num" style="color:var(--mut);font-weight:500">${share}%</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>
+    </div>
+    ${!hasLines ? `<div style="font-size:11px;color:var(--mut);margin-top:10px;text-align:center">تقدير بناءً على ملخص المنتجات — لم تُرجِع الـ API تفاصيل بنود الأوردر الكاملة لهذه الفترة.</div>` : ''}`;
+  }
+
+  return `<div id="misWrap">${toolbar}${kpiStrip}<div id="misBody">${body}</div></div>`;
+}
+
+function paintMenuSales(){
+  const { from, to } = anRange();
+  const wrap = document.getElementById('misWrap');
+  if(wrap) wrap.outerHTML = misSectionHTML(from, to);
+}
+
+/* ============================================================
    Analytics — BI workspace v3 (frontend-only)
    ============================================================ */
-let _anPreset      = '30d';                 // 'today' | 'yesterday' | '7d' | '30d' | '90d' | 'month' | 'custom'
+let _anPreset      = '30d';
 let _anCustom      = { from:null, to:null };
-let _anDays        = 30;                    // kept for the report builder's default range
-let _anData        = null;                  // /reports/analytics response
-let _anSummary     = null;                  // /reports/summary response
-let _anPayments    = null;                  // /payments list
-let _anOpenOrders  = null;                  // /orders?status=open list
+let _anDays        = 30;
+let _anData        = null;
+let _anSummary     = null;
+let _anPayments    = null;
+let _anOpenOrders  = null;
 let _anLastUpdated = null;
 
 let _rbGroup = 'employee', _rbMetric = 'sales', _rbRows = null;
@@ -2302,6 +3059,7 @@ const _anTime = p => p && (p.createdAt || p.paidAt || p.timestamp || null);
 function anRange(){
   if(_anPreset === 'custom' && _anCustom.from && _anCustom.to) return _anCustom;
   const to = Date.now();
+  if(_anPreset === 'all'){ return { from: 0, to }; }
   if(_anPreset === 'today'){
     const d = new Date(); d.setHours(0,0,0,0);
     return { from: d.getTime(), to };
@@ -2400,7 +3158,7 @@ function renderAnalytics(from, to){
   /* ---------- toolbar ---------- */
   const presets = [
     ['today','اليوم'], ['yesterday','أمس'], ['7d','7 أيام'],
-    ['30d','30 يومًا'], ['90d','90 يومًا'], ['month','هذا الشهر'],
+    ['30d','30 يومًا'], ['90d','90 يومًا'], ['month','هذا الشهر'], ['all','كل الفترات'],
   ];
   const toolbar = `<div class="an-toolbar">
     <div class="an-range">
@@ -2545,6 +3303,14 @@ function renderAnalytics(from, to){
         <div class="card">${prodRev}</div>
       </section>
     </div>
+
+    <section class="an-section">
+      <div class="an-section__head">
+        <div class="an-section__title">🍽️ تحليل مبيعات عناصر القائمة</div>
+        <div class="an-section__sub">الكمية المُباعة والإيراد لكل عنصر — ${_anPreset==='today'?'اليوم':_anPreset==='month'?'هذا الشهر':_anPreset==='all'?'كل الفترات':'الفترة المحددة'}</div>
+      </div>
+      <div class="card">${misSectionHTML(from, to)}</div>
+    </section>
 
     <section class="an-section">
       <div class="an-section__head">
@@ -2760,7 +3526,6 @@ function anTopProductsByQty(sum){
   return anProductList(items, 'qty');
 }
 function anTopProductsByRevenue(sum, an){
-  // Prefer real per-product sales if the backend already returns it
   if(an && Array.isArray(an.byProduct) && an.byProduct.length){
     const items = an.byProduct
       .map(p => ({ name: String(p.key==null?'':p.key), revenue: _anNum(p.sales) }))
@@ -2769,7 +3534,6 @@ function anTopProductsByRevenue(sum, an){
       .slice(0,10);
     if(items.length) return anProductList(items, 'revenue');
   }
-  // Frontend-only estimate: current MENU price × sold quantity
   const tops = (sum && Array.isArray(sum.topSellers)) ? sum.topSellers : [];
   if(!tops.length) return `<div class="an-empty">لا توجد بيانات منتجات لهذه الفترة.</div>`;
   const items = tops.map(([name,qty]) => {
@@ -4217,7 +4981,7 @@ async function startApp(){
   try{ const t=await api('/tenant'); TENANT_MODE=(t&&t.mode)||(ME&&ME.tenantMode)||'restaurant'; TENANT_SETTINGS=(t&&t.settings)||{}; }catch{ TENANT_MODE=(ME&&ME.tenantMode)||'restaurant'; }
   const GW={stripe:'💳 Stripe',fiserv:'💳 Fiserv',tsys:'💳 TSYS',mock:'🧪 دفع محاكاة'};
   $("#modebadge").textContent=(GW[CFG.paymentMode]||('💳 '+CFG.paymentMode))+(ME?` · ${ME.name} (${ME.role})`:'');
-  if(!((ME&&ME.routes)||[]).includes(route)) route=(ME.routes&&ME.routes[0])||'pos';
+  if(!((ME&&ME.routes)||[]).includes(route) && route !== 'orders') route=(ME.routes&&ME.routes[0])||'pos';
   await loadMenu();tickClock();
   if(!window._clockIv) window._clockIv=setInterval(()=>{
     tickClock();
