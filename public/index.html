@@ -84,7 +84,6 @@
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   #stripe-element{background:#fff;padding:12px;border-radius:10px;margin:10px 0;direction:ltr}
   .modebadge{font-size:11px;padding:3px 8px;border-radius:20px;background:var(--panel2);border:1px solid var(--line);color:var(--mut)}
-  /* الطباعة: يظهر #printArea فقط على الورق، بمقاس 80mm لفة الإيصال */
   #printArea{display:none}
   @media print{
     body{background:#fff}
@@ -97,7 +96,6 @@
     #printArea .c{text-align:center}
     @page{margin:6mm}
   }
-  /* ---- تفاعلات دقيقة (سريعة وسلسة) ---- */
   @keyframes itemPop{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:none}}
   @keyframes lineIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
   @keyframes modalIn{from{opacity:0;transform:translateY(24px) scale(.97)}to{opacity:1;transform:none}}
@@ -278,7 +276,6 @@ function allowedNav(){
   const r = (ME&&ME.routes)||[];
   let nav = NAV.filter(n=>r.includes(n.id));
   if(isRetail()){
-    // أعمال التجزئة لا تحتاج طاولات أو مطبخًا أو طلب QR للطاولات أو التوصيل.
     const hide=new Set(['floor','kds','qr','online','reservations']);
     nav = nav.filter(n=>!hide.has(n.id)).map(n=>{
       if(n.id==='pos') return {...n,ic:'🛒',label:'بيع'};
@@ -327,7 +324,7 @@ async function render(){
 }
 
 /* ---- نقطة البيع ---- */
-let activeSeat=null;   // بأسلوب Toast: المقعد الذي تُنسب إليه العناصر الجديدة (null = مشترك)
+let activeSeat=null;
 function setActiveSeat(n){ activeSeat=(activeSeat===n?null:n); render(); toast(activeSeat?('الطلب الآن للمقعد '+activeSeat):'الطلب الآن لعناصر مشتركة'); }
 function posView(){
   const searching = posSearch.trim().length>0;
@@ -358,7 +355,6 @@ function setSearch(v){
 }
 async function scanAdd(){
   const code=posSearch.trim(); if(!code) return;
-  // تطابق تام للباركود/رمز المنتج → يُضاف مباشرة (سلوك الماسح)
   let it=MENU.find(m=>m.barcode&&m.barcode===code) || MENU.find(m=>m.sku&&String(m.sku).toLowerCase()===code.toLowerCase());
   if(!it){ try{ it=await api('/products/lookup?code='+encodeURIComponent(code)); }catch(e){ it=null; } }
   if(it&&it.id){ const full=MENU.find(m=>m.id===it.id)||it; if(full.trackStock&&Number(full.stock)<=0){toast('غير متوفر');return;} addItem(full.id); posSearch=''; render(); }
@@ -383,7 +379,6 @@ function checkPanel(){
         <span style="font-size:13px">💳 <b>${checkCustomer.name||'عضو'}</b> · ${checkCustomer.points} نقطة</span>
         <button class="chip" style="margin-right:auto;padding:3px 8px" onclick="detachCustomer()">✕</button></div>`
     : `<div style="padding:8px 12px;border-bottom:1px solid var(--line)"><button class="chip" style="width:100%" onclick="attachCustomer()">＋ إضافة عضو ولاء</button></div>`;
-  // منتقي المقعد بأسلوب Toast: اختر مقعدًا، ثم تُنسب العناصر التي تضيفها لذلك الضيف.
   const seatBar = isRetail()?'':`<div style="display:flex;gap:6px;align-items:center;padding:8px 12px;border-bottom:1px solid var(--line);overflow-x:auto">
       <span style="font-size:11px;color:var(--mut);white-space:nowrap">الطلب لـ</span>
       <button class="chip ${!activeSeat?'sel':''}" style="padding:3px 9px;white-space:nowrap" onclick="setActiveSeat(null)">🍽 مشترك</button>
@@ -402,7 +397,6 @@ function checkPanel(){
     ${seats.length>=2?`<div style="padding:0 12px 8px"><button class="btn ghost" style="width:100%" onclick="splitBySeat()">👥 تقسيم حسب المقعد (${seats.length})</button></div>`:""}
     ${check.length?`<div style="padding:0 12px 12px"><button class="btn ghost" style="width:100%" onclick="clearCheck()">تفريغ</button></div>`:""}</div>`;
 }
-// إسناد رقم مقعد ودورة إلى سطر في الفاتورة.
 function lineMeta(i){
   const l=check[i];
   openModal(`<div class="mhd"><h3>المقعد والدورة · ${esc(l.name)}</h3><button class="x" onclick="closeModal()">✕</button></div><div class="mbd">
@@ -416,7 +410,6 @@ function lineMeta(i){
       <button class="chip ${!l.course?'sel':''}" onclick="setLineMeta(${i},'course',null)">بلا</button></div></div>`);
 }
 function setLineMeta(i,key,val){ check[i][key]=val; lineMeta(i); render(); }
-// تفصيل حسب المقعد لتقسيم الفاتورة.
 function splitBySeat(){
   const groups={};
   check.forEach(l=>{const s=l.seat||'مشترك';(groups[s] ||= []).push(l);});
@@ -436,7 +429,6 @@ function addItem(id){const it=MENU.find(m=>m.id===id);
   if(it.modifierGroups&&it.modifierGroups.length){ openModifierPicker(it,null); return; }
   const ex=check.find(l=>l.id===id&&(!l.mods||!l.mods.length)&&(l.seat||null)===(activeSeat||null));
   if(ex)ex.qty++;else check.push({id,name:it.name,price:it.price,qty:1,mods:[],taxRate:it.taxRate??null,seat:activeSeat||null});render()}
-// بيع بالوزن: أدخل الوزن، كمية السطر = الوزن، فيكون الإجمالي = سعر الوحدة × الوزن.
 function weighItem(it){
   const u=it.weightUnit||'lb';
   openModal(`<div class="mhd"><h3>⚖️ ${esc(it.name)}</h3><button class="x" onclick="closeModal()">✕</button></div><div class="mbd">
@@ -465,7 +457,7 @@ function editMods(i){const it=MENU.find(m=>m.id===check[i].id);
     <div class="mbd"><div class="modrow">${chips}</div><button class="btn primary" onclick="saveMods(${i})">حفظ</button></div>`)}
 function saveMods(i){check[i].mods=[...document.querySelectorAll('.modrow .chip.sel')].map(c=>c.dataset.m);closeModal();render()}
 
-/* ---- منتقي الإضافات المجمّعة (بأسلوب Toast/Square: إلزامي/اختياري، حد أدنى/أقصى، تسعير) ---- */
+/* ---- منتقي الإضافات المجمّعة ---- */
 let _mp=null;
 function openModifierPicker(it,lineIndex){
   const sel={}; (it.modifierGroups||[]).forEach(g=>sel[g.id]=new Set());
@@ -571,7 +563,7 @@ async function sendToKitchen(){
       if(autoTicket()) doPrint(ticketInner(order));
       check=[];tableNo=null;checkCustomer=null;activeSeat=null;render();
       toast(courses.length?('✅ الطلب #'+order.number+' أُرسل · دورة '+courses[0]+' انطلقت'):('✅ الطلب #'+order.number+' أُرسل إلى المطبخ'));return;
-    }catch(e){ if(!e.offline){ toast('⚠️ '+e.message); return; } /* دون اتصال → المتابعة إلى الصندوق */ }
+    }catch(e){ if(!e.offline){ toast('⚠️ '+e.message); return; } }
   }
   queueOrder(payload);
 }
@@ -585,17 +577,15 @@ function queueOrder(payload){
   check=[];tableNo=null;checkCustomer=null;activeSeat=null;render();toast('📴 الطلب '+number+' بالانتظار — سيتزامن عند عودة الاتصال');
 }
 
-/* ---- الدفع (Stripe وضع الاختبار أو محاكاة) ---- */
+/* ---- الدفع ---- */
 let pay={};
 async function startPayment(){
   const t=totals(check);
   pay={lines:JSON.parse(JSON.stringify(check)),table:tableNo,sub:t.sub,effRate:t.effRate,tip:+(t.sub*0.18).toFixed(2),tipPct:18,method:'card',
     customer:checkCustomer, pointsRedeemed:0, redeemDiscount:0, manualDiscount:0, discountReason:'', comp:false,
     serviceCharge:0, svcPct:0, taxExempt:false, giftApplied:0, giftCode:null};
-  // تطبيق رسم الخدمة الافتراضي/البقشيش التلقائي للعميل إن وُجد
   const sc=Number((TENANT_SETTINGS||{}).serviceChargePct)||0;
   if(sc>0){ pay.svcPct=sc; pay.serviceCharge=Math.round(pay.sub*sc)/100; }
-  // تطبيق خصم مجدول نشط (ساعة سعيدة) إن كان مفعّلًا الآن
   try{
     const act=await api('/discounts/active?subtotal='+pay.sub).catch(()=>[]);
     if(act&&act.length&&!(pay.manualDiscount>0)){
@@ -607,7 +597,6 @@ async function startPayment(){
   }catch(e){}
   paymentModal();
 }
-// حساب التسوية الكامل (يطابق الخادم): الخصم يقلل المجموع الخاضع للضريبة، رسم الخدمة يضيف، الضريبة على المجموع بعد الخصم، البقشيش أخيرًا؛ بطاقة الهدايا وسيلة دفع.
 function payCalc(){
   const sub=pay.sub;
   const disc=Math.round(Math.min(sub,(pay.redeemDiscount||0)+(pay.manualDiscount||0))*100)/100;
@@ -637,12 +626,10 @@ function paymentModal(){
       </div>
       <div style="font-size:11px;color:var(--mut);margin-top:4px">يكسب ~${Math.floor(pay.sub*LOYALTY.earnRate)} نقطة في هذه الزيارة</div></div>`;
   }
-  // خصم / إعفاء
   const discBlock=`<div class="fld" style="margin-top:8px"><label>الخصم / الإعفاء</label>
     ${pay.manualDiscount>0
       ? `<div style="display:flex;gap:6px;align-items:center"><span class="tag amber">${pay.comp?'إعفاء':'خصم'} −${money(pay.manualDiscount)}${pay.discountReason?(' · '+esc(pay.discountReason)):''}</span>${pay.autoDisc?'<span class="tag" style="background:#3a2a5e;color:#c4b5fd">🕐 ساعة سعيدة</span>':''}<button class="chip" style="margin-right:auto" onclick="clearDiscount()">إزالة</button></div>`
       : `<div style="display:flex;gap:6px"><button class="chip" onclick="openDiscount()">＋ إضافة خصم</button>${isMgr?'<button class="chip" style="color:var(--amber)" onclick="compCheck()">إعفاء كامل (100%)</button>':''}</div>`}</div>`;
-  // رسم الخدمة
   const svcOn=pay.serviceCharge>0;
   const svcBlock=`<div class="fld"><label>رسم الخدمة${pay.svcPct?(' ('+pay.svcPct+'%)'):''}</label>
     <div style="display:flex;gap:6px;flex-wrap:wrap">
@@ -716,7 +703,7 @@ function setTip(p){pay.tipPct=p;pay.tip=+(pay.sub*p/100).toFixed(2);paymentModal
 function setCustomTip(v){pay.tip=parseFloat(v)||0;pay.tipPct=null;const c=payCalc();$(".mhd h3").textContent='الدفع · '+money(c.due);const b=document.querySelector('.btn.green');if(b)b.textContent=c.due>0?('خصم '+money(c.due)):'إتمام (مدفوع)';}
 function setMethod(m){pay.method=m;paymentModal()}
 
-/* ---- تقسيم الدفع (تقسيم متساوٍ أو عدة وسائل) ---- */
+/* ---- تقسيم الدفع ---- */
 let _split=null;
 function evenTenders(total,n){
   const each=Math.floor(total/n*100)/100; const t=[];
@@ -770,7 +757,6 @@ async function submitSplit(){
 
 async function processPayment(){
   const grand=payCalc().due;
-  // دون اتصال: البطاقة تحتاج اتصالًا؛ النقد/المحفظة يمكن اصطفافها.
   if(!ONLINE){
     if(pay.method==='card'){ toast('💳 البطاقة تحتاج اتصالًا — استلم نقدًا أو انتظر عودة الاتصال'); return; }
     return queuePayment(grand);
@@ -778,9 +764,8 @@ async function processPayment(){
   try{
     const intent=await api('/payments/intent',{method:'POST',body:JSON.stringify({lines:pay.lines.map(l=>({name:l.name,price:l.price,qty:l.qty,mods:l.mods})),tip:pay.tip,table:pay.table})});
     if(pay.method==='card' && intent.mode==='stripe' && CFG.publishableKey){
-      return stripeCardFlow(intent);   // عنصر دفع Stripe حقيقي
+      return stripeCardFlow(intent);
     }
-    // محاكاة / نقد / محفظة: تُظهر تفويضًا متحركًا ثم تكتمل
     openModal(`<div class="mbd c" style="text-align:center;padding:50px 30px"><div style="font-size:46px">${pay.method==='cash'?'💵':'💳'}</div>
       <h3 style="margin:14px 0 6px">${pay.method==='cash'?'تم استلام النقد…':'جارٍ التفويض…'}</h3>
       <p style="color:var(--mut)">${money(grand)} · ${intent.mode==='mock'?'معالج محاكاة':'stripe'}</p>
@@ -789,7 +774,7 @@ async function processPayment(){
   }catch(e){
     if(e.offline){
       if(pay.method==='card'){ toast('💳 فُقد الاتصال — لم تُخصم البطاقة'); return; }
-      return queuePayment(grand);    // نقد/محفظة: اصطفاف بدل الفشل
+      return queuePayment(grand);
     }
     toast('⚠️ '+e.message);
   }
@@ -801,7 +786,7 @@ function queuePayment(grand){
     discount:Math.round(((pay.redeemDiscount||0)+(pay.manualDiscount||0))*100)/100, discountReason:pay.discountReason||null, comp:!!pay.comp, serviceCharge:pay.serviceCharge||0,
     lines:pay.lines.map(l=>({name:l.name,price:l.price,qty:l.qty,mods:l.mods}))}});
   saveOutbox();
-  if(pay.table){ PENDING=PENDING.filter(p=>p.table!==pay.table); savePending(); }  // الطاولة سُوّيت محليًا
+  if(pay.table){ PENDING=PENDING.filter(p=>p.table!==pay.table); savePending(); }
   check=[];tableNo=null;checkCustomer=null;activeSeat=null;showReceipt(grand);renderNav();
   toast('📴 دفع '+pay.method+' بالانتظار — سيتزامن عند عودة الاتصال');
 }
@@ -825,10 +810,9 @@ async function confirmStripe(intentId,grand){
 }
 async function completePayment(intentId,grand){
   try{
-    // استبدال رصيد بطاقة الهدايا (من جهة الخادم) للمبلغ المطبَّق.
     if(pay.giftCode && pay.giftApplied>0){
       try{ await api('/giftcards/'+encodeURIComponent(pay.giftCode)+'/redeem',{method:'POST',body:JSON.stringify({amount:pay.giftApplied})}); }
-      catch(e){ /* غير حاسم: قد تكون البطاقة تغيّرت */ }
+      catch(e){ }
     }
     const trueDisc=Math.round(((pay.redeemDiscount||0)+(pay.manualDiscount||0))*100)/100;
     const r=await api('/payments/complete',{method:'POST',body:JSON.stringify({
@@ -839,12 +823,12 @@ async function completePayment(intentId,grand){
     if(pay.customer && r && r.pointsBalance!=null) toast('💳 '+(r.pointsEarned||0)+' نقطة مكتسبة · الرصيد '+r.pointsBalance);
     _lastPayId=(r&&r.id)||null;
     _lastPayCustomer=pay.customer?{email:pay.customer.email||'',phone:pay.customer.phone||''}:null;
-    try{ await loadMenu(); }catch(e){}   // تحديث أعداد مخزون التجزئة بعد البيع
+    try{ await loadMenu(); }catch(e){}
     check=[];tableNo=null;checkCustomer=null;activeSeat=null;showReceipt(grand);renderNav();
   }catch(e){toast('⚠️ '+e.message)}
 }
-let _lastReceipt=null;   // {pay, calc, grand, when} للطباعة/البريد
-let _lastPayId=null, _lastPayCustomer=null;   // للإيصالات الرقمية
+let _lastReceipt=null;
+let _lastPayId=null, _lastPayCustomer=null;
 function receiptInner(p,calc,grand,when){
   const c=calc||{sub:p.sub||0,disc:0,svc:0,tax:0,tip:p.tip||0,total:grand,gift:0,due:grand};
   const items=p.lines.map(l=>`<div class="r"><span>${l.qty}× ${l.name}</span><span>${money(l.price*l.qty)}</span></div>${(l.mods&&l.mods.length)?`<div style="color:#777;font-size:11px;margin-left:14px">${l.mods.join(", ")}</div>`:""}`).join("");
@@ -870,10 +854,9 @@ function showReceipt(grand){
       <button class="btn ghost" onclick="digitalReceiptForm()">📲 إيصال رقمي</button>
       <button class="btn primary" onclick="closeModal();render()">تم</button></div></div>`);
   if(localStorage.getItem('pp_autoprint_receipt')==='1') setTimeout(printReceipt,150);
-  try{ pushDisplay({message:'شكرًا لك!'}); }catch(e){}   // شاشة العميل تُظهر شكرًا
+  try{ pushDisplay({message:'شكرًا لك!'}); }catch(e){}
   toast('💰 تم خصم '+money(grand));
 }
-// إرسال إيصال رقمي (بريد/SMS) للدفعة المُكتملة عبر الخادم.
 function digitalReceiptForm(){
   if(!_lastPayId){ toast('لا يوجد دفع لإرساله'); return; }
   const ip='width:100%;padding:9px;border-radius:8px;background:var(--panel);border:1px solid var(--line);color:var(--txt)';
@@ -914,7 +897,6 @@ function emailReceipt(){
   window.location.href=`mailto:?subject=Your%20Tavo%20Receipt&body=${body}`;
   toast('✉️ جارٍ فتح البريد…');
 }
-// طباعة تذكرة المطبخ
 function ticketInner(o){
   const when=new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
   return `<div class="c" style="font-size:16px;font-weight:bold">المطبخ</div>
@@ -948,7 +930,6 @@ async function tableClick(n){
 }
 
 /* ---- شاشة المطبخ ---- */
-// عرض جسم التذكرة مجمّعًا بالدورة، مع وسوم المقاعد وأزرار الإطلاق لكل دورة.
 function kdsBody(o){
   const line=it=>`<div class="it">${it.qty}× ${it.name}${it.seat?` <span style="font-size:11px;color:#7fb3ff">👤${it.seat}</span>`:''}${(it.mods&&it.mods.length)?`<div class="mods">↳ ${it.mods.join(", ")}</div>`:""}</div>`;
   const courses=[...new Set((o.lines||[]).map(l=>l.course).filter(Boolean))].sort();
@@ -973,9 +954,9 @@ async function fireCourse(orderId,course){
 }
 async function kdsView(){
   const server=await api('/orders?status=cooking').catch(()=>cacheGet('/orders?status=cooking')||[]);
-  const local=PENDING.map(p=>({...p,_local:true}));   // تذاكر مصطفّة دون اتصال
+  const local=PENDING.map(p=>({...p,_local:true}));
   const orders=[...local,...server];
-  window._kds=orders;   // متاح لطباعة التذاكر
+  window._kds=orders;
   if(!orders.length)return `<div class="empty" style="padding:80px">👨‍🍳 لا توجد تذاكر نشطة.</div>`;
   return `<div class="kds">${orders.map(o=>{const mins=Math.floor((Date.now()-(o.firedAt||o.createdAt))/60000);const late=mins>=10;
     const idArg=o._local?o.tempId:o.id;
@@ -1004,7 +985,7 @@ async function voidOrder(id,num,local){
   catch(e){toast(e.offline?'📴 الإلغاء يحتاج اتصالًا':'⚠️ '+e.message)}
 }
 
-/* ---- الطلبات الإلكترونية (منصات التوصيل) ---- */
+/* ---- الطلبات الإلكترونية ---- */
 async function onlineView(){
   const all=await api('/orders?status=cooking').catch(()=>cacheGet('/orders?status=cooking')||[]);
   const orders=all.filter(o=>o.channel==='delivery');
@@ -1033,7 +1014,7 @@ async function simulateOrder(platform){
   catch(e){ toast(e.offline?'📴 يحتاج اتصالًا':'⚠️ '+e.message); }
 }
 
-/* ---- طلب ودفع QR (أكواد المسح للطلب) ---- */
+/* ---- طلب ودفع QR ---- */
 function guestSlug(){ return (ME&&ME.tenantSlug) || (typeof TENANT_SLUG!=='undefined'&&TENANT_SLUG) || 'default'; }
 function guestBase(){ return (IS_NATIVE?BACKEND_URL:location.origin); }
 function guestUrl(table){ const s=guestSlug(); let u=guestBase()+'/order.html?tenant='+encodeURIComponent(s); if(table!=null) u+='&table='+encodeURIComponent(table); return u; }
@@ -1041,7 +1022,6 @@ function kioskUrl(){ return guestBase()+'/order.html?tenant='+encodeURIComponent
 function launchKiosk(){ const w=window.open(kioskUrl(),'_blank'); if(!w){toast('اسمح بالنوافذ المنبثقة لتشغيل الكشك');} }
 function displayUrl(){ return guestBase()+'/display.html?tenant='+encodeURIComponent(guestSlug()); }
 function launchDisplay(){ const w=window.open(displayUrl(),'_blank'); if(!w){toast('اسمح بالنوافذ المنبثقة لفتح الشاشة');} }
-// مزامنة الفاتورة النشطة إلى شاشة العميل (بفاصل زمني حسب بصمة المحتوى).
 let _dispSig='';
 function pushDisplay(opts){
   if(!ONLINE) return;
@@ -1055,8 +1035,8 @@ function pushDisplay(opts){
   api('/display',{method:'POST',body:JSON.stringify(payload)}).catch(()=>{});
 }
 
-/* ---- شاشة مزدوجة (بأسلوب Clover Duo) للدفع من العميل ---- */
-let _cc=null;            // الجلسة النشطة {sessionId, lines, total, ...}
+/* ---- شاشة مزدوجة ---- */
+let _cc=null;
 let _ccTimer=null, _ccCharging=false, _ccReceiptDone=false, _ccPayId=null;
 async function startCustomerCheckout(){
   if(!check.length) return;
@@ -1082,7 +1062,7 @@ async function pollCustomerCheckout(){
   if(!_cc) return;
   let s; try{ s=await api('/display?tenant='+encodeURIComponent(guestSlug())); }catch(e){ return; }
   const co=s.checkout;
-  if(!co || co.sessionId!==_cc.sessionId){ return; }   // انتهت الجلسة في مكان آخر
+  if(!co || co.sessionId!==_cc.sessionId){ return; }
   if(co.phase==='tip'){ ccModal('📲 بانتظار الضيف','يختار البقشيش على شاشة العميل…'); return; }
   if(co.phase==='await_card' && !_ccCharging){
     _ccCharging=true;
@@ -1169,7 +1149,7 @@ async function paintQRs(){
   });
 }
 function copyLink(url){ navigator.clipboard?.writeText(url).then(()=>toast('🔗 تم نسخ الرابط'),()=>toast(url)); }
-function qrImgData(url){ // إنشاء QR مستقل كـ data-url للطباعة
+function qrImgData(url){
   const tmp=document.createElement('div'); new QRCode(tmp,{text:url,width:240,height:240,correctLevel:QRCode.CorrectLevel.M});
   const img=tmp.querySelector('img'), cnv=tmp.querySelector('canvas');
   return (img&&img.src)||(cnv&&cnv.toDataURL('image/png'))||'';
@@ -1245,11 +1225,14 @@ async function dashView(){
     if(p.status==='partially_refunded')return `<span class="tag amber">مُرتجع ${money(p.refundedAmount)}</span>`;
     return '<span class="tag green">مدفوع</span>';
   };
-  const recent=pays.slice(-10).reverse().map(p=>`<tr><td>#${String(p.id).slice(-4)}</td><td>${p.table?('طاولة '+p.table):'سفري'}</td>
+  const recent=pays.slice(-10).reverse().map(p=>{
+    const refundData=encodeURIComponent(JSON.stringify({id:p.id,total:Number(p.total),refundedAmount:Number(p.refundedAmount||0)}));
+    return `<tr><td>#${String(p.id).slice(-4)}</td><td>${p.table?('طاولة '+p.table):'سفري'}</td>
     <td><span class="tag ${p.method==='card'?'blue':p.method==='cash'?'green':'amber'}">${p.method}</span></td>
     <td>${statusTag(p)}</td>
     <td style="text-align:left;font-weight:700">${money(p.total)}</td>
-    <td style="text-align:left">${(p.status!=='refunded')?`<button class="chip" style="color:var(--red)" onclick='openRefund(${JSON.stringify(JSON.stringify({id:p.id,total:p.total,refundedAmount:p.refundedAmount||0}))})'>استرجاع</button>`:''}</td></tr>`).join("")||`<tr><td colspan="6" style="text-align:center;color:var(--mut);padding:30px">لا مبيعات بعد</td></tr>`;
+    <td style="text-align:left">${(p.status!=='refunded')?`<button class="chip" style="color:var(--red)" onclick="openRefund(decodeURIComponent('${refundData}'))">استرجاع</button>`:''}</td></tr>`;
+  }).join("")||`<tr><td colspan="6" style="text-align:center;color:var(--mut);padding:30px">لا مبيعات بعد</td></tr>`;
   return `${offlineBanner}<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
       <div class="sec-title" style="margin:0">أداء اليوم</div>
       <button class="btn primary" style="flex:0;padding:10px 18px" onclick="openZReport()">🧾 إغلاق اليومية / تقرير Z</button></div>
@@ -1273,7 +1256,7 @@ async function dashView(){
       <table><thead><tr><th>الطلب</th><th>الموقع</th><th>الطريقة</th><th>الحالة</th><th style="text-align:left">الإجمالي</th><th></th></tr></thead><tbody>${recent}</tbody></table></div>`;
 }
 function openRefund(json){
-  const p=JSON.parse(JSON.parse(json));
+  const p=JSON.parse(json);
   const refundable=(p.total-(p.refundedAmount||0)).toFixed(2);
   openModal(`<div class="mhd"><h3>استرجاع · #${String(p.id).slice(-4)}</h3><button class="x" onclick="closeModal()">✕</button></div>
    <div class="mbd">
@@ -1326,11 +1309,10 @@ async function menuView(){
         <button class="btn primary" style="flex:0;padding:10px 18px" onclick="editItem()">+ إضافة عنصر</button></div></div>
     ${sections||'<div class="empty">لا توجد عناصر بعد.</div>'}`;
 }
-// طباعة ورقة ملصقات باركود/سعر للمنتجات التي لها SKU أو باركود.
 function printLabels(){
   const items=_menuItems.filter(i=>i.barcode||i.sku);
   if(!items.length){ toast('لا منتجات لها SKU أو باركود'); return; }
-  const code=s=>{ // باركود CSS بسيط: أعمدة متبادلة من الأرقام
+  const code=s=>{
     const digits=String(s).replace(/\D/g,'')||'00000000';
     return digits.split('').map(d=>`<span style="display:inline-block;width:${1+(+d)%3}px;height:34px;background:#000;margin-right:1px"></span>`).join('');
   };
@@ -1420,7 +1402,7 @@ function renderRecipe(){
 function addRecipeRow(){ if(!_invItems.length){toast('أضف عناصر المخزون أولًا');return;} _editRecipe.push({invId:_invItems[0].id,qty:1}); renderRecipe(); }
 function removeRecipeRow(ri){ _editRecipe.splice(ri,1); renderRecipe(); }
 
-/* ---- المخزون (رصيد + تكلفة الوصفة) ---- */
+/* ---- المخزون ---- */
 async function inventoryView(){
   _invItems=await api('/inventory').catch(()=>cacheGet('/inventory')||[]);
   const low=_invItems.filter(i=>i.qty<=(i.parLevel||0));
@@ -1494,7 +1476,7 @@ async function delInv(id){
   catch(e){ toast(e.offline?'📴 يحتاج اتصالًا':'⚠️ '+e.message); }
 }
 
-/* ---- الولاء وبطاقات الهدايا ---- */
+/* ---- الولاء ---- */
 let _custList=[], _giftList=[];
 async function loyaltyView(){
   [_custList,_giftList]=await Promise.all([
@@ -1560,7 +1542,7 @@ async function issueGift(){
   }catch(e){ toast('⚠️ '+e.message); }
 }
 
-/* ---- الحجوزات + قائمة الانتظار ---- */
+/* ---- الحجوزات ---- */
 let _resvs=[], _resvTab='reservations';
 async function reservationsView(){
   _resvs=await api('/reservations').catch(()=>[]);
@@ -1638,7 +1620,7 @@ async function resvStatus(id,status){
   catch(e){ toast('⚠️ '+e.message); }
 }
 
-/* ---- الفروع المتعددة (سجل + مجموع موحّد) ---- */
+/* ---- الفروع المتعددة ---- */
 let _locs=[], _roll=null, _locDays=30;
 function locRange(){ const to=Date.now(); return {from:to-_locDays*86400000,to}; }
 async function locationsView(){
@@ -1697,7 +1679,7 @@ async function delLocation(id){
   catch(e){ toast('⚠️ '+e.message); }
 }
 
-/* ---- الخصومات (إعدادات مسبقة + ساعة سعيدة مجدولة) ---- */
+/* ---- الخصومات ---- */
 let _discs=[];
 const DOW_SHORT=['أحد','إثن','ثلا','أرب','خمي','جمع','سبت'];
 function discValueLabel(d){ return d.kind==='amount'?('$'+(Number(d.value)||0).toFixed(2)+' خصم'):((Number(d.value)||0)+'% خصم'); }
@@ -1729,7 +1711,6 @@ async function discountsView(){
       <tbody>${rows}</tbody></table></div>
     <p style="font-size:12px;color:var(--mut);margin-top:12px">الخصم الذي له جدول و<b>تطبيق تلقائي</b> مفعّل سيُطبَّق تلقائيًا في نقطة البيع خلال نافذته (مثال: ساعة سعيدة 4–6م). يمكن للموظفين إزالته من أي فاتورة. بدون جدول، يكون الخصم إعدادًا مسبقًا بضغطة واحدة.</p>`;
 }
-// نسخة العميل من فحص النافذة على الخادم (تتعامل مع الالتفاف الليلي)
 function discLiveNow(s,now){
   if(!s||!s.days||!s.days.length) return false;
   const day=now.getDay(), cur=now.getHours()*60+now.getMinutes();
@@ -1795,7 +1776,7 @@ async function delDiscount(id){
   catch(e){ toast('⚠️ '+e.message); }
 }
 
-/* ---- التحليلات (تقارير متقدمة) ---- */
+/* ---- التحليلات ---- */
 let _anDays=30, _anData=null, _rbGroup='employee', _rbMetric='sales', _rbRows=null;
 function anRange(){ const to=Date.now(); return {from:to-_anDays*86400000,to}; }
 async function analyticsView(){
@@ -1882,7 +1863,7 @@ function exportReport(){
   toast('⬇ تم تنزيل CSV');
 }
 
-/* ---- حسابات الشركات + الفواتير ---- */
+/* ---- حسابات الشركات ---- */
 let _accts=[], _invoices=[];
 async function houseAccountsView(){
   [_accts,_invoices]=await Promise.all([api('/house-accounts').catch(()=>[]),api('/invoices').catch(()=>[])]);
@@ -1973,7 +1954,7 @@ async function payInvoice(id,reopen){
   catch(e){ toast('⚠️ '+e.message); }
 }
 
-/* ---- CRM (دليل العملاء + الملفات) ---- */
+/* ---- CRM ---- */
 let _crmList=[], _crmQuery='';
 async function crmView(){
   _crmList=await api('/customers').catch(()=>[]);
@@ -2048,7 +2029,7 @@ async function sendReceipt(paymentId,channel,to){
   catch(e){ toast('⚠️ '+e.message); }
 }
 
-/* ---- التسويق (حملات البريد/الرسائل) ---- */
+/* ---- التسويق ---- */
 let _campaigns=[], _msgLog=[], _segReach={};
 async function marketingView(){
   let status={email:'simulated',sms:'simulated'};
@@ -2104,7 +2085,7 @@ async function sendCampaign(){
   catch(e){ toast('⚠️ '+e.message); }
 }
 
-/* ---- المشتريات (الموردون + أوامر الشراء) ---- */
+/* ---- المشتريات ---- */
 let _vendors=[], _pos=[], _poProducts=[], _poLines=[];
 async function purchasingView(){
   [_vendors,_pos,_poProducts]=await Promise.all([
@@ -2205,7 +2186,7 @@ async function receivePO(id){
   catch(e){ toast('⚠️ '+e.message); }
 }
 
-/* ---- الجرد (عدّ دوري) ---- */
+/* ---- الجرد ---- */
 let _takes=[], _activeTake=null;
 async function stocktakeView(){
   _takes=await api('/stocktakes').catch(()=>[]);
@@ -2272,8 +2253,8 @@ async function applyTake(){
   catch(e){ toast('⚠️ '+e.message); }
 }
 
-/* ---- اسأل Tavo (مساعد الأعمال بالذكاء الاصطناعي) ---- */
-let _askLog=[];      // [{role:'you'|'tavo', text, suggestions?}]
+/* ---- اسأل Tavo ---- */
+let _askLog=[];
 let _askSugg=[];
 let _askBusy=false;
 async function askView(){
@@ -2603,7 +2584,7 @@ function drawPin(){const d=document.getElementById('pinDots');if(d)d.innerHTML=p
 function pinKey(k){
   if(k==='C'){pinBuf='';drawPin();return}
   if(k==='⏎'){submitPin();return}
-  if(pinBuf.length<6){pinBuf+=k;drawPin();if(pinBuf.length>=4){/* السماح بالإدخال */}}
+  if(pinBuf.length<6){pinBuf+=k;drawPin();if(pinBuf.length>=4){}}
 }
 const TENANT_SLUG=new URLSearchParams(location.search).get('tenant')||'default';
 async function submitPin(){
@@ -2630,7 +2611,7 @@ async function startApp(){
   await loadMenu();tickClock();
   if(!window._clockIv) window._clockIv=setInterval(()=>{tickClock();if(route==='kds'||route==='online')render()},30000);
   updateConn();
-  if(OUTBOX.length) flushOutbox();   // مزامنة أي عناصر مصطفّة من جلسة سابقة دون اتصال
+  if(OUTBOX.length) flushOutbox();
   renderNav();render();
 }
 async function boot(){
