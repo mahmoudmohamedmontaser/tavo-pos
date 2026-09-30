@@ -172,19 +172,13 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 // ---- helpers ----
 const round = n => Math.round(n * 100) / 100;
 
-// ✅ FIX: Generate a unique order number based on the highest existing number,
-// NOT on the total count of orders. Counting is unreliable because:
-//   1. Deleting/voiding orders shrinks the count → next order reuses old numbers.
-//   2. It doesn't account for the tenant's starting number (1000).
-//   3. It's a race condition under concurrent requests (QR + POS + delivery).
-// Using MAX(number) + 1 guarantees monotonic, unique numbers per tenant.
 async function nextOrderNumber(tenantId = DEFAULT_TENANT) {
-  const orders = await store.listOrders(undefined, tenantId);
-  const max = orders.reduce((m, o) => {
-    const n = Number(o.number);
-    return Number.isFinite(n) && n > m ? n : m;
-  }, 1000);
-  return max + 1;
+  const result = await db.query(
+    `SELECT next_order_number($1) AS number`,
+    [tenantId]
+  );
+
+  return Number(result.rows[0].number);
 }
 
 // Tax is computed per line so items can carry their own rate (e.g. alcohol,
