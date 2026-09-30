@@ -1099,9 +1099,26 @@ function queueOrder(payload){
 let pay={};
 async function startPayment(){
   const t=totals(check);
-  pay={lines:JSON.parse(JSON.stringify(check)),table:tableNo,sub:t.sub,effRate:t.effRate,tip:0,tipPct:0,method:'cash',
-    customer:checkCustomer, pointsRedeemed:0, redeemDiscount:0, manualDiscount:0, discountReason:'', comp:false,
-    serviceCharge:0, svcPct:0, taxExempt:false, giftApplied:0, giftCode:null};
+   pay={
+     lines:JSON.parse(JSON.stringify(check)),
+     table:tableNo,
+     sub:t.sub,
+     effRate:t.effRate,
+     tip:0,
+     tipPct:0,
+     method:'cash',
+     customer:checkCustomer,
+     pointsRedeemed:0,
+     redeemDiscount:0,
+     manualDiscount:0,
+     discountReason:'',
+     comp:false,
+     serviceCharge:0,
+     svcPct:0,
+     taxExempt:false,
+     giftApplied:0,
+     giftCode:null
+   };
   const sc=Number((TENANT_SETTINGS||{}).serviceChargePct)||0;
   if(sc>0){ pay.svcPct=sc; pay.serviceCharge=Math.round(pay.sub*sc)/100; }
   try{
