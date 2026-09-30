@@ -23,6 +23,7 @@ const LOYALTY_REDEEM = parseFloat(process.env.LOYALTY_REDEEM_RATE || '0.05'); //
 
 // Store is initialized in start(); handlers access it via this reference.
 let store;
+// Small async wrapper so route handlers can throw and we still return JSON 500s.
 const h = fn => (req, res) => fn(req, res).catch(e => {
   if (e && e.status) return res.status(e.status).json({ error: e.message });
   console.error(e); res.status(500).json({ error: e.message });
@@ -52,6 +53,64 @@ app.use((req, res, next) => {
   res.setHeader('X-DNS-Prefetch-Control', 'off');
   res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
   if (PROD) res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
+  next();
+});
+
+// ===================================================================
+//  INITIALIZATION MIDDLEWARE
+// ===================================================================
+// Ensures `store` is initialized before any route that depends on it.
+// Uses a shared promise so concurrent requests don't trigger multiple initializations.
+let initPromise = null;
+async function initializeApp() {
+  // Refuse to boot in production without a strong, non-default JWT secret —
+  // a weak secret would let anyone forge staff/manager sessions.
+  const jwt = process.env.JWT_SECRET || '';
+  if (PROD && (jwt.length < 24 || jwt === 'dev-only-change-me')) {
+    console.error('FATAL: set a strong JWT_SECRET (>=24 chars) before running in production.');
+    process.exit(1);
+  }
+  if (!PROD && jwt.length < 24) console.warn('[security] JWT_SECRET is weak/unset — fine for dev, REQUIRED in production.');
+  
+  store = await getStore();             // getStore() runs schema migration in init()
+  
+  // Auto-seed a brand-new (empty) database so fresh deploys work out of the box.
+  // Existing data is never touched. Disable with AUTO_SEED=false.
+  if (process.env.AUTO_SEED !== 'false') {
+    const users = await store.listUsers();
+    if (users.length === 0) {
+      await store.reset(buildSeedData());
+      console.log('  Empty database detected → seeded default menu, tables, and users.');
+    }
+  }
+  
+  // Self-heal: ensure the 'default' tenant has a real row (databases created
+  // before multi-tenancy stored data under tenant_id='default' but had no tenants row).
+  try {
+    if (!(await store.getTenant(DEFAULT_TENANT))) {
+      await store.createTenant({ id: DEFAULT_TENANT, name: 'Tavo', slug: DEFAULT_TENANT, plan: 'free', mode: 'restaurant', createdAt: Date.now() });
+      console.log('  Backfilled the default tenant row.');
+    }
+  } catch (e) { console.error('default-tenant backfill skipped:', e.message); }
+  
+  return store;
+}
+
+app.use(async (req, res, next) => {
+  if (!store) {
+    if (!initPromise) {
+      initPromise = initializeApp().catch(err => {
+        console.error('Initialization failed:', err);
+        initPromise = null; // Reset so next request can retry
+        throw err;
+      });
+    }
+    try {
+      await initPromise;
+    } catch (err) {
+      return res.status(500).json({ error: 'Internal Server Error - Database initialization failed' });
+    }
+  }
   next();
 });
 
@@ -1755,33 +1814,25 @@ app.get('/api/tips/pool', requireAuth, requireRole('manager'), h(async (req, res
 // ---- staff ----
 app.get('/api/staff', requireAuth, requireRole('manager'), h(async (req, res) => res.json(await store.listStaff(tid(req)))));
 
+// ===================================================================
+//  APPLICATION STARTUP & EXPORT
+// ===================================================================
+
+export default app;
+
 async function start() {
-  // Refuse to boot in production without a strong, non-default JWT secret —
-  // a weak secret would let anyone forge staff/manager sessions.
-  const jwt = process.env.JWT_SECRET || '';
-  if (PROD && (jwt.length < 24 || jwt === 'dev-only-change-me')) {
-    console.error('FATAL: set a strong JWT_SECRET (>=24 chars) before running in production.');
-    process.exit(1);
+  if (!initPromise) {
+    initPromise = initializeApp().catch(err => {
+      console.error('Initialization failed:', err);
+      initPromise = null; // Reset so next request can retry
+      throw err;
+    });
   }
-  if (!PROD && jwt.length < 24) console.warn('[security] JWT_SECRET is weak/unset — fine for dev, REQUIRED in production.');
-  store = await getStore();             // getStore() runs schema migration in init()
-  // Auto-seed a brand-new (empty) database so fresh deploys work out of the box.
-  // Existing data is never touched. Disable with AUTO_SEED=false.
-  if (process.env.AUTO_SEED !== 'false') {
-    const users = await store.listUsers();
-    if (users.length === 0) {
-      await store.reset(buildSeedData());
-      console.log('  Empty database detected → seeded default menu, tables, and users.');
-    }
-  }
-  // Self-heal: ensure the 'default' tenant has a real row (databases created
-  // before multi-tenancy stored data under tenant_id='default' but had no tenants row).
-  try {
-    if (!(await store.getTenant(DEFAULT_TENANT))) {
-      await store.createTenant({ id: DEFAULT_TENANT, name: 'Tavo', slug: DEFAULT_TENANT, plan: 'free', mode: 'restaurant', createdAt: Date.now() });
-      console.log('  Backfilled the default tenant row.');
-    }
-  } catch (e) { console.error('default-tenant backfill skipped:', e.message); }
+  await initPromise;
+  
+  // On Vercel, we don't call app.listen(); Vercel handles the HTTP server.
+  // The exported `app` is what Vercel invokes, and the middleware ensures
+  // `store` is initialized before any request is processed.
   if (!process.env.VERCEL) {
     app.listen(PORT, () => {
       console.log(`\n  Tavo POS running → http://localhost:${PORT}`);
@@ -1790,25 +1841,4 @@ async function start() {
   }
 }
 
-
-
-
-const startPromise = start();
-
-app.use(async (req, res, next) => {
-    try {
-        await startPromise;
-        next();
-    } catch (e) {
-        console.error('Initialization failed:', e);
-        res.status(500).json({ error: 'Server initialization failed' });
-    }
-});
-
-export default app;
-//   app.listen(PORT, () => {
-//     console.log(`\n  Tavo POS running → http://localhost:${PORT}`);
-//     console.log(`  Database: ${storeKind().toUpperCase()}   Payment mode: ${usingStripe ? 'STRIPE (test)' : 'MOCK (no key set)'}\n`);
-//   });
-// }
-// start().catch(e => { console.error('Failed to start:', e); process.exit(1); });
+start().catch(e => { console.error('Failed to start:', e); process.exit(1); });
