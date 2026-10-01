@@ -18,6 +18,7 @@ export function makeJsonStore() {
       const db = read();
       db.menu = menu; db.tables = tables; db.staff = staff; db.users = users; db.inventory = inventory;
       db.orders = []; db.payments = []; db.customers = []; db.giftcards = []; db.drawers = []; db.shifts = []; db.messages = []; db.campaigns = []; db.vendors = []; db.purchaseOrders = []; db.stocktakes = []; db.reservations = []; db.houseAccounts = []; db.invoices = []; db.locations = []; db.discountPresets = [];
+      db.orderSequences = {};   // ★ NEW: reset the per-tenant order counter
       db.tenants = tenants || [{ id: DEFAULT_TENANT, name: 'Default', slug: DEFAULT_TENANT, plan: 'free', createdAt: Date.now() }];
       write(db);
     },
@@ -68,6 +69,36 @@ export function makeJsonStore() {
     async findOrderByExternalId(externalId, tenantId) { return read().orders.find(o => o.externalId === externalId && owns(o, tenantId)) || null; },
     async createOrder(order) { const db = read(); db.orders.push(order); write(db); return order; },
     async updateOrder(id, patch) { const db = read(); const o = db.orders.find(x => x.id === id); if (!o) return null; Object.assign(o, patch); write(db); return o; },
+
+    // ★ NEW: atomic per-tenant monotonic order-number generator.
+    //   Same contract as the Postgres backend:
+    //     - strictly increasing per tenant
+    //     - never reuses a number (even after voids/deletes)
+    //     - persists across restarts (stored in db.json)
+    //     - seeds from MAX(existing order.number)+1 the first time it is called
+    //   NOTE: the JSON backend is a single-process fallback. True concurrent
+    //   writes (multiple Node instances sharing one file) are not safe here;
+    //   in multi-instance / multi-device deployments use PostgreSQL.
+    async nextOrderNumber(tenantId) {
+      const tid = T(tenantId);
+      const db = read();
+      if (!db.orderSequences) db.orderSequences = {};
+      if (db.orderSequences[tid] == null) {
+        // First call for this tenant: seed from the highest existing order.
+        const max = (db.orders || [])
+          .filter(o => owns(o, tid))
+          .reduce((m, o) => Math.max(m, Number(o.number) || 0), 1000);
+        db.orderSequences[tid] = max + 1;   // 1001..1004  → 1005
+      } else {
+        db.orderSequences[tid] = Number(db.orderSequences[tid]) + 1;
+      }
+      const number = db.orderSequences[tid];
+      write(db);
+      if (!Number.isFinite(number) || number <= 0) {
+        const e = new Error('Failed to generate order number'); e.status = 500; throw e;
+      }
+      return number;
+    },
 
     // ---- payments ----
     async listPayments(tenantId) { return read().payments.filter(p => owns(p, tenantId)); },
@@ -184,3 +215,191 @@ export function makeJsonStore() {
     async deleteDiscountPreset(id) { const db = read(); db.discountPresets = (db.discountPresets || []).filter(d => d.id !== id); write(db); },
   };
 }
+
+
+// // JSON-file storage backend — the zero-setup default.
+// // Tenant-aware: every business is a "tenant". List/scan methods take a tenantId
+// // (defaulting to 'default') so a single-store deployment behaves exactly as before,
+// // while a multi-tenant deployment keeps each tenant's data fully isolated.
+// import { read, write } from '../db.js';
+
+// export const DEFAULT_TENANT = 'default';
+// const T = x => x || DEFAULT_TENANT;          // normalize a tenantId
+// const owns = (row, tid) => (row.tenantId || DEFAULT_TENANT) === T(tid);
+
+// export function makeJsonStore() {
+//   return {
+//     kind: 'json',
+//     async init() { /* nothing to do */ },
+
+//     // bulk reset for one tenant's seed (used by `npm run seed` / first-boot).
+//     async reset({ menu = [], tables = [], staff = [], users = [], inventory = [], tenants } = {}) {
+//       const db = read();
+//       db.menu = menu; db.tables = tables; db.staff = staff; db.users = users; db.inventory = inventory;
+//       db.orders = []; db.payments = []; db.customers = []; db.giftcards = []; db.drawers = []; db.shifts = []; db.messages = []; db.campaigns = []; db.vendors = []; db.purchaseOrders = []; db.stocktakes = []; db.reservations = []; db.houseAccounts = []; db.invoices = []; db.locations = []; db.discountPresets = [];
+//       db.tenants = tenants || [{ id: DEFAULT_TENANT, name: 'Default', slug: DEFAULT_TENANT, plan: 'free', createdAt: Date.now() }];
+//       write(db);
+//     },
+
+//     // ---- tenants ----
+//     async createTenant(t) { const db = read(); (db.tenants ||= []).push(t); write(db); return t; },
+//     async updateTenant(id, patch) { const db = read(); const t = (db.tenants || []).find(x => x.id === id); if (!t) return null; Object.assign(t, patch); write(db); return t; },
+//     async getTenant(id) { return (read().tenants || []).find(t => t.id === id) || null; },
+//     async getTenantBySlug(slug) { return (read().tenants || []).find(t => t.slug === slug) || null; },
+//     async listTenants() { return read().tenants || []; },
+//     // Add one tenant's starter data without wiping others (used by signup).
+//     async seedTenant({ menu = [], tables = [], staff = [], users = [], inventory = [] }) {
+//       const db = read();
+//       db.menu.push(...menu); db.tables.push(...tables); db.staff.push(...staff); db.users.push(...users);
+//       (db.inventory ||= []).push(...inventory);
+//       write(db);
+//     },
+
+//     // ---- menu (scoped) ----
+//     async listMenu(tenantId) { return read().menu.filter(m => owns(m, tenantId)).sort((a, b) => (a.sortOrder || 0) - (b.sortOrder || 0)); },
+//     async createMenuItem(item) { const db = read(); db.menu.push(item); write(db); return item; },
+//     async updateMenuItem(id, patch) { const db = read(); const it = db.menu.find(m => m.id === id); if (!it) return null; Object.assign(it, patch); write(db); return it; },
+//     async deleteMenuItem(id) { const db = read(); db.menu = db.menu.filter(m => m.id !== id); write(db); },
+//     // Retail stock: add `delta` to a product's stock, clamped at 0.
+//     async adjustMenuStock(id, delta) {
+//       const db = read(); const it = db.menu.find(m => m.id === id); if (!it) return null;
+//       it.stock = Math.max(0, Math.round(((Number(it.stock) || 0) + Number(delta)) * 1000) / 1000);
+//       write(db); return it;
+//     },
+//     async findProductByCode(code, tenantId) {
+//       const k = String(code).trim();
+//       return read().menu.filter(m => owns(m, tenantId)).find(m => (m.barcode && m.barcode === k) || (m.sku && String(m.sku).toUpperCase() === k.toUpperCase())) || null;
+//     },
+
+//     // ---- tables (scoped; table numbers repeat per tenant) ----
+//     async listTables(tenantId) { return read().tables.filter(t => owns(t, tenantId)); },
+//     async setTableStatus(number, status, orderId = null, tenantId) {
+//       const db = read(); const t = db.tables.find(x => x.number === number && owns(x, tenantId));
+//       if (t) { t.status = status; t.orderId = orderId; write(db); }
+//     },
+
+//     // ---- orders ----
+//     async listOrders(status, tenantId) {
+//       return read().orders.filter(o => owns(o, tenantId) && (!status || o.status === status));
+//     },
+//     async countOrders(tenantId) { return read().orders.filter(o => owns(o, tenantId)).length; },
+//     async getOrder(id) { return read().orders.find(o => o.id === id) || null; },
+//     async findOrderByExternalId(externalId, tenantId) { return read().orders.find(o => o.externalId === externalId && owns(o, tenantId)) || null; },
+//     async createOrder(order) { const db = read(); db.orders.push(order); write(db); return order; },
+//     async updateOrder(id, patch) { const db = read(); const o = db.orders.find(x => x.id === id); if (!o) return null; Object.assign(o, patch); write(db); return o; },
+
+//     // ---- payments ----
+//     async listPayments(tenantId) { return read().payments.filter(p => owns(p, tenantId)); },
+//     async createPayment(p) { const db = read(); db.payments.push(p); write(db); return p; },
+//     async findPaymentByStripeId(stripeId, tenantId) { return read().payments.find(p => p.stripeId === stripeId && (tenantId == null || owns(p, tenantId))) || null; },
+//     async getPayment(id) { return read().payments.find(p => p.id === id) || null; },
+//     async updatePayment(id, patch) { const db = read(); const p = db.payments.find(x => x.id === id); if (!p) return null; Object.assign(p, patch); write(db); return p; },
+
+//     // ---- users / staff (scoped) ----
+//     async listUsers(tenantId) { return read().users.filter(u => owns(u, tenantId)); },
+//     async listStaff(tenantId) { return read().staff.filter(s => owns(s, tenantId)); },
+
+//     // ---- inventory (scoped) ----
+//     async listInventory(tenantId) { return (read().inventory || []).filter(i => owns(i, tenantId)).sort((a, b) => (a.name || '').localeCompare(b.name || '')); },
+//     async getInventoryItem(id) { return (read().inventory || []).find(i => i.id === id) || null; },
+//     async createInventoryItem(item) { const db = read(); (db.inventory ||= []).push(item); write(db); return item; },
+//     async updateInventoryItem(id, patch) { const db = read(); const it = (db.inventory ||= []).find(i => i.id === id); if (!it) return null; Object.assign(it, patch); write(db); return it; },
+//     async deleteInventoryItem(id) { const db = read(); db.inventory = (db.inventory || []).filter(i => i.id !== id); write(db); },
+//     // Atomically add `delta` (can be negative) to an item's on-hand qty. Never goes below 0.
+//     async adjustInventory(id, delta) {
+//       const db = read(); const it = (db.inventory || []).find(i => i.id === id); if (!it) return null;
+//       it.qty = Math.round(((Number(it.qty) || 0) + Number(delta)) * 1000) / 1000;
+//       if (it.qty < 0) it.qty = 0;
+//       write(db); return it;
+//     },
+
+//     // ---- customers / loyalty (scoped) ----
+//     async listCustomers(tenantId) { return (read().customers || []).filter(c => owns(c, tenantId)).sort((a, b) => (b.points || 0) - (a.points || 0)); },
+//     async getCustomer(id) { return (read().customers || []).find(c => c.id === id) || null; },
+//     async findCustomerByPhone(phone, tenantId) { const p = String(phone).replace(/\D/g, ''); return (read().customers || []).find(c => owns(c, tenantId) && String(c.phone).replace(/\D/g, '') === p) || null; },
+//     async createCustomer(c) { const db = read(); (db.customers ||= []).push(c); write(db); return c; },
+//     async updateCustomer(id, patch) { const db = read(); const c = (db.customers ||= []).find(x => x.id === id); if (!c) return null; Object.assign(c, patch); write(db); return c; },
+
+//     // ---- gift cards (scoped) ----
+//     async listGiftCards(tenantId) { return (read().giftcards || []).filter(g => owns(g, tenantId)).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); },
+//     async getGiftCardByCode(code, tenantId) { const k = String(code).toUpperCase().replace(/[^A-Z0-9]/g, ''); return (read().giftcards || []).find(g => owns(g, tenantId) && String(g.code).toUpperCase().replace(/[^A-Z0-9]/g, '') === k) || null; },
+//     async createGiftCard(g) { const db = read(); (db.giftcards ||= []).push(g); write(db); return g; },
+//     async updateGiftCard(id, patch) { const db = read(); const g = (db.giftcards ||= []).find(x => x.id === id); if (!g) return null; Object.assign(g, patch); write(db); return g; },
+
+//     // ---- cash drawer sessions (scoped) ----
+//     async getOpenDrawer(tenantId) { return (read().drawers || []).find(d => owns(d, tenantId) && d.status === 'open') || null; },
+//     async getDrawer(id) { return (read().drawers || []).find(d => d.id === id) || null; },
+//     async listDrawers(tenantId) { return (read().drawers || []).filter(d => owns(d, tenantId)).sort((a, b) => (b.openedAt || 0) - (a.openedAt || 0)); },
+//     async createDrawer(d) { const db = read(); (db.drawers ||= []).push(d); write(db); return d; },
+//     async updateDrawer(id, patch) { const db = read(); const d = (db.drawers ||= []).find(x => x.id === id); if (!d) return null; Object.assign(d, patch); write(db); return d; },
+
+//     // ---- shifts / time clock (scoped) ----
+//     async listShifts(tenantId) { return (read().shifts || []).filter(s => owns(s, tenantId)).sort((a, b) => (b.clockIn || 0) - (a.clockIn || 0)); },
+//     async getShift(id) { return (read().shifts || []).find(s => s.id === id) || null; },
+//     async getOpenShiftFor(userId, tenantId) { return (read().shifts || []).find(s => owns(s, tenantId) && s.userId === userId && s.status === 'open') || null; },
+//     async createShift(s) { const db = read(); (db.shifts ||= []).push(s); write(db); return s; },
+//     async updateShift(id, patch) { const db = read(); const s = (db.shifts ||= []).find(x => x.id === id); if (!s) return null; Object.assign(s, patch); write(db); return s; },
+
+//     // ---- messages (digital receipts + marketing sends) (scoped) ----
+//     async listMessages(tenantId) { return (read().messages || []).filter(m => owns(m, tenantId)).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); },
+//     async createMessage(m) { const db = read(); (db.messages ||= []).push(m); write(db); return m; },
+//     async updateMessage(id, patch) { const db = read(); const m = (db.messages ||= []).find(x => x.id === id); if (!m) return null; Object.assign(m, patch); write(db); return m; },
+
+//     // ---- marketing campaigns (scoped) ----
+//     async listCampaigns(tenantId) { return (read().campaigns || []).filter(c => owns(c, tenantId)).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); },
+//     async getCampaign(id) { return (read().campaigns || []).find(c => c.id === id) || null; },
+//     async createCampaign(c) { const db = read(); (db.campaigns ||= []).push(c); write(db); return c; },
+//     async updateCampaign(id, patch) { const db = read(); const c = (db.campaigns ||= []).find(x => x.id === id); if (!c) return null; Object.assign(c, patch); write(db); return c; },
+
+//     // ---- vendors / suppliers (scoped) ----
+//     async listVendors(tenantId) { return (read().vendors || []).filter(v => owns(v, tenantId)).sort((a, b) => (a.name || '').localeCompare(b.name || '')); },
+//     async getVendor(id) { return (read().vendors || []).find(v => v.id === id) || null; },
+//     async createVendor(v) { const db = read(); (db.vendors ||= []).push(v); write(db); return v; },
+//     async updateVendor(id, patch) { const db = read(); const v = (db.vendors ||= []).find(x => x.id === id); if (!v) return null; Object.assign(v, patch); write(db); return v; },
+//     async deleteVendor(id) { const db = read(); db.vendors = (db.vendors || []).filter(v => v.id !== id); write(db); },
+
+//     // ---- purchase orders (scoped) ----
+//     async listPurchaseOrders(tenantId) { return (read().purchaseOrders || []).filter(p => owns(p, tenantId)).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); },
+//     async getPurchaseOrder(id) { return (read().purchaseOrders || []).find(p => p.id === id) || null; },
+//     async createPurchaseOrder(p) { const db = read(); (db.purchaseOrders ||= []).push(p); write(db); return p; },
+//     async updatePurchaseOrder(id, patch) { const db = read(); const p = (db.purchaseOrders ||= []).find(x => x.id === id); if (!p) return null; Object.assign(p, patch); write(db); return p; },
+
+//     // ---- stocktakes / cycle counts (scoped) ----
+//     async listStocktakes(tenantId) { return (read().stocktakes || []).filter(s => owns(s, tenantId)).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); },
+//     async getStocktake(id) { return (read().stocktakes || []).find(s => s.id === id) || null; },
+//     async createStocktake(s) { const db = read(); (db.stocktakes ||= []).push(s); write(db); return s; },
+//     async updateStocktake(id, patch) { const db = read(); const s = (db.stocktakes ||= []).find(x => x.id === id); if (!s) return null; Object.assign(s, patch); write(db); return s; },
+
+//     // ---- reservations + waitlist (scoped) ----
+//     async listReservations(tenantId) { return (read().reservations || []).filter(r => owns(r, tenantId)).sort((a, b) => (a.time || a.createdAt || 0) - (b.time || b.createdAt || 0)); },
+//     async getReservation(id) { return (read().reservations || []).find(r => r.id === id) || null; },
+//     async createReservation(r) { const db = read(); (db.reservations ||= []).push(r); write(db); return r; },
+//     async updateReservation(id, patch) { const db = read(); const r = (db.reservations ||= []).find(x => x.id === id); if (!r) return null; Object.assign(r, patch); write(db); return r; },
+
+//     // ---- house accounts (scoped) ----
+//     async listHouseAccounts(tenantId) { return (read().houseAccounts || []).filter(a => owns(a, tenantId)).sort((a, b) => (a.name || '').localeCompare(b.name || '')); },
+//     async getHouseAccount(id) { return (read().houseAccounts || []).find(a => a.id === id) || null; },
+//     async createHouseAccount(a) { const db = read(); (db.houseAccounts ||= []).push(a); write(db); return a; },
+//     async updateHouseAccount(id, patch) { const db = read(); const a = (db.houseAccounts ||= []).find(x => x.id === id); if (!a) return null; Object.assign(a, patch); write(db); return a; },
+
+//     // ---- invoices (scoped) ----
+//     async listInvoices(tenantId) { return (read().invoices || []).filter(i => owns(i, tenantId)).sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0)); },
+//     async getInvoice(id) { return (read().invoices || []).find(i => i.id === id) || null; },
+//     async createInvoice(i) { const db = read(); (db.invoices ||= []).push(i); write(db); return i; },
+//     async updateInvoice(id, patch) { const db = read(); const i = (db.invoices ||= []).find(x => x.id === id); if (!i) return null; Object.assign(i, patch); write(db); return i; },
+
+//     // ---- locations (multi-site registry, scoped to the owning tenant) ----
+//     async listLocations(tenantId) { return (read().locations || []).filter(l => owns(l, tenantId)).sort((a, b) => (a.name || '').localeCompare(b.name || '')); },
+//     async getLocation(id) { return (read().locations || []).find(l => l.id === id) || null; },
+//     async createLocation(l) { const db = read(); (db.locations ||= []).push(l); write(db); return l; },
+//     async updateLocation(id, patch) { const db = read(); const l = (db.locations ||= []).find(x => x.id === id); if (!l) return null; Object.assign(l, patch); write(db); return l; },
+//     async deleteLocation(id) { const db = read(); db.locations = (db.locations || []).filter(l => l.id !== id); write(db); },
+
+//     // ---- discount presets + scheduled (happy-hour) discounts (scoped) ----
+//     async listDiscountPresets(tenantId) { return (read().discountPresets || []).filter(d => owns(d, tenantId)).sort((a, b) => (a.name || '').localeCompare(b.name || '')); },
+//     async getDiscountPreset(id) { return (read().discountPresets || []).find(d => d.id === id) || null; },
+//     async createDiscountPreset(d) { const db = read(); (db.discountPresets ||= []).push(d); write(db); return d; },
+//     async updateDiscountPreset(id, patch) { const db = read(); const d = (db.discountPresets ||= []).find(x => x.id === id); if (!d) return null; Object.assign(d, patch); write(db); return d; },
+//     async deleteDiscountPreset(id) { const db = read(); db.discountPresets = (db.discountPresets || []).filter(d => d.id !== id); write(db); },
+//   };
+// }
