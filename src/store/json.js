@@ -18,7 +18,6 @@ export function makeJsonStore() {
       const db = read();
       db.menu = menu; db.tables = tables; db.staff = staff; db.users = users; db.inventory = inventory;
       db.orders = []; db.payments = []; db.customers = []; db.giftcards = []; db.drawers = []; db.shifts = []; db.messages = []; db.campaigns = []; db.vendors = []; db.purchaseOrders = []; db.stocktakes = []; db.reservations = []; db.houseAccounts = []; db.invoices = []; db.locations = []; db.discountPresets = [];
-      db.counters = {};   // ← Order-number counters per tenant (DB-owned).
       db.tenants = tenants || [{ id: DEFAULT_TENANT, name: 'Default', slug: DEFAULT_TENANT, plan: 'free', createdAt: Date.now() }];
       write(db);
     },
@@ -69,29 +68,6 @@ export function makeJsonStore() {
     async findOrderByExternalId(externalId, tenantId) { return read().orders.find(o => o.externalId === externalId && owns(o, tenantId)) || null; },
     async createOrder(order) { const db = read(); db.orders.push(order); write(db); return order; },
     async updateOrder(id, patch) { const db = read(); const o = db.orders.find(x => x.id === id); if (!o) return null; Object.assign(o, patch); write(db); return o; },
-
-    // ---- order numbering (DB-owned, atomic per tenant) ----
-    // The ONLY place in the whole app that assigns an order number.
-    // Bootstraps itself from the highest existing order number on first call,
-    // then increments safely. Never called from the server layer.
-    async nextOrderNumber(tenantId) {
-      const db = read();
-      db.counters ||= {};
-      const key = T(tenantId);
-
-      // Bootstrap from the highest existing order for this tenant (never collide).
-      if (db.counters[key] == null) {
-        const max = (db.orders || [])
-          .filter(o => owns(o, tenantId))
-          .reduce((m, o) => Math.max(m, Number(o.number) || 0), 1000);
-        db.counters[key] = max - 1000;
-      }
-
-      db.counters[key] += 1;
-      const number = 1000 + db.counters[key];   // first order = 1001 (matches old behavior)
-      write(db);
-      return number;
-    },
 
     // ---- payments ----
     async listPayments(tenantId) { return read().payments.filter(p => owns(p, tenantId)); },
